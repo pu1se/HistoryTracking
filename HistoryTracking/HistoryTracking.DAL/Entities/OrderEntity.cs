@@ -15,12 +15,12 @@ namespace HistoryTracking.DAL.Entities
         [Key]
         public Guid Id { get; set; }        
 
-        public string Title { get; set; }
-
         public string Comments { get; set; }
 
-        public OrderStatusType Status { get; set; }
+        public OrderStatusType OrderStatus { get; set; }
 
-        public virtual ICollection<OfferEntity> Offers { get; set; }
+        public PaymentStatusType PaymentStatus { get; set; }
+
+        public virtual ICollection<OfferEntity> Offers { get; set; } = new List<OfferEntity>();
     }
 }

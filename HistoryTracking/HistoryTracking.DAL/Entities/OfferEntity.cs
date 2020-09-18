@@ -21,6 +21,6 @@ namespace HistoryTracking.DAL.Entities
 
         public CurrencyType Currency { get; set; }
 
-        public virtual ICollection<OrderEntity> Orders { get; set; }
+        public virtual ICollection<OrderEntity> Orders { get; set; } = new List<OrderEntity>();
     }
 }

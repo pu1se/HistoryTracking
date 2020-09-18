@@ -27,9 +27,9 @@ namespace HistoryTracking.DAL.Migrations
                 c => new
                     {
                         Id = c.Guid(nullable: false),
-                        Title = c.String(),
                         Comments = c.String(),
-                        Status = c.Int(nullable: false),
+                        OrderStatus = c.Int(nullable: false),
+                        PaymentStatus = c.Int(nullable: false),
                         CreatedDate = c.DateTime(nullable: false),
                         UpdatedDate = c.DateTime(nullable: false),
                         CreatedByUserId = c.Guid(nullable: false),

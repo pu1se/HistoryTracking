@@ -48,6 +48,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DatabaseInitializer.cs" />
     <Compile Include="DataContext.cs" />
     <Compile Include="Entities\BaseEntity.cs" />
     <Compile Include="Entities\IHistoryTracking.cs" />
@@ -56,10 +57,11 @@
     <Compile Include="Entities\UserEntity.cs" />
     <Compile Include="Enums\CurrencyType.cs" />
     <Compile Include="Enums\OrderStatusType.cs" />
+    <Compile Include="Enums\PaymentStatusType.cs" />
     <Compile Include="Enums\UserType.cs" />
-    <Compile Include="Migrations\202009180722271_Init.cs" />
-    <Compile Include="Migrations\202009180722271_Init.Designer.cs">
-      <DependentUpon>202009180722271_Init.cs</DependentUpon>
+    <Compile Include="Migrations\202009181357094_Init.cs" />
+    <Compile Include="Migrations\202009181357094_Init.Designer.cs">
+      <DependentUpon>202009181357094_Init.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -69,8 +71,8 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\202009180722271_Init.resx">
-      <DependentUpon>202009180722271_Init.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\202009181357094_Init.resx">
+      <DependentUpon>202009181357094_Init.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

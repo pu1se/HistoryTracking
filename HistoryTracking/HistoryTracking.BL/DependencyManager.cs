@@ -4,12 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HistoryTracking.DAL.Enums
+namespace HistoryTracking.BL
 {
-    public enum OrderStatusType
+    public class DependencyManager
     {
-        New,
-        Delivering,
-        Closed
     }
 }

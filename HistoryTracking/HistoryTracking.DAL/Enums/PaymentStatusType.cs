@@ -6,10 +6,9 @@ using System.Threading.Tasks;
 
 namespace HistoryTracking.DAL.Enums
 {
-    public enum OrderStatusType
+    public enum PaymentStatusType
     {
-        New,
-        Delivering,
-        Closed
+        NotPaid,
+        Paid
     }
 }
