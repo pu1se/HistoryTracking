@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("HistoryTracking.BL.Tests")]
+[assembly: AssemblyTitle("HistoryTracking._Common")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("HistoryTracking.BL.Tests")]
+[assembly: AssemblyProduct("HistoryTracking._Common")]
 [assembly: AssemblyCopyright("Copyright ©  2020")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("7ddc9f46-0335-443b-9cb1-fd779c6fa8fd")]
+[assembly: Guid("577256da-f8f3-4449-a014-ea3c0a6c9751")]
 
 // Version information for an assembly consists of the following four values:
 //

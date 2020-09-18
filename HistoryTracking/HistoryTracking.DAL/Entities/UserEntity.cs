@@ -10,7 +10,7 @@ using HistoryTracking.DAL.Enums;
 namespace HistoryTracking.DAL.Entities
 {
     [Table("Users")]
-    public class UserEntity : IEntity
+    public class UserEntity : BaseEntity
     {
         [Key]
         public Guid Id { get; set; }
@@ -20,11 +20,5 @@ namespace HistoryTracking.DAL.Entities
         public string Email { get; set; }
 
         public UserType UserType { get; set; }
-
-
-        public DateTime CreatedDate { get; set; }
-        public DateTime UpdatedDate { get; set; }
-        public Guid CreatedByUserId { get; set; }
-        public Guid UpdatedByUserId { get; set; }
     }
 }

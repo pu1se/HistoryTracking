@@ -10,7 +10,7 @@ using HistoryTracking.DAL.Enums;
 namespace HistoryTracking.DAL.Entities
 {
     [Table("Orders")]
-    public class OrderEntity : IEntity
+    public class OrderEntity : BaseEntity
     {
         [Key]
         public Guid Id { get; set; }        
@@ -22,11 +22,5 @@ namespace HistoryTracking.DAL.Entities
         public OrderStatusType Status { get; set; }
 
         public virtual ICollection<OfferEntity> Offers { get; set; }
-
-
-        public DateTime CreatedDate { get; set; }
-        public DateTime UpdatedDate { get; set; }
-        public Guid CreatedByUserId { get; set; }
-        public Guid UpdatedByUserId { get; set; }
     }
 }
