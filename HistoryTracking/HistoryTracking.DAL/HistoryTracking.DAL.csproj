@@ -51,6 +51,7 @@
     <Compile Include="DatabaseInitializer.cs" />
     <Compile Include="DataContext.cs" />
     <Compile Include="Entities\BaseEntity.cs" />
+    <Compile Include="Entities\ActivityHistoryEntity.cs" />
     <Compile Include="Entities\IHistoryTracking.cs" />
     <Compile Include="Entities\OfferEntity.cs" />
     <Compile Include="Entities\OrderEntity.cs" />

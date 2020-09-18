@@ -28,33 +28,50 @@ namespace HistoryTracking.DAL
                 return;
             }
 
+            var now = DateTime.UtcNow;
             storage.Users.Add(new UserEntity
             {
                 Id = TestData.SystemUserId,
                 Email = "system.user@appxite.com",
                 Name = "System User",
-                UserType = UserType.SystemUser
+                UserType = UserType.SystemUser,
+                CreatedDate = now,
+                UpdatedDate = now,
+                CreatedByUserId = TestData.SystemUserId,
+                UpdatedByUserId = TestData.SystemUserId
             });
             storage.Users.Add(new UserEntity
             {
                 Id = TestData.ResellerUserId,
                 Email = "reseller@tmp.com",
                 Name = "Some Reseller",
-                UserType = UserType.Reseller
+                UserType = UserType.Reseller,
+                CreatedDate = now,
+                UpdatedDate = now,
+                CreatedByUserId = TestData.SystemUserId,
+                UpdatedByUserId = TestData.SystemUserId
             });
             storage.Users.Add(new UserEntity
             {
                 Id = TestData.CustomerUserId,
                 Email = "customer@tmp.com",
                 Name = "Some Customer",
-                UserType = UserType.Customer
+                UserType = UserType.Customer,
+                CreatedDate = now,
+                UpdatedDate = now,
+                CreatedByUserId = TestData.SystemUserId,
+                UpdatedByUserId = TestData.SystemUserId
             });
             storage.Users.Add(new UserEntity
             {
                 Id = TestData.AnotherCustomerUserId,
                 Email = "another.customer@tmp.com",
                 Name = "Another Customer",
-                UserType = UserType.Customer
+                UserType = UserType.Customer,
+                CreatedDate = now,
+                UpdatedDate = now,
+                CreatedByUserId = TestData.SystemUserId,
+                UpdatedByUserId = TestData.SystemUserId
             });
 
             var offer = storage.Offers.Add(new OfferEntity
@@ -63,6 +80,10 @@ namespace HistoryTracking.DAL
                 Currency = CurrencyType.Euro,
                 Price = 99,
                 Title = "Super Offer",
+                CreatedDate = now,
+                UpdatedDate = now,
+                CreatedByUserId = TestData.SystemUserId,
+                UpdatedByUserId = TestData.SystemUserId
             });
             storage.Orders.Add(new OrderEntity
             {
@@ -70,7 +91,11 @@ namespace HistoryTracking.DAL
                 Comments = "Call me before delivering",
                 OrderStatus = OrderStatusType.New,
                 PaymentStatus = PaymentStatusType.NotPaid,
-                Offers = new List<OfferEntity>(new []{offer})
+                Offers = new List<OfferEntity>(new []{offer}),
+                CreatedDate = now,
+                UpdatedDate = now,
+                CreatedByUserId = TestData.SystemUserId,
+                UpdatedByUserId = TestData.SystemUserId
             });
 
             storage.SaveChanges();

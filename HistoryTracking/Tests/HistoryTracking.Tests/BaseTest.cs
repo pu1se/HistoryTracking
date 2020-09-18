@@ -23,5 +23,11 @@ namespace HistoryTracking.Tests
                 _isFirstCall = false;
             }
         }
+
+        [TestCleanup]
+        public void BaseCleanup()
+        {
+            Storage.Dispose();
+        }
     }
 }
