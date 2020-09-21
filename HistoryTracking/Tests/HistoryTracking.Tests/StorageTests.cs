@@ -8,7 +8,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace HistoryTracking.Tests
 {
     [TestClass]
-    public class RepositoryTests : BaseTest
+    public class StorageTests : BaseTest
     {
         [TestMethod]
         public async Task CheckDataContextIsWorking()

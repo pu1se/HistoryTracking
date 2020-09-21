@@ -10,7 +10,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>HistoryTracking.UI.Web</title>
+    <title>History Tracking POC</title>
     <base href="~/" />
     <link rel="stylesheet" href="css/bootstrap/bootstrap.min.css" />
     <link href="css/site.css" rel="stylesheet" />
@@ -31,6 +31,13 @@
         <a class="dismiss">🗙</a>
     </div>
 
-    <script src="_framework/blazor.server.js"></script>
+<script src="_framework/blazor.server.js"></script>
+<script>
+    hubConnection.serverTimeoutInMilliseconds = 2000000; // 100 second
+    connection.onclose(() => setTimeout(function() {
+        startSignalRConnection(connection);
+        console.log("hello");
+    }, 5000));
+</script>
 </body>
 </html>
