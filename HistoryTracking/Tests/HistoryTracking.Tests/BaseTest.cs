@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using HistoryTracking.BL;
 using HistoryTracking.DAL;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -16,9 +17,11 @@ namespace HistoryTracking.Tests
         [TestInitialize]
         public void BaseInitialize()
         {
+            DependencyManager.RegisterComponents();
+            Storage = DependencyManager.Resolve<DataContext>();
+
             if (_isFirstCall)
             {
-                Storage = new DataContext();
                 DatabaseInitializer.SeedWithTestData(Storage);
                 _isFirstCall = false;
             }
