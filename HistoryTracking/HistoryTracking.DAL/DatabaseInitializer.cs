@@ -74,7 +74,7 @@ namespace HistoryTracking.DAL
                 UpdatedByUserId = TestData.SystemUserId
             });
 
-            var offer = storage.Offers.Add(new OfferEntity
+            var offer = storage.SubscriptionProducts.Add(new SubscriptionProductEntity
             {
                 Id = TestData.OfferId,
                 Currency = CurrencyType.Euro,
@@ -91,7 +91,7 @@ namespace HistoryTracking.DAL
                 Comments = "Call me before delivering",
                 OrderStatus = OrderStatusType.New,
                 PaymentStatus = PaymentStatusType.NotPaid,
-                Offers = new List<OfferEntity>(new []{offer}),
+                SubscriptionProducts = new List<SubscriptionProductEntity>(new []{offer}),
                 CreatedDate = now,
                 UpdatedDate = now,
                 CreatedByUserId = TestData.SystemUserId,

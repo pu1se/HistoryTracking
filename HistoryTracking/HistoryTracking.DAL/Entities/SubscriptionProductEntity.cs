@@ -9,8 +9,8 @@ using HistoryTracking.DAL.Enums;
 
 namespace HistoryTracking.DAL.Entities
 {
-    [Table("Offers")]
-    public class OfferEntity : BaseEntity
+    [Table("SubscriptionProducts")]
+    public class SubscriptionProductEntity : BaseEntity
     {
         [Key]
         public Guid Id { get; set; }
@@ -22,5 +22,9 @@ namespace HistoryTracking.DAL.Entities
         public CurrencyType Currency { get; set; }
 
         public virtual ICollection<OrderEntity> Orders { get; set; } = new List<OrderEntity>();
+
+        public Guid SubscriptionOwnerUserId { get; set; }
+        [ForeignKey("SubscriptionOwnerUserId")]
+        public virtual UserEntity SubscriptionOwnerUser { get; set; }
     }
 }

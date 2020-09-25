@@ -13,7 +13,7 @@ namespace HistoryTracking.DAL
     {
         private const String DefaultConnectionStringName = "DefaultConnection";
         public DbSet<UserEntity> Users { get; set; }
-        public DbSet<OfferEntity> Offers { get; set; }
+        public DbSet<SubscriptionProductEntity> SubscriptionProducts { get; set; }
         public DbSet<OrderEntity> Orders { get; set; }
          
 
@@ -55,14 +55,24 @@ namespace HistoryTracking.DAL
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             modelBuilder.Entity<OrderEntity>()
-                .HasMany(e => e.Offers)
+                .HasMany(e => e.SubscriptionProducts)
                 .WithMany(e => e.Orders)
                 .Map(config =>
                 {
-                    config.MapLeftKey("OfferId");
+                    config.MapLeftKey("SubscriptionProductId");
                     config.MapRightKey("OrderId");
-                    config.ToTable("Offers_Orders");
+                    config.ToTable("SubscriptionProducts_Orders");
                 });
+
+            modelBuilder.Entity<UserEntity>()
+                .HasMany(e => e.SubscriptionProducts)
+                .WithRequired(e => e.SubscriptionOwnerUser)
+                .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<UserEntity>()
+                .HasMany(e => e.Orders)
+                .WithRequired(e => e.CustomerUser)
+                .WillCascadeOnDelete(false);
 
             base.OnModelCreating(modelBuilder);
         }

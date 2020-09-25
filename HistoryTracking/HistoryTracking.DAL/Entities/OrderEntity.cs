@@ -21,6 +21,10 @@ namespace HistoryTracking.DAL.Entities
 
         public PaymentStatusType PaymentStatus { get; set; }
 
-        public virtual ICollection<OfferEntity> Offers { get; set; } = new List<OfferEntity>();
+        public virtual ICollection<SubscriptionProductEntity> SubscriptionProducts { get; set; } = new List<SubscriptionProductEntity>();
+
+        public Guid CustomerUserId { get; set; }
+        [ForeignKey("CustomerUserId")]
+        public UserEntity CustomerUser { get; set; }
     }
 }

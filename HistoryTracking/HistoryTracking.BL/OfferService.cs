@@ -16,9 +16,9 @@ namespace HistoryTracking.BL
         {
         }
 
-        public Task<List<OfferEntity>> GetList()
+        public Task<List<SubscriptionProductEntity>> GetList()
         {
-            return Storage.Offers.ToListAsync();
+            return Storage.SubscriptionProducts.ToListAsync();
         }
     }
 }

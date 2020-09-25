@@ -20,5 +20,9 @@ namespace HistoryTracking.DAL.Entities
         public string Email { get; set; }
 
         public UserType UserType { get; set; }
+
+        public virtual ICollection<SubscriptionProductEntity> SubscriptionProducts { get; set; }
+
+        public virtual ICollection<OrderEntity> Orders { get; set; }
     }
 }
