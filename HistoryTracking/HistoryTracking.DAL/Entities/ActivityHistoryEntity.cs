@@ -9,17 +9,17 @@ using System.Threading.Tasks;
 namespace HistoryTracking.DAL.Entities
 {
     [Table("ActivityHistories")]
-    public class ActivityHistoryEntity
+    public class ActivityHistoryEntity : BaseEntity
     {
         [Key]
         public Guid Id { get; set; }
 
-        public string EntitySnapshotAsJson { get; set; }
-
         public string EntityName { get; set; }
 
-        public DateTime CreatedDate { get; set; }
+        public string EntitySnapshotBeforeChangeAsJson { get; set; }
 
-        public DateTime UpdatedDate { get; set; }
+        public string EntitySnapshotAfterChangeAsJson { get; set; }
+
+        public int PropertiesWasChanged { get; set; }
     }
 }

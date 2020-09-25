@@ -66,8 +66,13 @@ namespace HistoryTracking.DAL
 
             modelBuilder.Entity<UserEntity>()
                 .HasMany(e => e.SubscriptionProducts)
-                .WithRequired(e => e.SubscriptionOwnerUser)
-                .WillCascadeOnDelete(false);
+                .WithMany(e => e.SubscriptionOwnerUsers)
+                .Map(config =>
+                {
+                    config.MapLeftKey("SubscriptionProductId");
+                    config.MapRightKey("UserId");
+                    config.ToTable("SubscriptionProducts_Users");
+                });
 
             modelBuilder.Entity<UserEntity>()
                 .HasMany(e => e.Orders)

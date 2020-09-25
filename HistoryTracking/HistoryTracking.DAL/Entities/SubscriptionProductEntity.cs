@@ -19,12 +19,14 @@ namespace HistoryTracking.DAL.Entities
 
         public decimal Price { get; set; }
 
+        public decimal DistributorMarkupAsPercent { get; set; }
+
+        public decimal ResellerMarkupAsPercent { get; set; }
+
         public CurrencyType Currency { get; set; }
 
         public virtual ICollection<OrderEntity> Orders { get; set; } = new List<OrderEntity>();
 
-        public Guid SubscriptionOwnerUserId { get; set; }
-        [ForeignKey("SubscriptionOwnerUserId")]
-        public virtual UserEntity SubscriptionOwnerUser { get; set; }
+        public virtual ICollection<UserEntity> SubscriptionOwnerUsers { get; set; }
     }
 }

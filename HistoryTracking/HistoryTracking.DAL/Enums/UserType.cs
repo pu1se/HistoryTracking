@@ -10,6 +10,7 @@ namespace HistoryTracking.DAL.Enums
     {
         Customer,
         Reseller,
+        Distributor,
         SystemUser
     }
 }

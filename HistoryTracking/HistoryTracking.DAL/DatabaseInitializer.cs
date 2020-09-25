@@ -11,12 +11,13 @@ namespace HistoryTracking.DAL
     public static class TestData
     {
         public static readonly Guid SystemUserId = new Guid("11000000-0000-0000-0000-AAAAAAAAAAAA");
-        public static readonly Guid ResellerUserId = new Guid("22000000-0000-0000-0000-AAAAAAAAAAAA");
-        public static readonly Guid CustomerUserId = new Guid("33000000-0000-0000-0000-AAAAAAAAAAAA");
-        public static readonly Guid AnotherCustomerUserId = new Guid("44000000-0000-0000-0000-AAAAAAAAAAAA");
+        public static readonly Guid DistributorUserId = new Guid("22000000-0000-0000-0000-AAAAAAAAAAAA");
+        public static readonly Guid ResellerUserId = new Guid("33000000-0000-0000-0000-AAAAAAAAAAAA");
+        public static readonly Guid CustomerUserId = new Guid("55000000-0000-0000-0000-AAAAAAAAAAAA");
+        public static readonly Guid AnotherCustomerUserId = new Guid("66000000-0000-0000-0000-AAAAAAAAAAAA");
 
-        public static readonly Guid OfferId = new Guid("66000000-0000-0000-0000-AAAAAAAAAAAA");
-        public static readonly Guid OrderId = new Guid("77000000-0000-0000-0000-AAAAAAAAAAAA");
+        public static readonly Guid SubscriptionProductId = new Guid("88000000-0000-0000-0000-AAAAAAAAAAAA");
+        public static readonly Guid OrderId = new Guid("99000000-0000-0000-0000-AAAAAAAAAAAA");
     }
 
     public static class DatabaseInitializer
@@ -40,7 +41,18 @@ namespace HistoryTracking.DAL
                 CreatedByUserId = TestData.SystemUserId,
                 UpdatedByUserId = TestData.SystemUserId
             });
-            storage.Users.Add(new UserEntity
+            var distributor = storage.Users.Add(new UserEntity
+            {
+                Id = TestData.DistributorUserId,
+                Email = "distributor@tmp.com",
+                Name = "Some Distributor",
+                UserType = UserType.Distributor,
+                CreatedDate = now,
+                UpdatedDate = now,
+                CreatedByUserId = TestData.SystemUserId,
+                UpdatedByUserId = TestData.SystemUserId
+            });
+            var reseller = storage.Users.Add(new UserEntity
             {
                 Id = TestData.ResellerUserId,
                 Email = "reseller@tmp.com",
@@ -51,7 +63,7 @@ namespace HistoryTracking.DAL
                 CreatedByUserId = TestData.SystemUserId,
                 UpdatedByUserId = TestData.SystemUserId
             });
-            storage.Users.Add(new UserEntity
+            var customer = storage.Users.Add(new UserEntity
             {
                 Id = TestData.CustomerUserId,
                 Email = "customer@tmp.com",
@@ -76,14 +88,17 @@ namespace HistoryTracking.DAL
 
             var offer = storage.SubscriptionProducts.Add(new SubscriptionProductEntity
             {
-                Id = TestData.OfferId,
+                Id = TestData.SubscriptionProductId,
                 Currency = CurrencyType.Euro,
                 Price = 99,
-                Title = "Super Offer",
+                DistributorMarkupAsPercent = 5,
+                ResellerMarkupAsPercent = 10,
+                Title = "Super Subscription Product",
                 CreatedDate = now,
                 UpdatedDate = now,
                 CreatedByUserId = TestData.SystemUserId,
-                UpdatedByUserId = TestData.SystemUserId
+                UpdatedByUserId = TestData.SystemUserId,
+                SubscriptionOwnerUsers = new List<UserEntity>(new []{distributor, reseller}),
             });
             storage.Orders.Add(new OrderEntity
             {
@@ -95,7 +110,8 @@ namespace HistoryTracking.DAL
                 CreatedDate = now,
                 UpdatedDate = now,
                 CreatedByUserId = TestData.SystemUserId,
-                UpdatedByUserId = TestData.SystemUserId
+                UpdatedByUserId = TestData.SystemUserId,
+                CustomerUser = customer
             });
 
             storage.SaveChanges();
