@@ -1,7 +1,23 @@
 ﻿@page "/users"
+@using HistoryTracking.UI.Web.ApiRequests
+@using HistoryTracking.BL.Services.User
 
 <h3>UserListPage</h3>
 
+@foreach (var user in UserList)
+{
+    <p>@user.Name</p>
+}
+
+@inject UserApiClient UserApi
 @code {
+
+    private List<GetUserModel> UserList { get; set; } = new List<GetUserModel>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        ApiCallDataResult<List<GetUserModel>> users = await UserApi.GetUserListAsync();
+        UserList = users.Data;
+    }
 
 }

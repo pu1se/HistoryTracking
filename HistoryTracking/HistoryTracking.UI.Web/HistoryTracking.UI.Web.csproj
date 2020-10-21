@@ -5,7 +5,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="ApiRequests\" />
+    <PackageReference Include="RestSharp" Version="105.2.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\HistoryTracking.BL\HistoryTracking.BL.csproj" />
+    <ProjectReference Include="..\HistoryTracking._Common\HistoryTracking._Common.csproj" />
   </ItemGroup>
 
 </Project>

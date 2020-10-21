@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using HistoryTracking.UI.Web.ApiRequests;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Hosting;
@@ -32,6 +33,8 @@ namespace HistoryTracking.UI.Web
                 hubOptions.EnableDetailedErrors = true;
                 hubOptions.KeepAliveInterval = TimeSpan.FromMinutes(60);
             });
+            services.AddTransient<UserApiClient>();
+            services.AddSingleton<UiSettings>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
