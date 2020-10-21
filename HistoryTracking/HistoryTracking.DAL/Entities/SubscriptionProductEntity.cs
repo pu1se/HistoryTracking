@@ -27,6 +27,6 @@ namespace HistoryTracking.DAL.Entities
 
         public virtual ICollection<OrderEntity> Orders { get; set; } = new List<OrderEntity>();
 
-        public virtual ICollection<UserEntity> SubscriptionOwnerUsers { get; set; }
+        public virtual ICollection<UserEntity> OwnerUsers { get; set; }
     }
 }

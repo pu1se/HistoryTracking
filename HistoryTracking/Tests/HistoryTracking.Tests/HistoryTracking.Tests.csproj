@@ -65,9 +65,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BaseTest.cs" />
+    <Compile Include="_Core\BaseServiceTests.cs" />
+    <Compile Include="_Core\BaseTest.cs" />
     <Compile Include="StorageTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UserServiceTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -82,7 +84,12 @@
       <Project>{729C6B68-B1CB-4193-AF43-E568CA11E333}</Project>
       <Name>HistoryTracking.DAL</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\HistoryTracking._Common\HistoryTracking._Common.csproj">
+      <Project>{577256da-f8f3-4449-a014-ea3c0a6c9751}</Project>
+      <Name>HistoryTracking._Common</Name>
+    </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

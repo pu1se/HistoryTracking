@@ -66,7 +66,7 @@ namespace HistoryTracking.DAL
 
             modelBuilder.Entity<UserEntity>()
                 .HasMany(e => e.SubscriptionProducts)
-                .WithMany(e => e.SubscriptionOwnerUsers)
+                .WithMany(e => e.OwnerUsers)
                 .Map(config =>
                 {
                     config.MapLeftKey("SubscriptionProductId");

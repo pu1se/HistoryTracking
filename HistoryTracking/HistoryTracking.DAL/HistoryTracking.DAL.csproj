@@ -60,9 +60,9 @@
     <Compile Include="Enums\OrderStatusType.cs" />
     <Compile Include="Enums\PaymentStatusType.cs" />
     <Compile Include="Enums\UserType.cs" />
-    <Compile Include="Migrations\202009251648072_Init.cs" />
-    <Compile Include="Migrations\202009251648072_Init.Designer.cs">
-      <DependentUpon>202009251648072_Init.cs</DependentUpon>
+    <Compile Include="Migrations\202010211217409_Init.cs" />
+    <Compile Include="Migrations\202010211217409_Init.Designer.cs">
+      <DependentUpon>202010211217409_Init.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -72,8 +72,8 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\202009251648072_Init.resx">
-      <DependentUpon>202009251648072_Init.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\202010211217409_Init.resx">
+      <DependentUpon>202010211217409_Init.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

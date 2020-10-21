@@ -98,7 +98,7 @@ namespace HistoryTracking.DAL
                 UpdatedDate = now,
                 CreatedByUserId = TestData.SystemUserId,
                 UpdatedByUserId = TestData.SystemUserId,
-                SubscriptionOwnerUsers = new List<UserEntity>(new []{distributor, reseller}),
+                OwnerUsers = new List<UserEntity>(new []{distributor, reseller}),
             });
             storage.Orders.Add(new OrderEntity
             {

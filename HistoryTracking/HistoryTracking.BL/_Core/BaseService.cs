@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using HistoryTracking.DAL;
 
-namespace HistoryTracking.BL._Core
+namespace HistoryTracking.BL
 {
     public abstract class BaseService
     {
