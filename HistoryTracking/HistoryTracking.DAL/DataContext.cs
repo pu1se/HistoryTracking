@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using HistoryTracking.DAL.Entities;
+using HistoryTracking.DAL.Migrations;
 
 namespace HistoryTracking.DAL
 {
@@ -19,6 +20,8 @@ namespace HistoryTracking.DAL
 
         public DataContext() : base(DefaultConnectionStringName)
         {
+            Database.SetInitializer(new MigrateDatabaseToLatestVersion<DataContext, Configuration>());
+
             var objectContext = ((IObjectContextAdapter) this).ObjectContext;
             objectContext.SavingChanges += (sender, args) =>
             {

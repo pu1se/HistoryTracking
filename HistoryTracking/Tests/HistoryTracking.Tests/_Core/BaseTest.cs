@@ -11,7 +11,6 @@ namespace HistoryTracking.Tests
 {
     public abstract class BaseTest
     {
-        private static bool _isFirstCall = true;
         protected DataContext Storage { get; private set; }
 
         [TestInitialize]
@@ -19,12 +18,6 @@ namespace HistoryTracking.Tests
         {
             DependencyManager.RegisterComponents();
             Storage = DependencyManager.Resolve<DataContext>();
-
-            if (_isFirstCall)
-            {
-                DatabaseInitializer.SeedWithTestData(Storage);
-                _isFirstCall = false;
-            }
         }
 
         [TestCleanup]
