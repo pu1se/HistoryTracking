@@ -2,10 +2,66 @@
 
 <h3>Users</h3>
 
-@foreach (var user in Model.UserList)
-{
-    <p>@user.Name</p>
-}
+<PageViewer PageModel="@Model">
+    @if (Model.UserList.Any())
+    {
+        <br />
+        <br />
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>User Type</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+                @foreach (var user in Model.UserList)
+                {
+                    <tr>
+                        <td>@user.Name</td>
+                        <td>@user.Email</td>
+                        <td>@user.UserType</td>
+                        <td>
+                            <a href="/users/@user.Id" style="text-decoration: underline;">
+                                edit
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <p>User list is empty. Please add users.</p>
+    }
+
+
+    <a href='/users/Add'>
+        <span class="oi oi-plus" aria-hidden="true" style="vertical-align: text-bottom"></span> <span style="text-decoration: underline;">add</span>
+    </a>
+</PageViewer>
+
+<style>
+    .table {
+        text-align: center;
+    }
+
+    .table th {
+        text-align: start;
+    }
+
+    .table td {
+        text-align: start;
+    }
+</style>
 
 
 
@@ -26,6 +82,8 @@
             return;
         }
         Model.UserList = getUserListResult.Data;
+
+        Model.IsReady = true;
     }
 
 

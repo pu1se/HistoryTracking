@@ -41,10 +41,10 @@ app {
             margin-left: 1.5rem;
         }
 
-.main .top-row a:first-child {
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
+        .main .top-row a:first-child {
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
 
 .sidebar {
     background-image: linear-gradient(180deg, rgb(5, 39, 103) 0%, #3a0647 70%);
@@ -129,12 +129,12 @@ app {
     z-index: 1000;
 }
 
-#blazor-error-ui .dismiss {
-    cursor: pointer;
-    position: absolute;
-    right: 0.75rem;
-    top: 0.5rem;
-}
+    #blazor-error-ui .dismiss {
+        cursor: pointer;
+        position: absolute;
+        right: 0.75rem;
+        top: 0.5rem;
+    }
 
 @media (max-width: 767.98px) {
     .main .top-row:not(.auth) {
@@ -180,4 +180,117 @@ app {
         /* Never collapse the sidebar for wide screens */
         display: block;
     }
+}
+
+h4 {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+button {
+    min-width: 105px;
+}
+
+
+/*--- Ajax Loader Icon ------*/
+
+.hide {
+    visibility: hidden;
+    opacity: 0.05;
+    transition-duration: 0.5s;
+    transition-timing-function: ease-in-out;
+}
+
+#PageOverlay {
+    top: 70px;
+    position: fixed;
+    background-color: #fff;
+    height: 80%;
+    width: 100%;
+    z-index: 9998;
+    margin-left: -30px;
+}
+
+#LoadIcon {
+    z-index: 9999;
+    opacity: 1;
+}
+
+.cssload-loader {
+    position: fixed;
+    top: 45%;
+    left: calc(50% + 80px);
+    width: 62px;
+    height: 62px;
+    border-radius: 50%;
+    perspective: 780px;
+    z-index: 1005;
+    opacity: 0.7;
+}
+
+.cssload-inner {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    border-radius: 50%;
+}
+
+    .cssload-inner.cssload-one {
+        left: 0%;
+        top: 0%;
+        animation: cssload-rotate-one 1.15s linear infinite;
+        border-bottom: 3px solid #ddd;
+    }
+
+    .cssload-inner.cssload-two {
+        right: 0%;
+        top: 0%;
+        animation: cssload-rotate-two 1.15s linear infinite;
+        border-right: 3px solid #ddd;
+    }
+
+    .cssload-inner.cssload-three {
+        right: 0%;
+        bottom: 0%;
+        animation: cssload-rotate-three 1.15s linear infinite;
+        border-top: 3px solid #ddd;
+    }
+
+@keyframes cssload-rotate-one {
+    0% {
+        transform: rotateX(35deg) rotateY(-45deg) rotateZ(0deg);
+    }
+
+    100% {
+        transform: rotateX(35deg) rotateY(-45deg) rotateZ(360deg);
+    }
+}
+
+@keyframes cssload-rotate-two {
+    0% {
+        transform: rotateX(50deg) rotateY(10deg) rotateZ(0deg);
+    }
+
+    100% {
+        transform: rotateX(50deg) rotateY(10deg) rotateZ(360deg);
+    }
+}
+
+@keyframes cssload-rotate-three {
+    0% {
+        transform: rotateX(35deg) rotateY(55deg) rotateZ(0deg);
+    }
+
+    100% {
+        transform: rotateX(35deg) rotateY(55deg) rotateZ(360deg);
+    }
+}
+
+
+
+/*--- End of Ajax Loader Icon ------*/
+
+select {
+    width: 100%;
 }

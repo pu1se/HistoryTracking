@@ -19,7 +19,10 @@ namespace HistoryTracking.BL.Services
                     e =>
                     new GetUserModel
                     {
-                        Name = e.Name
+                        Id = e.Id,
+                        Email = e.Email,
+                        Name = e.Name,
+                        UserType = e.UserType
                     })
                 .ToListAsync();
 

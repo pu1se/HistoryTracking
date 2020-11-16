@@ -2,13 +2,13 @@
 
 @if (PageModel != null && PageModel.IsReady)
 {
-    @ChildContent
+@ChildContent
 }
 @if (PageModel != null && !PageModel.LogMessage.IsNullOrEmpty())
 {
-    <div>
-        <span>Log: @PageModel.LogMessage</span>
-    </div>
+<div>
+    <span>Log: @PageModel.LogMessage</span>
+</div>
 }
 <div></div>
 <div id="PageOverlay" class="@(PageModel.IsReady ? "hide" : "")"></div>
@@ -19,7 +19,7 @@
 </div>
 
 
-
+@inject IJSRuntime script
 @using HistoryTracking.UI.Web.PageModels
 @code {
     [Parameter]
@@ -27,4 +27,9 @@
 
     [Parameter]
     public BasePageModel PageModel { get; set; }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await script.InvokeAsync<string>("console.log", "hello ");
+    }
 }
