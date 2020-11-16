@@ -1,0 +1,30 @@
+﻿<Notification PageModel="@PageModel"></Notification>
+
+@if (PageModel != null && PageModel.IsReady)
+{
+    @ChildContent
+}
+@if (PageModel != null && !PageModel.LogMessage.IsNullOrEmpty())
+{
+    <div>
+        <span>Log: @PageModel.LogMessage</span>
+    </div>
+}
+<div></div>
+<div id="PageOverlay" class="@(PageModel.IsReady ? "hide" : "")"></div>
+<div id="LoadIcon" class="cssload-loader @(PageModel.IsReady ? "hide" : "")">
+    <div class="cssload-inner cssload-one"></div>
+    <div class="cssload-inner cssload-two"></div>
+    <div class="cssload-inner cssload-three"></div>
+</div>
+
+
+
+@using HistoryTracking.UI.Web.PageModels
+@code {
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+
+    [Parameter]
+    public BasePageModel PageModel { get; set; }
+}

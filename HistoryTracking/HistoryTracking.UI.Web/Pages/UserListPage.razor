@@ -1,23 +1,36 @@
 ﻿@page "/users"
-@using HistoryTracking.UI.Web.ApiRequests
-@using HistoryTracking.BL.Services.User
 
-<h3>UserListPage</h3>
+<h3>Users</h3>
 
-@foreach (var user in UserList)
+@foreach (var user in Model.UserList)
 {
     <p>@user.Name</p>
 }
 
+
+
+@using HistoryTracking.UI.Web.ApiRequests
+@using HistoryTracking.BL.Services.User
+@using HistoryTracking.UI.Web.PageModels
 @inject UserApiClient UserApi
 @code {
 
-    private List<GetUserModel> UserList { get; set; } = new List<GetUserModel>();
+    private UserListPageModel Model = new UserListPageModel();
 
     protected override async Task OnInitializedAsync()
     {
-        ApiCallDataResult<List<GetUserModel>> users = await UserApi.GetUserListAsync();
-        UserList = users.Data;
+        var getUserListResult = await UserApi.GetUserListAsync();
+        if (!getUserListResult.IsSuccess)
+        {
+            ShowError(getUserListResult.ErrorMessage);
+            return;
+        }
+        Model.UserList = getUserListResult.Data;
     }
 
+
+    void ShowError(string errorMessage)
+    {
+        Model.ErrorMessage = errorMessage;
+    }
 }
