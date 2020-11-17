@@ -294,3 +294,16 @@ button {
 select {
     width: 100%;
 }
+
+
+.table {
+    text-align: center;
+}
+
+.table th {
+    text-align: start;
+}
+
+.table td {
+    text-align: start;
+}

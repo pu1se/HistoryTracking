@@ -131,8 +131,11 @@
   <ItemGroup>
     <None Include="packages.config" />
     <None Include="Properties\PublishProfiles\history-tracking-devtest-api - FTP.pubxml" />
+    <None Include="Properties\PublishProfiles\history-tracking-devtest-api - FTP1.pubxml" />
     <None Include="Properties\PublishProfiles\history-tracking-devtest-api - ReadOnly - FTP.pubxml" />
+    <None Include="Properties\PublishProfiles\history-tracking-devtest-api - ReadOnly - FTP1.pubxml" />
     <None Include="Properties\PublishProfiles\history-tracking-devtest-api - Web Deploy.pubxml" />
+    <None Include="Properties\PublishProfiles\history-tracking-devtest-api - Web Deploy1.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
