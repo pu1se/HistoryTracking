@@ -3,37 +3,28 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web.Http;
+using HistoryTracking.BL.Services;
+using HistoryTracking.BL.Services.Order.Models;
+using HistoryTracking.BL.Services.User;
 
 namespace HistoryTracking.Api.Controllers
 {
-    public class OrdersController : ApiController
+    [Route("orders")]
+    public class OrdersController : BaseController
     {
-        // GET api/<controller>
-        public IEnumerable<string> Get()
+        private OrderService OrderService { get; }
+
+        public OrdersController(OrderService service)
         {
-            return new string[] { "value1", "value2" };
+            OrderService = service;
         }
 
-        // GET api/<controller>/5
-        public string Get(int id)
+        [HttpGet]
+        public async Task<List<GetOrderModel>> GetUserList()
         {
-            return "value";
-        }
-
-        // POST api/<controller>
-        public void Post([FromBody]string value)
-        {
-        }
-
-        // PUT api/<controller>/5
-        public void Put(int id, [FromBody]string value)
-        {
-        }
-
-        // DELETE api/<controller>/5
-        public void Delete(int id)
-        {
+            return await OrderService.GetList();
         }
     }
 }

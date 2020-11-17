@@ -59,11 +59,16 @@
   <ItemGroup>
     <Compile Include="DependencyManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Services\OrderService.cs" />
+    <Compile Include="Services\Orders\Models\AddEditOrderModel.cs" />
+    <Compile Include="Services\Orders\Models\GetOrderModel.cs" />
+    <Compile Include="Services\Orders\OrderService.cs" />
+    <Compile Include="Services\SubscriptionProducts\Models\AddEditSubscriptionProductModel.cs" />
+    <Compile Include="Services\SubscriptionProducts\Models\GetSubscriptionProductModel.cs" />
+    <Compile Include="Services\SubscriptionProducts\SubscriptionProductService.cs" />
     <Compile Include="Services\SubscriptionService.cs" />
-    <Compile Include="Services\User\Models\AddUserModel.cs" />
-    <Compile Include="Services\User\Models\GetUserModel.cs" />
-    <Compile Include="Services\User\UserService.cs" />
+    <Compile Include="Services\Users\Models\AddUserModel.cs" />
+    <Compile Include="Services\Users\Models\GetUserModel.cs" />
+    <Compile Include="Services\Users\UserService.cs" />
     <Compile Include="_Core\BaseService.cs" />
   </ItemGroup>
   <ItemGroup>
