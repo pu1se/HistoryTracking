@@ -65,7 +65,6 @@
     <Compile Include="Services\SubscriptionProducts\Models\AddEditSubscriptionProductModel.cs" />
     <Compile Include="Services\SubscriptionProducts\Models\GetSubscriptionProductModel.cs" />
     <Compile Include="Services\SubscriptionProducts\SubscriptionProductService.cs" />
-    <Compile Include="Services\SubscriptionService.cs" />
     <Compile Include="Services\Users\Models\AddUserModel.cs" />
     <Compile Include="Services\Users\Models\GetUserModel.cs" />
     <Compile Include="Services\Users\UserService.cs" />

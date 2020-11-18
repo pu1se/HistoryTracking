@@ -7,9 +7,9 @@ using HistoryTracking.BL.Services.SubscriptionProducts.Models;
 
 namespace HistoryTracking.UI.Web.ApiRequests
 {
-    public class SubscriptionProductApiClient : BaseApiClient
+    public class SubscriptionApiClient : BaseApiClient
     {
-        public SubscriptionProductApiClient(UiSettings settings) : base(settings)
+        public SubscriptionApiClient(UiSettings settings) : base(settings)
         {
         }
 

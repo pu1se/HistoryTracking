@@ -13,8 +13,4 @@
     <ProjectReference Include="..\HistoryTracking._Common\HistoryTracking._Common.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Pages\Users\" />
-  </ItemGroup>
-
 </Project>

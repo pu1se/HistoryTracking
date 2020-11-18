@@ -1,0 +1,77 @@
+﻿@page "/orders"
+
+<h3>Orders</h3>
+
+<PageViewer PageModel="@Model">
+    @if (Model.OrderList.Any())
+    {
+        <br />
+        <br />
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th>Order Date</th>
+                <th>Order Status</th>
+                <th>Payment Status</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (var order in Model.OrderList)
+            {
+                <tr>
+                    <td>@order.OrderDate</td>
+                    <td>@order.OrderStatus</td>
+                    <td>@order.PaymentStatus</td>
+                    <td>
+                        <a href="/orders/@order.Id">
+                            edit
+                        </a>
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <p>Order list is empty.</p>
+    }
+
+
+    <a href='/orders/Add'>
+        <span class="oi oi-plus" aria-hidden="true" style="vertical-align: text-bottom"></span> <span>add</span>
+    </a>
+</PageViewer>
+
+
+
+@inject OrderApiClient OrderApi
+@code {
+
+    private OrderListPageModel Model = new OrderListPageModel();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var getOrderListResult = await OrderApi.GetOrderListAsync();
+        if (!getOrderListResult.IsSuccess)
+        {
+            ShowError(getOrderListResult.ErrorMessage);
+            return;
+        }
+        Model.OrderList = getOrderListResult.Data;
+
+        Model.IsReady = true;
+    }
+
+
+    void ShowError(string errorMessage)
+    {
+        Model.ErrorMessage = errorMessage;
+    }
+}

@@ -14,5 +14,6 @@ namespace HistoryTracking.BL.Services.Order.Models
         public PaymentStatusType PaymentStatus { get; set; }
         public Guid CustomerUserId { get; set; }
         public string CustomerUserName { get; set; }
+        public DateTime OrderDate { get; set; }
     }
 }

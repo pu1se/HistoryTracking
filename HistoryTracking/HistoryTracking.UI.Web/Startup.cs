@@ -34,6 +34,8 @@ namespace HistoryTracking.UI.Web
                 hubOptions.KeepAliveInterval = TimeSpan.FromMinutes(60);
             });
             services.AddTransient<UserApiClient>();
+            services.AddTransient<SubscriptionApiClient>();
+            services.AddTransient<OrderApiClient>();
             services.AddSingleton<UiSettings>();
         }
 

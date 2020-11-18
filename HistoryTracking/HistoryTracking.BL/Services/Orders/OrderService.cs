@@ -25,6 +25,7 @@ namespace HistoryTracking.BL.Services
                             PaymentStatus = e.PaymentStatus,
                             CustomerUserId = e.CustomerUserId,
                             CustomerUserName = e.CustomerUser.Name,
+                            OrderDate = e.CreatedDate
                         })
                 .ToListAsync();
 

@@ -1,6 +1,7 @@
-﻿@page "/subscriptions"
+﻿@page "/"
+@page "/users"
 
-<h3>Subscriptions</h3>
+<h3>Users</h3>
 
 <PageViewer PageModel="@Model">
     @if (Model.UserList.Any())
@@ -9,16 +10,20 @@
         <br />
         <table class="table table-hover">
             <thead>
-                <tr>
-                    <th>Name</th>
-                    <th></th>
-                </tr>
+            <tr>
+                <th>User Name</th>
+                <th>Email</th>
+                <th>User Type</th>
+                <th></th>
+            </tr>
             </thead>
             <tbody>
                 @foreach (var user in Model.UserList)
                 {
                     <tr>
                         <td>@user.Name</td>
+                        <td>@user.Email</td>
+                        <td>@user.UserType</td>
                         <td>
                             <a href="/users/@user.Id">
                                 edit
@@ -36,7 +41,7 @@
         <br />
         <br />
         <br />
-        <p>User list is empty. Please add users.</p>
+        <p>User list is empty.</p>
     }
 
 

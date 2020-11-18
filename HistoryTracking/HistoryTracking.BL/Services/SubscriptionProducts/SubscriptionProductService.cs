@@ -22,6 +22,7 @@ namespace HistoryTracking.BL.Services.SubscriptionProducts
                         new GetSubscriptionProductModel
                         {
                             Id = e.Id,
+                            Title = e.Title,
                             Price = e.Price,
                             Currency = e.Currency
                         })
