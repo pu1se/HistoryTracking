@@ -4,7 +4,7 @@
 <br />
 <PageViewer PageModel="@Model">
     <div class="row">
-        <div class="col-4">
+        <div class="col-2">
             Name
         </div>
         <div class="col-2">
@@ -13,7 +13,7 @@
     </div>
     <br />
     <div class="row">
-        <div class="col-4">
+        <div class="col-2">
             Email
         </div>
         <div class="col-2">
@@ -21,13 +21,27 @@
         </div>
     </div>
     <br />
+    <div class="row">
+        <div class="col-2">
+            User Type
+        </div>
+        <div class="col-2">
+            <select value="@Model.UserConfig.UserType">
+                @foreach (var currency in Model.UserTypeList)
+                {
+                <option value="@currency">
+                    @currency
+                </option>
+                }
+            </select>
+        </div>
+    </div>
+    <br />
     <br />
     <div class="row">
-        <div class="col-2"></div>
-
-        <div class="offset-5 col-4">
-            <a href="/users" class="btn btn-outline-info">Cancel</a>
+        <div class="col-2">
             <button @onclick="OnSaveBtnClick" class="btn btn-success" style="width: 130px; margin-right: 10px;">Save</button>
+            <a href="/users" class="btn btn-outline-info">Cancel</a>
         </div>
     </div>
 </PageViewer>
@@ -50,12 +64,10 @@
         var getUserTypeListResult = await UserApi.GetUserTypeListAsync();
         if (!getUserTypeListResult.IsSuccess)
         {
-            await script.InvokeAsync<string>("console.log", "hello ");
             ShowError(getUserTypeListResult.ErrorMessage);
             return;
         }
         Model.UserTypeList = getUserTypeListResult.Data;
-        await script.InvokeAsync<string>("console.log", "Save: ", Model.UserTypeList.ToJson());
 
         if (Model.IsAddingNewOne)
         {

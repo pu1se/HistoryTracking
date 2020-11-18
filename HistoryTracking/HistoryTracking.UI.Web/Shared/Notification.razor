@@ -25,11 +25,6 @@
     [Parameter]
     public BasePageModel PageModel { get; set; }
 
-    protected override void OnInitialized()
-    {
-        PageModel.LogMessage = PageModel.ErrorMessage;
-    }
-
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (!PageModel.ErrorMessage.IsNullOrEmpty())

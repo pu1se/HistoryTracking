@@ -8,7 +8,7 @@ using HistoryTracking.DAL.Enums;
 
 namespace HistoryTracking.Api.Controllers
 {
-    [Route("users")]
+    [RoutePrefix("users")]
     public class UsersController : BaseController
     {
         private UserService UserService { get; }
@@ -19,6 +19,7 @@ namespace HistoryTracking.Api.Controllers
         }
 
         [HttpGet]
+        [Route("")]
         public async Task<List<GetUserModel>> GetUserList()
         {
             return await UserService.GetList();
@@ -39,6 +40,7 @@ namespace HistoryTracking.Api.Controllers
         }
 
         [HttpPut]
+        [Route("")]
         public IHttpActionResult AddEditUser([FromBody] AddEditUserModel model)
         {
             UserService.AddEditUser(model);
