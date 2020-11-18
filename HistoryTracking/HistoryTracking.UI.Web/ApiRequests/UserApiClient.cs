@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using HistoryTracking.BL.Services.User;
+using HistoryTracking.DAL.Enums;
 
 namespace HistoryTracking.UI.Web.ApiRequests
 {
@@ -17,43 +18,26 @@ namespace HistoryTracking.UI.Web.ApiRequests
             return Api.GetAsync<List<GetUserModel>>("users");
         }
 
-        /*public Task<ApiCallResult> AddEditConfigAsync(AddEditConfigModel command)
+        public Task<ApiCallResult> AddEditUserAsync(AddEditUserModel model)
         {
             return Api.PutAsync(
-                $"exchange/organizations/{command.OrganizationId}/configs",
-                command
+                $"users",
+                model
             );
         }
 
-        public Task<ApiCallResult> DeleteConfigAsync(AddEditConfigModel command)
+        public Task<ApiCallDataResult<GetUserModel>> GetUserAsync(Guid userId)
         {
-            return Api.DeleteAsync(
-                $"exchange/organizations/{command.OrganizationId}/configs",
-                command
+            return Api.GetAsync<GetUserModel>(
+                $"users/{userId}"
             );
         }
 
-        public Task<ApiCallDataResult<List<RateResponse>>> GetRatesAsync(Guid organizationId)
+        public Task<ApiCallDataResult<List<UserType>>> GetUserTypeListAsync()
         {
-            return Api.GetAsync<List<RateResponse>>(
-                $"exchange/organizations/{organizationId}/rates"
+            return Api.GetAsync<List<UserType>>(
+                $"users/user-types"
             );
         }
-
-        public void FillConfigWithRate(ConfigViewModel config, List<RateResponse> rateList)
-        {
-            var rate = rateList.FirstOrDefault(
-                x => 
-                    x.FromCurrency == config.FromCurrency &&
-                    x.ToCurrency == config.ToCurrency
-            );
-
-            if (rate == null)
-            {
-                return;
-            }
-
-            config.ExchangeRate = rate.ExchangeRate;
-        }*/
     }
 }

@@ -1,9 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 using HistoryTracking.BL.Services.User;
 using HistoryTracking.DAL;
+using HistoryTracking.DAL.Enums;
 
 namespace HistoryTracking.BL.Services
 {
@@ -27,6 +29,23 @@ namespace HistoryTracking.BL.Services
                 .ToListAsync();
 
             return users;
+        }
+
+        public async Task<GetUserModel> GetItem(Guid userId)
+        {
+            var users = await GetList();
+
+            return users.FirstOrDefault(x => x.Id == userId);
+        }
+
+        public List<UserType> GetUserTypes()
+        {
+            return EnumHelper.ToList<UserType>();
+        }
+
+        public void AddEditUser(AddEditUserModel model)
+        {
+
         }
     }
 }

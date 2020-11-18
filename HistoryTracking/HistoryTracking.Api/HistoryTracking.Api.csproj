@@ -152,6 +152,14 @@
       <Project>{DB3C3B64-823C-4E0D-B7EB-0E07A6596952}</Project>
       <Name>HistoryTracking.BL</Name>
     </ProjectReference>
+    <ProjectReference Include="..\HistoryTracking.DAL\HistoryTracking.DAL.csproj">
+      <Project>{729C6B68-B1CB-4193-AF43-E568CA11E333}</Project>
+      <Name>HistoryTracking.DAL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\HistoryTracking._Common\HistoryTracking._Common.csproj">
+      <Project>{577256DA-F8F3-4449-A014-EA3C0A6C9751}</Project>
+      <Name>HistoryTracking._Common</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

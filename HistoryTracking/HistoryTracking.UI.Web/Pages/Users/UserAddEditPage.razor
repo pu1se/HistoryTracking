@@ -1,0 +1,116 @@
+﻿@page "/users/{selectedUser}"
+
+<h3>Currency \ @GetTitle()</h3>
+<br />
+<PageViewer PageModel="@Model">
+    <div class="row">
+        <div class="col-4">
+            Name
+        </div>
+        <div class="col-2">
+            <input value="@Model.UserConfig.Name" />
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-4">
+            Email
+        </div>
+        <div class="col-2">
+            <input value="@Model.UserConfig.Email" />
+        </div>
+    </div>
+    <br />
+    <br />
+    <div class="row">
+        <div class="col-2"></div>
+
+        <div class="offset-5 col-4">
+            <a href="/users" class="btn btn-outline-info">Cancel</a>
+            <button @onclick="OnSaveBtnClick" class="btn btn-success" style="width: 130px; margin-right: 10px;">Save</button>
+        </div>
+    </div>
+</PageViewer>
+
+
+
+@using HistoryTracking.DAL.Enums
+@inject UserApiClient UserApi
+@inject NavigationManager Navigation
+@inject IJSRuntime script
+@code {
+    [Parameter]
+    public string SelectedUser { get; set; }
+    private UserAddEditPageModel Model { get; } = new UserAddEditPageModel();
+
+    protected override async Task OnInitializedAsync()
+    {
+        Model.IsAddingNewOne = SelectedUser == "Add";
+
+        var getUserTypeListResult = await UserApi.GetUserTypeListAsync();
+        if (!getUserTypeListResult.IsSuccess)
+        {
+            await script.InvokeAsync<string>("console.log", "hello ");
+            ShowError(getUserTypeListResult.ErrorMessage);
+            return;
+        }
+        Model.UserTypeList = getUserTypeListResult.Data;
+        await script.InvokeAsync<string>("console.log", "Save: ", Model.UserTypeList.ToJson());
+
+        if (Model.IsAddingNewOne)
+        {
+            Model.UserConfig = new AddEditUserModel
+            {
+                UserType = UserType.Customer
+            };
+        }
+        else
+        {
+            var getCurrentUserConfigResult = await UserApi.GetUserAsync(new Guid(SelectedUser));
+            if (!getCurrentUserConfigResult.IsSuccess)
+            {
+                ShowError(getCurrentUserConfigResult.ErrorMessage);
+                return;
+            }
+            var currentUserConfig = getCurrentUserConfigResult.Data;
+            Model.UserConfig = new AddEditUserModel
+            {
+                Name = currentUserConfig.Name,
+                Email = currentUserConfig.Email,
+                Id = currentUserConfig.Id,
+                UserType = currentUserConfig.UserType
+            };
+        }
+
+        Model.IsReady = true;
+    }
+
+    async Task OnSaveBtnClick()
+    {
+        await script.InvokeAsync<string>("console.log", "Save: ", Model.UserConfig.ToJson());
+        var saveResult = await UserApi.AddEditUserAsync(Model.UserConfig);
+
+        if (!saveResult.IsSuccess)
+        {
+            ShowError(saveResult.ErrorMessage);
+            return;
+        }
+
+        Navigation.NavigateTo("currency-configs");
+    }
+
+    string GetTitle()
+    {
+        if (Model.IsAddingNewOne)
+        {
+            return "Add User";
+        }
+
+        return "Some value";
+    }
+
+    void ShowError(string errorMessage)
+    {
+        Model.ErrorMessage = errorMessage;
+    }
+}

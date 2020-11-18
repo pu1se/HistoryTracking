@@ -65,7 +65,7 @@
     <Compile Include="Services\SubscriptionProducts\Models\AddEditSubscriptionProductModel.cs" />
     <Compile Include="Services\SubscriptionProducts\Models\GetSubscriptionProductModel.cs" />
     <Compile Include="Services\SubscriptionProducts\SubscriptionProductService.cs" />
-    <Compile Include="Services\Users\Models\AddUserModel.cs" />
+    <Compile Include="Services\Users\Models\AddEditUserModel.cs" />
     <Compile Include="Services\Users\Models\GetUserModel.cs" />
     <Compile Include="Services\Users\UserService.cs" />
     <Compile Include="_Core\BaseService.cs" />
@@ -74,6 +74,10 @@
     <ProjectReference Include="..\HistoryTracking.DAL\HistoryTracking.DAL.csproj">
       <Project>{729C6B68-B1CB-4193-AF43-E568CA11E333}</Project>
       <Name>HistoryTracking.DAL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\HistoryTracking._Common\HistoryTracking._Common.csproj">
+      <Project>{577256DA-F8F3-4449-A014-EA3C0A6C9751}</Project>
+      <Name>HistoryTracking._Common</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

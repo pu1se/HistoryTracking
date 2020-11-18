@@ -19,16 +19,10 @@
 </div>
 
 
-@inject IJSRuntime script
 @code {
     [Parameter]
     public RenderFragment ChildContent { get; set; }
 
     [Parameter]
     public BasePageModel PageModel { get; set; }
-
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        await script.InvokeAsync<string>("console.log", "hello ");
-    }
 }
