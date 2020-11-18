@@ -41,9 +41,9 @@ namespace HistoryTracking.Api.Controllers
 
         [HttpPut]
         [Route("")]
-        public IHttpActionResult AddEditUser([FromBody] AddEditUserModel model)
+        public async Task<IHttpActionResult> AddEditUser([FromBody] AddEditUserModel model)
         {
-            UserService.AddEditUser(model);
+            await UserService.AddEditUser(model);
             return Ok();
         }
     }

@@ -8,7 +8,7 @@
             Name
         </div>
         <div class="col-2">
-            <input value="@Model.UserConfig.Name" />
+            <input @bind="Model.UserConfig.Name" />
         </div>
     </div>
     <br />
@@ -17,7 +17,7 @@
             Email
         </div>
         <div class="col-2">
-            <input value="@Model.UserConfig.Email" />
+            <input @bind="Model.UserConfig.Email" />
         </div>
     </div>
     <br />
@@ -26,7 +26,7 @@
             User Type
         </div>
         <div class="col-2">
-            <select value="@Model.UserConfig.UserType">
+            <select @bind="Model.UserConfig.UserType">
                 @foreach (var currency in Model.UserTypeList)
                 {
                 <option value="@currency">
@@ -92,6 +92,7 @@
                 Id = currentUserConfig.Id,
                 UserType = currentUserConfig.UserType
             };
+            Model.LogMessage = Model.UserConfig.ToJson();
         }
 
         Model.IsReady = true;
@@ -108,7 +109,7 @@
             return;
         }
 
-        Navigation.NavigateTo("currency-configs");
+        Navigation.NavigateTo("users");
     }
 
     string GetTitle()
@@ -118,7 +119,7 @@
             return "Add User";
         }
 
-        return "Some value";
+        return "Edit User";
     }
 
     void ShowError(string errorMessage)

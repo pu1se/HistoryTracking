@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using HistoryTracking.BL.Services.User;
 using HistoryTracking.DAL;
+using HistoryTracking.DAL.Entities;
 using HistoryTracking.DAL.Enums;
 
 namespace HistoryTracking.BL.Services
@@ -43,9 +44,32 @@ namespace HistoryTracking.BL.Services
             return EnumHelper.ToList<UserType>();
         }
 
-        public void AddEditUser(AddEditUserModel model)
+        public async Task AddEditUser(AddEditUserModel model)
         {
+            if (model.Id == Guid.Empty)
+            {
+                Storage.Users.Add(new UserEntity
+                {
+                    Id = Guid.NewGuid(),
+                    Name = model.Name,
+                    Email = model.Email,
+                    UserType = model.UserType
+                });
+            }
+            else
+            {
+                var editingUser = await Storage.Users.FirstOrDefaultAsync(x => x.Id == model.Id);
+                if (editingUser == null)
+                {
+                    return;
+                }
 
+                editingUser.Name = model.Name;
+                editingUser.Email = model.Email;
+                editingUser.UserType = model.UserType;
+            }
+
+            await Storage.SaveChangesAsync();
         }
     }
 }
