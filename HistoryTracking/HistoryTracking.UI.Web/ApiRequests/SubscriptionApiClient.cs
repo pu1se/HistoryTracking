@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using HistoryTracking.BL.Services.Order.Models;
 using HistoryTracking.BL.Services.SubscriptionProducts.Models;
+using HistoryTracking.DAL.Enums;
 
 namespace HistoryTracking.UI.Web.ApiRequests
 {
@@ -30,6 +31,13 @@ namespace HistoryTracking.UI.Web.ApiRequests
         {
             return Api.GetAsync<GetSubscriptionModel>(
                 $"subscriptions/{subscriptionId}"
+            );
+        }
+
+        public Task<ApiCallDataResult<List<CurrencyType>>> GetCurrencyListAsync()
+        {
+            return Api.GetAsync<List<CurrencyType>>(
+                $"subscriptions/currency-types"
             );
         }
     }

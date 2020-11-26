@@ -11,9 +11,6 @@ namespace HistoryTracking.DAL.Entities
     [Table("ActivityHistories")]
     public class ActivityHistoryEntity : BaseEntity
     {
-        [Key]
-        public Guid Id { get; set; }
-
         public string EntityName { get; set; }
 
         public string EntitySnapshotBeforeChangeAsJson { get; set; }

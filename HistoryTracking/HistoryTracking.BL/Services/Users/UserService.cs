@@ -50,7 +50,6 @@ namespace HistoryTracking.BL.Services
             {
                 Storage.Users.Add(new UserEntity
                 {
-                    Id = Guid.NewGuid(),
                     Name = model.Name,
                     Email = model.Email,
                     UserType = model.UserType

@@ -1,0 +1,141 @@
+﻿@page "/subscriptions/{SelectedSubscription}"
+@using HistoryTracking.BL.Services.SubscriptionProducts.Models
+
+<h3>@GetTitle()</h3>
+<br />
+<PageViewer PageModel="@Model">
+    <div class="row">
+        <div class="col-2">
+            Title
+        </div>
+        <div class="col-2">
+            <input @bind="Model.SubscriptionConfig.Title" />
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-2">
+            Distributor's Markup, %
+        </div>
+        <div class="col-2">
+            <input @bind="Model.SubscriptionConfig.DistributorMarkupAsPercent" type="number" />
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-2">
+            Reseller's Markup, %
+        </div>
+        <div class="col-2">
+            <input @bind="Model.SubscriptionConfig.ResellerMarkupAsPercent" type="number" />
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-2">
+            Price
+        </div>
+        <div class="col-1">
+            <input @bind="Model.SubscriptionConfig.Price" type="number" style=""/>
+        </div>
+        <div class="col-1">
+            <select @bind="Model.SubscriptionConfig.Currency" style="margin-left: -5px;">
+                @foreach (var currency in Model.CurrencyList)
+                {
+                    <option value="@currency">
+                        @currency
+                    </option>
+                }
+            </select>
+        </div>
+    </div>
+    <br />
+    <br />
+    <div class="row">
+        <div class="col-2">
+            <button @onclick="OnSaveBtnClick" class="btn btn-success" style="width: 130px; margin-right: 10px;">Save</button>
+            <a href="/subscriptions" class="btn btn-outline-info">Cancel</a>
+        </div>
+    </div>
+</PageViewer>
+
+
+
+@inject SubscriptionApiClient SubscriptionApi
+@inject NavigationManager Navigation
+@inject IJSRuntime script
+@code {
+    [Parameter]
+    public string SelectedSubscription { get; set; }
+    private SubscriptionAddEditPageModel Model { get; } = new SubscriptionAddEditPageModel();
+
+    protected override async Task OnInitializedAsync()
+    {
+        Model.IsAddingNewOne = SelectedSubscription == "Add";
+
+        var getCurrencyListResult = await SubscriptionApi.GetCurrencyListAsync();
+        if (!getCurrencyListResult.IsSuccess)
+        {
+            ShowError(getCurrencyListResult.ErrorMessage);
+            return;
+        }
+        Model.CurrencyList = getCurrencyListResult.Data;
+
+        if (Model.IsAddingNewOne)
+        {
+            Model.SubscriptionConfig = new AddEditSubscriptionModel
+            {
+            };
+        }
+        else
+        {
+            var getCurrentSubscriptionConfigResult = await SubscriptionApi.GetSibscriptionAsync(new Guid(SelectedSubscription));
+            if (!getCurrentSubscriptionConfigResult.IsSuccess)
+            {
+                ShowError(getCurrentSubscriptionConfigResult.ErrorMessage);
+                return;
+            }
+            var currentSubscriptionConfig = getCurrentSubscriptionConfigResult.Data;
+            Model.SubscriptionConfig = new AddEditSubscriptionModel
+            {
+                Id = currentSubscriptionConfig.Id,
+                Title = currentSubscriptionConfig.Title,
+                DistributorMarkupAsPercent = currentSubscriptionConfig.DistributorMarkupAsPercent,
+                ResellerMarkupAsPercent = currentSubscriptionConfig.ResellerMarkupAsPercent,
+                Price = currentSubscriptionConfig.Price,
+                Currency = currentSubscriptionConfig.Currency
+            };
+        }
+
+        Model.IsReady = true;
+    }
+
+    async Task OnSaveBtnClick()
+    {
+        await script.InvokeAsync<string>("console.log", "Save: ", Model.SubscriptionConfig.ToJson());
+        var saveResult = await SubscriptionApi.AddEditSubscriptionAsync(Model.SubscriptionConfig);
+
+        if (!saveResult.IsSuccess)
+        {
+            ShowError(saveResult.ErrorMessage);
+            return;
+        }
+
+        Navigation.NavigateTo("subscriptions");
+    }
+
+    string GetTitle()
+    {
+        if (Model.IsAddingNewOne)
+        {
+            return "Add Subscription";
+        }
+
+        return "Edit Subscription";
+    }
+
+    void ShowError(string errorMessage)
+    {
+        Model.ErrorMessage = errorMessage;
+    }
+}

@@ -33,6 +33,10 @@ namespace HistoryTracking.DAL
 
                     if (entry.State == EntityState.Added)
                     {
+                        if (entity.Id == Guid.Empty)
+                        {
+                            entity.Id = Guid.NewGuid();
+                        }
                         entity.CreatedDate = now;
                     }
 

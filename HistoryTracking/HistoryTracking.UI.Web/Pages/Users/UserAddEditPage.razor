@@ -1,6 +1,6 @@
-﻿@page "/users/{selectedUser}"
+﻿@page "/users/{SelectedUser}"
 
-<h3>Currency \ @GetTitle()</h3>
+<h3>@GetTitle()</h3>
 <br />
 <PageViewer PageModel="@Model">
     <div class="row">
@@ -27,10 +27,10 @@
         </div>
         <div class="col-2">
             <select @bind="Model.UserConfig.UserType">
-                @foreach (var currency in Model.UserTypeList)
+                @foreach (var userType in Model.UserTypeList)
                 {
-                <option value="@currency">
-                    @currency
+                <option value="@userType">
+                    @userType
                 </option>
                 }
             </select>
@@ -87,12 +87,11 @@
             var currentUserConfig = getCurrentUserConfigResult.Data;
             Model.UserConfig = new AddEditUserModel
             {
+                Id = currentUserConfig.Id,
                 Name = currentUserConfig.Name,
                 Email = currentUserConfig.Email,
-                Id = currentUserConfig.Id,
                 UserType = currentUserConfig.UserType
             };
-            Model.LogMessage = Model.UserConfig.ToJson();
         }
 
         Model.IsReady = true;

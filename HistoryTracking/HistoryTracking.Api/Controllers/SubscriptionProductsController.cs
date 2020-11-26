@@ -16,39 +16,39 @@ namespace HistoryTracking.Api.Controllers
     [RoutePrefix("subscriptions")]
     public class SubscriptionProductsController : BaseController
     {
-        private SubscriptionService SubscriptionProductService { get; }
+        private SubscriptionService SubscriptionService { get; }
 
         public SubscriptionProductsController(SubscriptionService service)
         {
-            SubscriptionProductService = service;
+            SubscriptionService = service;
         }
 
         [HttpGet]
         [Route("")]
         public async Task<List<GetSubscriptionModel>> GetUserList()
         {
-            return await SubscriptionProductService.GetList();
+            return await SubscriptionService.GetList();
         }
 
         [HttpGet]
         [Route("{subscriptionId:guid}")]
         public async Task<GetSubscriptionModel> GetSubscription(Guid subscriptionId)
         {
-            return await SubscriptionProductService.GetItem(subscriptionId);
+            return await SubscriptionService.GetItem(subscriptionId);
         }
 
-        /*[HttpGet]
-        [Route("user-types")]
-        public List<UserType> GetUserTypes()
+        [HttpGet]
+        [Route("currency-types")]
+        public List<CurrencyType> GetCurrencyTypes()
         {
-            return UserService.GetUserTypes();
-        }*/
+            return SubscriptionService.GetCurrencyTypes();
+        }
 
         [HttpPut]
         [Route("")]
         public async Task<IHttpActionResult> AddEdiSubscription([FromBody] AddEditSubscriptionModel model)
         {
-            await SubscriptionProductService.AddEditSubscription(model);
+            await SubscriptionService.AddEditSubscription(model);
             return Ok();
         }
     }

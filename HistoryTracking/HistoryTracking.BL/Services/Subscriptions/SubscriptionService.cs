@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using HistoryTracking.BL.Services.SubscriptionProducts.Models;
 using HistoryTracking.DAL;
 using HistoryTracking.DAL.Entities;
+using HistoryTracking.DAL.Enums;
 
 namespace HistoryTracking.BL.Services.SubscriptionProducts
 {
@@ -47,7 +48,6 @@ namespace HistoryTracking.BL.Services.SubscriptionProducts
             {
                 Storage.SubscriptionProducts.Add(new SubscriptionProductEntity
                 {
-                    Id = Guid.NewGuid(),
                     Title = model.Title,
                     Price = model.Price,
                     Currency = model.Currency,
@@ -71,6 +71,11 @@ namespace HistoryTracking.BL.Services.SubscriptionProducts
             }
 
             await Storage.SaveChangesAsync();
+        }
+
+        public List<CurrencyType> GetCurrencyTypes()
+        {
+            return EnumHelper.ToList<CurrencyType>();
         }
     }
 }

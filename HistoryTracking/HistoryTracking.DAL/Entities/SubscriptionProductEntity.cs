@@ -12,9 +12,6 @@ namespace HistoryTracking.DAL.Entities
     [Table("SubscriptionProducts")]
     public class SubscriptionProductEntity : BaseEntity
     {
-        [Key]
-        public Guid Id { get; set; }
-
         public string Title { get; set; }
 
         public decimal Price { get; set; }

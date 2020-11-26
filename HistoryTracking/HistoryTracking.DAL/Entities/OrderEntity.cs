@@ -12,9 +12,6 @@ namespace HistoryTracking.DAL.Entities
     [Table("Orders")]
     public class OrderEntity : BaseEntity
     {
-        [Key]
-        public Guid Id { get; set; }        
-
         public string Comments { get; set; }
 
         public OrderStatusType OrderStatus { get; set; }
