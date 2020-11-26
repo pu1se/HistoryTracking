@@ -8,6 +8,6 @@ namespace HistoryTracking.UI.Web.Pages.Subscriptions
 {
     public class SubscriptionListPageModel : BasePageModel
     {
-        public List<GetSubscriptionProductModel> SubscriptionList { get; set; } = new List<GetSubscriptionProductModel>();
+        public List<GetSubscriptionModel> SubscriptionList { get; set; } = new List<GetSubscriptionModel>();
     }
 }

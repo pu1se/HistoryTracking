@@ -27,7 +27,7 @@ namespace HistoryTracking.Api.Controllers
 
         [HttpGet]
         [Route("{userId:guid}")]
-        public async Task<GetUserModel> GetList(Guid userId)
+        public async Task<GetUserModel> GetUser(Guid userId)
         {
             return await UserService.GetItem(userId);
         }

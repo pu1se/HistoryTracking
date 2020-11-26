@@ -11,6 +11,10 @@
             <thead>
                 <tr>
                     <th>Name</th>
+                    <th>Distributor Markup, %</th>
+                    <th>Reseller Markup, %</th>
+                    <th>Base Price</th>
+                    <th>Price with Markup</th>
                     <th></th>
                 </tr>
             </thead>
@@ -19,6 +23,10 @@
                 {
                     <tr>
                         <td>@subscription.Title</td>
+                        <td>@subscription.DistributorMarkupAsPercent %</td>
+                        <td>@subscription.ResellerMarkupAsPercent %</td>
+                        <td>@subscription.Price @subscription.Currency.ToString()</td>
+                        <td>@subscription.TotalPrice @subscription.Currency.ToString()</td>
                         <td>
                             <a href="/subscriptions/@subscription.Id">
                                 edit

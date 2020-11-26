@@ -62,9 +62,9 @@
     <Compile Include="Services\Orders\Models\AddEditOrderModel.cs" />
     <Compile Include="Services\Orders\Models\GetOrderModel.cs" />
     <Compile Include="Services\Orders\OrderService.cs" />
-    <Compile Include="Services\SubscriptionProducts\Models\AddEditSubscriptionProductModel.cs" />
-    <Compile Include="Services\SubscriptionProducts\Models\GetSubscriptionProductModel.cs" />
-    <Compile Include="Services\SubscriptionProducts\SubscriptionProductService.cs" />
+    <Compile Include="Services\Subscriptions\Models\AddEditSubscriptionModel.cs" />
+    <Compile Include="Services\Subscriptions\Models\GetSubscriptionModel.cs" />
+    <Compile Include="Services\Subscriptions\SubscriptionService.cs" />
     <Compile Include="Services\Users\Models\AddEditUserModel.cs" />
     <Compile Include="Services\Users\Models\GetUserModel.cs" />
     <Compile Include="Services\Users\UserService.cs" />
