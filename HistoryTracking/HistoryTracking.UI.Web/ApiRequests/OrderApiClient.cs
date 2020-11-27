@@ -3,13 +3,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using HistoryTracking.BL.Services.Order.Models;
+using HistoryTracking.DAL.Enums;
 
 namespace HistoryTracking.UI.Web.ApiRequests
 {
     public class OrderApiClient : BaseApiClient
     {
-        public OrderApiClient(UiSettings settings) : base(settings)
+        private SubscriptionApiClient SubscriptionApi { get; }
+        private UserApiClient UserApi { get; }
+
+        public OrderApiClient(UiSettings settings, SubscriptionApiClient subscriptionApi, UserApiClient userApi) : base(settings)
         {
+            SubscriptionApi = subscriptionApi;
+            UserApi = userApi;
         }
 
         public Task<ApiCallDataResult<List<GetOrderModel>>> GetOrderListAsync()
@@ -17,43 +23,26 @@ namespace HistoryTracking.UI.Web.ApiRequests
             return Api.GetAsync<List<GetOrderModel>>("orders");
         }
 
-        /*public Task<ApiCallResult> AddEditConfigAsync(AddEditConfigModel command)
+        public Task<ApiCallResult> AddEditOrderAsync(AddEditOrderModel model)
         {
             return Api.PutAsync(
-                $"exchange/organizations/{command.OrganizationId}/configs",
-                command
+                $"orders",
+                model
             );
         }
 
-        public Task<ApiCallResult> DeleteConfigAsync(AddEditConfigModel command)
+        public Task<ApiCallDataResult<GetOrderModel>> GetOrderAsync(Guid subscriptionId)
         {
-            return Api.DeleteAsync(
-                $"exchange/organizations/{command.OrganizationId}/configs",
-                command
+            return Api.GetAsync<GetOrderModel>(
+                $"orders/{subscriptionId}"
             );
         }
 
-        public Task<ApiCallDataResult<List<RateResponse>>> GetRatesAsync(Guid organizationId)
+        public Task<ApiCallDataResult<List<OrderStatusType>>> GetOrderStatusTypeListAsync()
         {
-            return Api.GetAsync<List<RateResponse>>(
-                $"exchange/organizations/{organizationId}/rates"
+            return Api.GetAsync<List<OrderStatusType>>(
+                $"orders/currency-types"
             );
         }
-
-        public void FillConfigWithRate(ConfigViewModel config, List<RateResponse> rateList)
-        {
-            var rate = rateList.FirstOrDefault(
-                x => 
-                    x.FromCurrency == config.FromCurrency &&
-                    x.ToCurrency == config.ToCurrency
-            );
-
-            if (rate == null)
-            {
-                return;
-            }
-
-            config.ExchangeRate = rate.ExchangeRate;
-        }*/
     }
 }

@@ -11,8 +11,9 @@
             <thead>
             <tr>
                 <th>Order Date</th>
+                <th>Order Owner</th>
+                <th>Subscriptions</th>
                 <th>Order Status</th>
-                <th>Payment Status</th>
                 <th></th>
             </tr>
             </thead>
@@ -21,8 +22,9 @@
             {
                 <tr>
                     <td>@order.OrderDate</td>
+                    <td>@order.CustomerUser.Name</td>
+                    <td>@order.SubscriptionList.Select(item => item.Title).Join(", ")</td>
                     <td>@order.OrderStatus</td>
-                    <td>@order.PaymentStatus</td>
                     <td>
                         <a href="/orders/@order.Id">
                             edit
@@ -65,7 +67,6 @@
             return;
         }
         Model.OrderList = getOrderListResult.Data;
-
         Model.IsReady = true;
     }
 

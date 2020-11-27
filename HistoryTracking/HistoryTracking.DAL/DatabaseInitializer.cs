@@ -104,7 +104,7 @@ namespace HistoryTracking.DAL
             {
                 Id = TestData.OrderId,
                 Comments = "Call me before delivering",
-                OrderStatus = OrderStatusType.New,
+                OrderStatus = OrderStatusType.Draft,
                 PaymentStatus = PaymentStatusType.NotPaid,
                 SubscriptionProducts = new List<SubscriptionProductEntity>(new []{offer}),
                 CreatedDate = now,

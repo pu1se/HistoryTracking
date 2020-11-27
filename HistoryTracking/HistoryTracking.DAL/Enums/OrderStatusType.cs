@@ -8,7 +8,8 @@ namespace HistoryTracking.DAL.Enums
 {
     public enum OrderStatusType
     {
-        New,
+        Draft,
+        WaitingForApproval,
         InUse,
         Suspended,
         Deleted

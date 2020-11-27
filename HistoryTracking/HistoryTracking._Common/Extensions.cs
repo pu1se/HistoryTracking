@@ -63,5 +63,12 @@ namespace HistoryTracking
         {
             return EnumHelper.Parse<TEnum>(value);
         }
+
+        public static string Join(this IEnumerable<string> list, string delimiter)
+        {
+            return list.Aggregate(string.Empty,
+                (result, part) =>
+                    result + (string.IsNullOrEmpty(result) ? string.Empty : delimiter) + part);
+        }
     }
 }
