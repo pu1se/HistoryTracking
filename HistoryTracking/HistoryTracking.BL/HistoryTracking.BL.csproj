@@ -69,6 +69,7 @@
     <Compile Include="Services\Users\Models\GetUserModel.cs" />
     <Compile Include="Services\Users\UserService.cs" />
     <Compile Include="_Core\BaseService.cs" />
+    <Compile Include="_Core\ValidationException.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\HistoryTracking.DAL\HistoryTracking.DAL.csproj">

@@ -44,6 +44,23 @@ namespace HistoryTracking.BL.Services.SubscriptionProducts
 
         public async Task AddEditSubscription(AddEditSubscriptionModel model)
         {
+            if (model.Title.IsNullOrEmpty())
+            {
+                throw new ValidationException("Subscription Title is required.");
+            }
+            if (model.Price <= 0)
+            {
+                throw new ValidationException("Subscription Price should be more then zero.");
+            }
+            if (model.DistributorMarkupAsPercent < 0)
+            {
+                throw new ValidationException("Distributor markup should has positive value.");
+            }
+            if (model.ResellerMarkupAsPercent < 0)
+            {
+                throw new ValidationException("Reseller markup should has positive value.");
+            }
+
             if (model.Id == Guid.Empty)
             {
                 Storage.SubscriptionProducts.Add(new SubscriptionProductEntity

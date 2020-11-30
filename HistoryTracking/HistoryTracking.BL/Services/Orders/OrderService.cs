@@ -57,6 +57,11 @@ namespace HistoryTracking.BL.Services
 
         public async Task AddEditItem(AddEditOrderModel model)
         {
+            if (!model.SubscriptionIdList.Any())
+            {
+                throw new ValidationException("At least one subscription should be selected.");
+            }
+
             var subscriptionEntityList = await Storage.SubscriptionProducts
                 .Where(e => model.SubscriptionIdList.Contains(e.Id))
                 .ToListAsync();

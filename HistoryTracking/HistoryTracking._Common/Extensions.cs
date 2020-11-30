@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
@@ -69,6 +70,12 @@ namespace HistoryTracking
             return list.Aggregate(string.Empty,
                 (result, part) =>
                     result + (string.IsNullOrEmpty(result) ? string.Empty : delimiter) + part);
+        }
+
+        public static StringContent ToJsonStringContent(this Object obj)
+        {
+            var json = JsonConvert.SerializeObject(obj);
+            return new StringContent(json, Encoding.UTF8, "application/json");
         }
     }
 }

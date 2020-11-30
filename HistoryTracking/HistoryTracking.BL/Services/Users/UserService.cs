@@ -46,6 +46,15 @@ namespace HistoryTracking.BL.Services
 
         public async Task AddEditUser(AddEditUserModel model)
         {
+            if (model.Name.IsNullOrEmpty())
+            {
+                throw new ValidationException("User Name is required.");
+            }
+            if (model.Email.IsNullOrEmpty())
+            {
+                throw new ValidationException("User Email is required.");
+            }
+
             if (model.Id == Guid.Empty)
             {
                 Storage.Users.Add(new UserEntity
