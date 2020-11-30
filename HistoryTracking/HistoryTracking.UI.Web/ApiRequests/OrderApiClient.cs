@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using HistoryTracking.BL.Services.Order.Models;
+using HistoryTracking.BL.Services.SubscriptionProducts.Models;
+using HistoryTracking.BL.Services.User;
 using HistoryTracking.DAL.Enums;
 
 namespace HistoryTracking.UI.Web.ApiRequests
@@ -31,18 +33,41 @@ namespace HistoryTracking.UI.Web.ApiRequests
             );
         }
 
-        public Task<ApiCallDataResult<GetOrderModel>> GetOrderAsync(Guid subscriptionId)
+        public Task<ApiCallDataResult<GetOrderModel>> GetOrderAsync(Guid orderId)
         {
             return Api.GetAsync<GetOrderModel>(
-                $"orders/{subscriptionId}"
+                $"orders/{orderId}"
             );
         }
 
         public Task<ApiCallDataResult<List<OrderStatusType>>> GetOrderStatusTypeListAsync()
         {
             return Api.GetAsync<List<OrderStatusType>>(
-                $"orders/currency-types"
+                $"orders/order-status-types"
             );
+        }
+
+        public async Task<ApiCallDataResult<List<GetUserModel>>> GetCustomerListAsync()
+        {
+            var getUserListResult = await UserApi.GetUserListAsync();
+            if (!getUserListResult.IsSuccess)
+            {
+                return getUserListResult;
+            }
+
+            var customerList = getUserListResult.Data.Where(item => item.UserType == UserType.Customer).ToList();
+            return new ApiCallDataResult<List<GetUserModel>>(customerList);
+        }
+
+        public async Task<ApiCallDataResult<List<GetSubscriptionModel>>> GetSubscriptionList()
+        {
+            var getSubscriptionListResult = await SubscriptionApi.GetSubscriptionListAsync();
+            if (!getSubscriptionListResult.IsSuccess)
+            {
+                return getSubscriptionListResult;
+            }
+
+            return new ApiCallDataResult<List<GetSubscriptionModel>>(getSubscriptionListResult.Data);
         }
     }
 }

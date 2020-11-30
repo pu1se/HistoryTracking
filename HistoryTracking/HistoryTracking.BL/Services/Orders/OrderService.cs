@@ -57,31 +57,29 @@ namespace HistoryTracking.BL.Services
 
         public async Task AddEditItem(AddEditOrderModel model)
         {
-            /*if (model.Id == Guid.Empty)
+            var subscriptionEntityList = await Storage.SubscriptionProducts
+                .Where(e => model.SubscriptionIdList.Contains(e.Id))
+                .ToListAsync();
+
+            if (model.Id == Guid.Empty)
             {
                 Storage.Orders.Add(new OrderEntity
                 {
-                    Title = model.Title,
-                    Price = model.Price,
-                    Currency = model.Currency,
-                    DistributorMarkupAsPercent = model.DistributorMarkupAsPercent,
-                    ResellerMarkupAsPercent = model.ResellerMarkupAsPercent,
+                    OrderStatus = model.OrderStatus,
+                    CustomerUserId = model.CustomerId,
+                    SubscriptionProducts = subscriptionEntityList
                 });
             }
             else
             {
-                var editingOrder = await Storage.OrderProducts.FirstOrDefaultAsync(x => x.Id == model.Id);
+                var editingOrder = await Storage.Orders.FirstOrDefaultAsync(x => x.Id == model.Id);
                 if (editingOrder == null)
                 {
                     return;
                 }
 
-                editingOrder.Title = model.Title;
-                editingOrder.Price = model.Price;
-                editingOrder.Currency = model.Currency;
-                editingOrder.DistributorMarkupAsPercent = model.DistributorMarkupAsPercent;
-                editingOrder.ResellerMarkupAsPercent = model.ResellerMarkupAsPercent;
-            }*/
+                editingOrder.OrderStatus = model.OrderStatus;
+            }
 
             await Storage.SaveChangesAsync();
         }

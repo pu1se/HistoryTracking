@@ -13,6 +13,7 @@ namespace HistoryTracking.BL.Services.Order.Models
     {
         public Guid Id { get; set; }
         public OrderStatusType OrderStatus { get; set; }
+        public DateTime OrderDate { get; set; }
         public Guid CustomerId { get; set; }
         public List<Guid> SubscriptionIdList { get; set; } = new List<Guid>();
     }

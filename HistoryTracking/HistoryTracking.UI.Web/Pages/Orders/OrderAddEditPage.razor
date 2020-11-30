@@ -1,0 +1,214 @@
+﻿@page "/orders/{SelectedOrder}"
+@using HistoryTracking.BL.Services.Order.Models
+@using HistoryTracking.DAL.Enums
+
+<h3>@GetTitle()</h3>
+<br />
+<PageViewer PageModel="@Model">
+    @if (!Model.IsAddingNewOne)
+    {
+        <div class="row">
+            <div class="col-2">
+                Order Date
+            </div>
+            <div class="col-2">
+                <span>@Model.OrderConfig.OrderDate.ToString()</span>
+            </div>
+        </div>
+        <br />
+    }
+
+    @if (Model.IsAddingNewOne)
+    {
+        <div class="row">
+            <div class="col-2">
+                Customer
+            </div>
+            <div class="col-2">
+                <select @bind="Model.OrderConfig.CustomerId">
+                    @foreach (var customer in Model.CustomerList)
+                    {
+                        <option value="@customer.Id">
+                            @customer.Name
+                        </option>
+                    }
+                </select>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="row">
+            <div class="col-2">
+                Customer
+            </div>
+            <div class="col-2">
+                <span>@Model.CustomerList.First(x => x.Id == Model.OrderConfig.CustomerId).Name</span>
+            </div>
+        </div>
+    }
+
+    <br />
+
+    @if (Model.IsAddingNewOne)
+    {
+        <div class="row">
+            <div class="col-2">
+                Subscriptions
+            </div>
+            <div class="col-2">
+                <select multiple="multiple" @onchange="OnSubscriptionSelectChange">
+                    @foreach (var subscription in Model.SubscriptionList)
+                    {
+                        <option value="@subscription.Id" selected="@Model.OrderConfig.SubscriptionIdList.Contains(subscription.Id)">
+                            @subscription.Title
+                        </option>
+                    }
+                </select>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="row">
+            <div class="col-2">
+                Subscriptions
+            </div>
+            <div class="col-2">
+                <span>@Model.SubscriptionList.Where(x => Model.OrderConfig.SubscriptionIdList.Contains(x.Id)).Select(x=>x.Title).Join(", ")</span>
+            </div>
+        </div>
+    }
+
+    <br />
+
+    <div class="row">
+        <div class="col-2">
+            Order Status
+        </div>
+        <div class="col-2">
+            <select @bind="Model.OrderConfig.OrderStatus">
+                @foreach (var orderStatusType in Model.OrderStatusTypeList)
+                {
+                    <option value="@orderStatusType">
+                        @orderStatusType
+                    </option>
+                }
+            </select>
+        </div>
+    </div>
+
+    <br />
+    <br />
+    <div class="row">
+        <div class="col-2">
+            <button @onclick="OnSaveBtnClick" class="btn btn-success" style="width: 130px; margin-right: 10px;">Save</button>
+            <a href="/orders" class="btn btn-outline-info">Cancel</a>
+        </div>
+    </div>
+</PageViewer>
+
+
+
+@inject OrderApiClient OrderApi
+@inject NavigationManager Navigation
+@inject IJSRuntime script
+@code {
+    [Parameter]
+    public string SelectedOrder { get; set; }
+    private OrderAddEditPageModel Model { get; } = new OrderAddEditPageModel();
+
+    protected override async Task OnInitializedAsync()
+    {
+        Model.IsAddingNewOne = SelectedOrder == "Add";
+
+        var getOrderStatusTypeListResult = await OrderApi.GetOrderStatusTypeListAsync();
+        if (!getOrderStatusTypeListResult.IsSuccess)
+        {
+            ShowError(getOrderStatusTypeListResult.ErrorMessage);
+            return;
+        }
+        Model.OrderStatusTypeList = getOrderStatusTypeListResult.Data;
+
+
+        var getCustomerListResult = await OrderApi.GetCustomerListAsync();
+        if (!getCustomerListResult.IsSuccess)
+        {
+            ShowError(getCustomerListResult.ErrorMessage);
+            return;
+        }
+        Model.CustomerList = getCustomerListResult.Data;
+
+
+        var getSubscriptionListResult = await OrderApi.GetSubscriptionList();
+        if (!getSubscriptionListResult.IsSuccess)
+        {
+            ShowError(getSubscriptionListResult.ErrorMessage);
+            return;
+        }
+        Model.SubscriptionList = getSubscriptionListResult.Data;
+
+
+        if (Model.IsAddingNewOne)
+        {
+            Model.OrderConfig = new AddEditOrderModel
+            {
+                CustomerId = Model.CustomerList.First().Id,
+                OrderStatus = OrderStatusType.Draft
+            };
+        }
+        else
+        {
+            var getCurrentOrderConfigResult = await OrderApi.GetOrderAsync(new Guid(SelectedOrder));
+            if (!getCurrentOrderConfigResult.IsSuccess)
+            {
+                ShowError(getCurrentOrderConfigResult.ErrorMessage);
+                return;
+            }
+            var currentOrderConfig = getCurrentOrderConfigResult.Data;
+            Model.OrderConfig = new AddEditOrderModel
+            {
+                Id = currentOrderConfig.Id,
+                CustomerId = currentOrderConfig.CustomerUser.Id,
+                OrderStatus = currentOrderConfig.OrderStatus,
+                SubscriptionIdList = currentOrderConfig.SubscriptionList.Select(item => item.Id).ToList()
+            };
+        }
+
+        Model.IsReady = true;
+    }
+
+    async Task OnSaveBtnClick()
+    {
+        await script.InvokeAsync<string>("console.log", "Save: ", Model.OrderConfig.ToJson());
+        var saveResult = await OrderApi.AddEditOrderAsync(Model.OrderConfig);
+
+        if (!saveResult.IsSuccess)
+        {
+            ShowError(saveResult.ErrorMessage);
+            return;
+        }
+
+        Navigation.NavigateTo("orders");
+    }
+
+    void OnSubscriptionSelectChange(ChangeEventArgs e)
+    {
+        Model.LogMessage = e.ToJson();
+    }
+
+    string GetTitle()
+    {
+        if (Model.IsAddingNewOne)
+        {
+            return "Add Order";
+        }
+
+        return "Edit Order";
+    }
+
+    void ShowError(string errorMessage)
+    {
+        Model.ErrorMessage = errorMessage;
+    }
+}
