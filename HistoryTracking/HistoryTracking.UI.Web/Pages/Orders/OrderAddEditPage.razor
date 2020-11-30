@@ -56,15 +56,23 @@
             <div class="col-2">
                 Subscriptions
             </div>
-            <div class="col-2">
-                <select multiple="multiple" @onchange="OnSubscriptionSelectChange">
-                    @foreach (var subscription in Model.SubscriptionList)
-                    {
-                        <option value="@subscription.Id" selected="@Model.OrderConfig.SubscriptionIdList.Contains(subscription.Id)">
+            <div class="col-3">
+                @foreach (var subscription in Model.SubscriptionList)
+                {
+                <div class="row">
+                    <div class="col-2">
+                        <input id="@subscription.Id"
+                               type="checkbox"
+                               checked="@Model.OrderConfig.SubscriptionIdList.Contains(subscription.Id)"
+                               @onchange="@(e => OnSubscriptionChange(e, subscription.Id))" />
+                    </div>
+                    <div class="col-2">
+                        <label for="@subscription.Id">
                             @subscription.Title
-                        </option>
-                    }
-                </select>
+                        </label>
+                    </div>
+                </div>
+                }
             </div>
         </div>
     }
@@ -192,9 +200,16 @@
         Navigation.NavigateTo("orders");
     }
 
-    void OnSubscriptionSelectChange(ChangeEventArgs e)
+    void OnSubscriptionChange(ChangeEventArgs e, Guid subscriptionId)
     {
-        Model.LogMessage = e.ToJson();
+        if (Model.OrderConfig.SubscriptionIdList.Contains(subscriptionId))
+        {
+            Model.OrderConfig.SubscriptionIdList.Remove(subscriptionId);
+        }
+        else
+        {
+            Model.OrderConfig.SubscriptionIdList.Add(subscriptionId);
+        }
     }
 
     string GetTitle()
