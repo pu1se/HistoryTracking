@@ -65,6 +65,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ExtractChangesTests.cs" />
     <Compile Include="_Core\BaseServiceTests.cs" />
     <Compile Include="_Core\BaseTest.cs" />
     <Compile Include="StorageTests.cs" />

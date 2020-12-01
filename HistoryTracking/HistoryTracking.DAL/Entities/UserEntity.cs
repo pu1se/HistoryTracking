@@ -12,10 +12,13 @@ namespace HistoryTracking.DAL.Entities
     [Table("Users")]
     public class UserEntity : BaseEntity
     {
+        [TrackChanges]
         public string Name { get; set; }
 
+        [TrackChanges]
         public string Email { get; set; }
 
+        [TrackChanges]
         public UserType UserType { get; set; }
 
         public virtual ICollection<SubscriptionProductEntity> SubscriptionProducts { get; set; }

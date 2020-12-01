@@ -77,5 +77,16 @@ namespace HistoryTracking
             var json = JsonConvert.SerializeObject(obj);
             return new StringContent(json, Encoding.UTF8, "application/json");
         }
+
+        public static T DeepClone<T>(this T obj)
+        {
+            if (Object.ReferenceEquals(obj, null))
+            {
+                return default(T);
+            }
+
+            var deserializeSettings = new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace };
+            return JsonConvert.DeserializeObject<T>(JsonConvert.SerializeObject(obj), deserializeSettings);
+        }
     }
 }
