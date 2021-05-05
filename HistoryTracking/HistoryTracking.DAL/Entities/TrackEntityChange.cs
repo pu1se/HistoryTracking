@@ -5,18 +5,22 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using HistoryTracking.DAL.Enums;
 
 namespace HistoryTracking.DAL.Entities
 {
-    [Table("ActivityHistories")]
-    public class ActivityHistoryEntity : BaseEntity
+    [Table("TrackEntityChanges")]
+    public class TrackEntityChange
     {
-        public string EntityName { get; set; }
+        [Key]
+        public Guid Id { get; set; }
+
+        public EntityType EntityType { get; set; }
 
         public string EntitySnapshotBeforeChangeAsJson { get; set; }
 
         public string EntitySnapshotAfterChangeAsJson { get; set; }
 
-        public int PropertiesWasChanged { get; set; }
+        public int TrackingPropertiesWasChanged { get; set; }
     }
 }

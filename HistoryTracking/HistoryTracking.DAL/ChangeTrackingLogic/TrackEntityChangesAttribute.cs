@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace HistoryTracking.DAL
 {
-    [AttributeUsage(AttributeTargets.Property)]
-    public class TrackChangesAttribute : Attribute
+    [AttributeUsage(AttributeTargets.Class)]
+    public class TrackEntityChangesAttribute : Attribute
     {
     }
 }

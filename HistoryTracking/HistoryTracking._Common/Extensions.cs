@@ -80,9 +80,9 @@ namespace HistoryTracking
 
         public static T DeepClone<T>(this T obj)
         {
-            if (Object.ReferenceEquals(obj, null))
+            if (object.ReferenceEquals(obj, null))
             {
-                return default(T);
+                return default;
             }
 
             var deserializeSettings = new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace };

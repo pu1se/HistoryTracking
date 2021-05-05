@@ -18,7 +18,7 @@ namespace HistoryTracking.BL
             if (wasInitialized)
                 return;
 
-            services.RegisterType<DataContext>(new HierarchicalLifetimeManager());
+            services.RegisterType<DataContext>(new TransientLifetimeManager());
             AddTransientServices();
             wasInitialized = true;
         }

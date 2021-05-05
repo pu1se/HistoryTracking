@@ -17,7 +17,7 @@ namespace HistoryTracking.DAL.ChangeTrackingLogic
 
         public static bool HasTrackChangesAttribute(this PropertyInfo property)
         {
-            return property.GetAttribute<TrackChangesAttribute>() != null;
+            return property.GetAttribute<TrackEntityChangesAttribute>() != null;
         }
     }
 }

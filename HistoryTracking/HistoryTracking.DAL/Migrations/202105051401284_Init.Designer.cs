@@ -13,7 +13,7 @@ namespace HistoryTracking.DAL.Migrations
         
         string IMigrationMetadata.Id
         {
-            get { return "202010211217409_Init"; }
+            get { return "202105051401284_Init"; }
         }
         
         string IMigrationMetadata.Source

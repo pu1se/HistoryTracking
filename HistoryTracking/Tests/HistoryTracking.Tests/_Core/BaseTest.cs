@@ -25,5 +25,11 @@ namespace HistoryTracking.Tests
         {
             Storage.Dispose();
         }
+
+        public void CleanStorageCache()
+        {
+            Storage.Dispose();
+            Storage = DependencyManager.Resolve<DataContext>();
+        }
     }
 }

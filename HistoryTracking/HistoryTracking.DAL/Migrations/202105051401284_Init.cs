@@ -16,8 +16,8 @@ namespace HistoryTracking.DAL.Migrations
                         OrderStatus = c.Int(nullable: false),
                         PaymentStatus = c.Int(nullable: false),
                         CustomerUserId = c.Guid(nullable: false),
-                        CreatedDate = c.DateTime(nullable: false),
-                        UpdatedDate = c.DateTime(nullable: false),
+                        CreatedDate = c.DateTime(nullable: false, precision: 7, storeType: "datetime2"),
+                        UpdatedDate = c.DateTime(nullable: false, precision: 7, storeType: "datetime2"),
                         CreatedByUserId = c.Guid(nullable: false),
                         UpdatedByUserId = c.Guid(nullable: false),
                     })
@@ -33,8 +33,8 @@ namespace HistoryTracking.DAL.Migrations
                         Name = c.String(),
                         Email = c.String(),
                         UserType = c.Int(nullable: false),
-                        CreatedDate = c.DateTime(nullable: false),
-                        UpdatedDate = c.DateTime(nullable: false),
+                        CreatedDate = c.DateTime(nullable: false, precision: 7, storeType: "datetime2"),
+                        UpdatedDate = c.DateTime(nullable: false, precision: 7, storeType: "datetime2"),
                         CreatedByUserId = c.Guid(nullable: false),
                         UpdatedByUserId = c.Guid(nullable: false),
                     })
@@ -50,8 +50,8 @@ namespace HistoryTracking.DAL.Migrations
                         DistributorMarkupAsPercent = c.Decimal(nullable: false, precision: 18, scale: 2),
                         ResellerMarkupAsPercent = c.Decimal(nullable: false, precision: 18, scale: 2),
                         Currency = c.Int(nullable: false),
-                        CreatedDate = c.DateTime(nullable: false),
-                        UpdatedDate = c.DateTime(nullable: false),
+                        CreatedDate = c.DateTime(nullable: false, precision: 7, storeType: "datetime2"),
+                        UpdatedDate = c.DateTime(nullable: false, precision: 7, storeType: "datetime2"),
                         CreatedByUserId = c.Guid(nullable: false),
                         UpdatedByUserId = c.Guid(nullable: false),
                     })

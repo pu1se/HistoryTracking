@@ -1,11 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
+using System.Data.Entity.Migrations;
+using System.Data.Entity.ModelConfiguration.Configuration;
+using System.Data.Entity.ModelConfiguration.Conventions;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using HistoryTracking.DAL.Entities;
+using HistoryTracking.DAL.Enums;
 using HistoryTracking.DAL.Migrations;
 
 namespace HistoryTracking.DAL
@@ -16,11 +23,12 @@ namespace HistoryTracking.DAL
         public DbSet<UserEntity> Users { get; set; }
         public DbSet<SubscriptionProductEntity> SubscriptionProducts { get; set; }
         public DbSet<OrderEntity> Orders { get; set; }
-         
+
 
         public DataContext() : base(DefaultConnectionStringName)
         {
             Database.SetInitializer(new MigrateDatabaseToLatestVersion<DataContext, Configuration>());
+            Configuration.LazyLoadingEnabled = false;
 
             var objectContext = ((IObjectContextAdapter) this).ObjectContext;
             objectContext.SavingChanges += (sender, args) =>
@@ -58,9 +66,13 @@ namespace HistoryTracking.DAL
                 }
             };
         }
+        
+        
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
+            modelBuilder.Properties<DateTime>().Configure(c => c.HasColumnType("datetime2"));
+
             modelBuilder.Entity<OrderEntity>()
                 .HasMany(e => e.SubscriptionProducts)
                 .WithMany(e => e.Orders)

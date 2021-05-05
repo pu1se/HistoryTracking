@@ -18,6 +18,7 @@ namespace HistoryTracking.Tests
 
             Assert.IsTrue(users != null);
             Assert.IsTrue(users.Any());
+            Assert.IsTrue(users.First().Name.IsNullOrEmpty() == false);
         }
     }
 }

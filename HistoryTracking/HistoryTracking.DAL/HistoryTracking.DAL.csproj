@@ -53,23 +53,25 @@
   <ItemGroup>
     <Compile Include="ChangeTrackingLogic\AttributeExtensions.cs" />
     <Compile Include="ChangeTrackingLogic\ChangeItem.cs" />
+    <Compile Include="ChangeTrackingLogic\DisplayPropertyChangesAttribute.cs" />
     <Compile Include="ChangeTrackingLogic\GetChanges.cs" />
-    <Compile Include="ChangeTrackingLogic\TrackChangesAttribute.cs" />
+    <Compile Include="ChangeTrackingLogic\TrackEntityChangesAttribute.cs" />
     <Compile Include="DatabaseInitializer.cs" />
     <Compile Include="DataContext.cs" />
     <Compile Include="Entities\BaseEntity.cs" />
-    <Compile Include="Entities\ActivityHistoryEntity.cs" />
+    <Compile Include="Entities\TrackEntityChange.cs" />
     <Compile Include="Entities\IHistoryTracking.cs" />
     <Compile Include="Entities\SubscriptionProductEntity.cs" />
     <Compile Include="Entities\OrderEntity.cs" />
     <Compile Include="Entities\UserEntity.cs" />
     <Compile Include="Enums\CurrencyType.cs" />
+    <Compile Include="Enums\EntityType.cs" />
     <Compile Include="Enums\OrderStatusType.cs" />
     <Compile Include="Enums\PaymentStatusType.cs" />
     <Compile Include="Enums\UserType.cs" />
-    <Compile Include="Migrations\202010211217409_Init.cs" />
-    <Compile Include="Migrations\202010211217409_Init.Designer.cs">
-      <DependentUpon>202010211217409_Init.cs</DependentUpon>
+    <Compile Include="Migrations\202105051401284_Init.cs" />
+    <Compile Include="Migrations\202105051401284_Init.Designer.cs">
+      <DependentUpon>202105051401284_Init.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -79,10 +81,15 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\202010211217409_Init.resx">
-      <DependentUpon>202010211217409_Init.cs</DependentUpon>
+    <ProjectReference Include="..\HistoryTracking._Common\HistoryTracking._Common.csproj">
+      <Project>{577256da-f8f3-4449-a014-ea3c0a6c9751}</Project>
+      <Name>HistoryTracking._Common</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\202105051401284_Init.resx">
+      <DependentUpon>202105051401284_Init.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
