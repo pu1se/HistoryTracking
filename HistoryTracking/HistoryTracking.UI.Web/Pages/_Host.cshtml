@@ -32,5 +32,11 @@
     </div>
 
 <script src="_framework/blazor.server.js"></script>
+<script>
+    window.WriteCookie = function (name, value) {
+        var expires = "";
+        document.cookie = name + "=" + value + expires + "; path=/";
+    }
+</script>
 </body>
 </html>

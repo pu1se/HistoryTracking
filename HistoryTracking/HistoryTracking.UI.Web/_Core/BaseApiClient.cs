@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 
 namespace HistoryTracking.UI.Web.ApiRequests
@@ -14,6 +15,12 @@ namespace HistoryTracking.UI.Web.ApiRequests
         {
             Settings = settings;
             Api = new ApiRequestExecuter(Settings.ApiUrl);
+        }
+
+        static BaseApiClient()
+        {
+            ServicePointManager.ServerCertificateValidationCallback +=
+                (sender, certificate, chain, sslPolicyErrors) => true;
         }
     }
 }

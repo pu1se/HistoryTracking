@@ -25,6 +25,21 @@
     </ul>
 </div>
 
+<div style="color: white; position: absolute; bottom: 1px; width: 250px;">
+    Current User is:
+    <br/>
+    <select @onchange="OnSelectedUserChange">
+        @foreach (var user in UserList)
+        {
+            <option value="@user.Id">
+                @user.Name
+            </option>
+        }
+    </select>
+</div>
+
+@inject UserApiClient UserApi
+@inject IJSRuntime script 
 @code {
     private bool collapseNavMenu = true;
 
@@ -34,4 +49,44 @@
     {
         collapseNavMenu = !collapseNavMenu;
     }
+
+    private List<GetUserModel> UserList { get; set; } = new List<GetUserModel>();
+    private string CurrentUser { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var getUserListResult = await UserApi.GetUserListAsync();
+
+        if (getUserListResult.IsSuccess)
+        {
+            UserList = getUserListResult.Data;
+        }
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender == false)
+        {
+            return;
+        }
+
+        if (UserList.Any())
+        {
+            await SetSelectedUser(UserList.First().Id.ToString());
+        }
+        await base.OnAfterRenderAsync(firstRender);
+    }
+
+    async Task OnSelectedUserChange(ChangeEventArgs e)
+    {
+        var selectedUser = e.Value.ToString();
+        await SetSelectedUser(selectedUser);
+    }
+
+    async Task SetSelectedUser(string selectedUser)
+    {
+        await script.InvokeAsync<string>("console.info", "Selected User: ", selectedUser);
+        await script.InvokeAsync<object>("WriteCookie", "CurrentUser", selectedUser);
+    }
 }
+
