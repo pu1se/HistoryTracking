@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Net;
+using System.Threading.Tasks;
 using RestSharp;
 
 namespace HistoryTracking.UI.Web.ApiRequests
@@ -34,6 +35,7 @@ namespace HistoryTracking.UI.Web.ApiRequests
 
             var restClient = new RestClient(this.BaseUrl);
             var request = GenerateRequest(httpMethod, path, data);
+            request.AddCookie("CurrentUser", UserManager.CurrentUser);
 
             var response = await restClient.ExecuteTaskAsync(request);
             var callResult = ApiErrorHandler.HandleResponse(response);
@@ -49,6 +51,7 @@ namespace HistoryTracking.UI.Web.ApiRequests
 
             var restClient = new RestClient(this.BaseUrl);
             var request = GenerateRequest(httpMethod, path, data);
+            request.AddCookie("CurrentUser", UserManager.CurrentUser);
 
             var response = await restClient.ExecuteTaskAsync<T>(request);
             var callResult = ApiErrorHandler.HandleResponse(response);

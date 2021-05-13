@@ -1,4 +1,5 @@
-﻿<div class="top-row pl-4 navbar navbar-dark">
+﻿@using Microsoft.AspNetCore.Http
+<div class="top-row pl-4 navbar navbar-dark">
     <a class="navbar-brand" href="">History Tracking POC</a>
     <button class="navbar-toggler" @onclick="ToggleNavMenu">
         <span class="navbar-toggler-icon"></span>
@@ -27,7 +28,7 @@
 
 <div style="color: white; position: absolute; bottom: 1px; width: 250px;">
     Current User is:
-    <br/>
+    <br />
     <select @onchange="OnSelectedUserChange">
         @foreach (var user in UserList)
         {
@@ -39,7 +40,7 @@
 </div>
 
 @inject UserApiClient UserApi
-@inject IJSRuntime script 
+@inject IJSRuntime script
 @code {
     private bool collapseNavMenu = true;
 
@@ -86,7 +87,7 @@
     async Task SetSelectedUser(string selectedUser)
     {
         await script.InvokeAsync<string>("console.info", "Selected User: ", selectedUser);
-        await script.InvokeAsync<object>("WriteCookie", "CurrentUser", selectedUser);
+        UserManager.CurrentUser = selectedUser;
     }
 }
 

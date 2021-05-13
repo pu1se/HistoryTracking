@@ -11,6 +11,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 using HistoryTracking.DAL.Entities;
 using HistoryTracking.DAL.Enums;
 using HistoryTracking.DAL.Migrations;
@@ -46,6 +47,7 @@ namespace HistoryTracking.DAL
                             entity.Id = Guid.NewGuid();
                         }
                         entity.CreatedDate = now;
+                        entity.CreatedByUserId = UserManager.GetCurrentUser();
                     }
 
                     if (entry.State == EntityState.Modified)
@@ -56,6 +58,7 @@ namespace HistoryTracking.DAL
                     if (entry.State == EntityState.Added || entry.State == EntityState.Modified)
                     {
                         entity.UpdatedDate = now;
+                        entity.UpdatedByUserId = UserManager.GetCurrentUser();
 
                         /*this.ActivityHistories.Add(new ActivityHistoryEntity
                         {
