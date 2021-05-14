@@ -29,7 +29,7 @@ namespace HistoryTracking.Tests
                 var user = users.First();
 
                 var oldName = user.Name;
-                var newName = "new name";
+                var newName = "new name " + Guid.NewGuid();
                 user.Name = newName;
                 Storage.Users.AddOrUpdate(user);
                 await Storage.SaveChangesAsync();

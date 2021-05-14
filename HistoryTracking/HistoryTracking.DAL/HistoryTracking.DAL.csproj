@@ -66,7 +66,6 @@
     <Compile Include="Entities\OrderEntity.cs" />
     <Compile Include="Entities\UserEntity.cs" />
     <Compile Include="Enums\CurrencyType.cs" />
-    <Compile Include="Enums\EntityType.cs" />
     <Compile Include="Enums\OrderStatusType.cs" />
     <Compile Include="Enums\PaymentStatusType.cs" />
     <Compile Include="Enums\UserType.cs" />

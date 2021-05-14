@@ -11,7 +11,7 @@ namespace HistoryTracking.DAL
     {
         public static Guid GetCurrentUser()
         {
-            var userIdAsString = HttpContext.Current.Request.Cookies["CurrentUser"];
+            var userIdAsString = HttpContext.Current?.Request.Cookies["CurrentUser"];
             var userId = userIdAsString != null ? new Guid(userIdAsString.Value) : TestData.SystemUserId;
             return userId;
         }

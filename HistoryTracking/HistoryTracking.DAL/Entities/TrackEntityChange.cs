@@ -15,12 +15,14 @@ namespace HistoryTracking.DAL.Entities
         [Key]
         public Guid Id { get; set; }
 
-        public EntityType EntityType { get; set; }
+        public string EventType { get; set; }
 
-        public string EntitySnapshotBeforeChangeAsJson { get; set; }
+        public string EntityTable { get; set; }
 
-        public string EntitySnapshotAfterChangeAsJson { get; set; }
+        public string EntityBeforeChange { get; set; }
 
-        public int TrackingPropertiesWasChanged { get; set; }
+        public string EntityAfterChange { get; set; }
+
+        public bool TrackingPropertiesWasChanged { get; set; }
     }
 }
