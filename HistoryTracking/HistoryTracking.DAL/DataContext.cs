@@ -53,19 +53,22 @@ namespace HistoryTracking.DAL
                     if (entry.State == EntityState.Modified)
                     {
                         entry.Property(nameof(BaseEntity.CreatedDate)).IsModified = false;
+                        entry.Property(nameof(BaseEntity.CreatedByUserId)).IsModified = false;
                     }
 
                     if (entry.State == EntityState.Added || entry.State == EntityState.Modified)
                     {
                         entity.UpdatedDate = now;
                         entity.UpdatedByUserId = UserManager.GetCurrentUser();
-
+                        entry.Property(nameof(BaseEntity.UpdatedDate)).IsModified = true;
+                        entry.Property(nameof(BaseEntity.UpdatedByUserId)).IsModified = true;
+                        
                         /*this.ActivityHistories.Add(new ActivityHistoryEntity
                         {
                             Id = Guid.NewGuid(),
                             EntityName = entry.
                         });*/
-                    }                    
+                    }
                 }
             };
         }
@@ -74,6 +77,10 @@ namespace HistoryTracking.DAL
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
+            modelBuilder.Ignore(new[] { typeof(BaseEntity) });
+
+            modelBuilder.Conventions.Remove<OneToManyCascadeDeleteConvention>();
+
             modelBuilder.Properties<DateTime>().Configure(c => c.HasColumnType("datetime2"));
 
             modelBuilder.Entity<OrderEntity>()

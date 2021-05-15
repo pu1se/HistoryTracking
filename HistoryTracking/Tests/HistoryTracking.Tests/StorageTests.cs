@@ -44,6 +44,8 @@ namespace HistoryTracking.Tests
                 users = await Storage.Users.ToListAsync();
                 user = users.First();
                 Assert.IsTrue(user.Name == oldName);
+                Assert.IsTrue(user.UpdatedDate >= DateTime.UtcNow.Date);
+                Assert.IsTrue(user.UpdatedByUserId == TestData.SystemUserId);
             }
             catch (Exception exception)
             {
