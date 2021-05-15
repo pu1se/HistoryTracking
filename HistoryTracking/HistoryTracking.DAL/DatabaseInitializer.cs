@@ -36,8 +36,8 @@ namespace HistoryTracking.DAL
                 Email = "system.user@appxite.com",
                 Name = "System User",
                 UserType = UserType.SystemUser,
-                CreatedDate = now,
-                UpdatedDate = now,
+                CreatedDateUtc = now,
+                UpdatedDateUtc = now,
                 CreatedByUserId = TestData.SystemUserId,
                 UpdatedByUserId = TestData.SystemUserId
             });
@@ -47,8 +47,8 @@ namespace HistoryTracking.DAL
                 Email = "distributor@tmp.com",
                 Name = "Some Distributor",
                 UserType = UserType.Distributor,
-                CreatedDate = now,
-                UpdatedDate = now,
+                CreatedDateUtc = now,
+                UpdatedDateUtc = now,
                 CreatedByUserId = TestData.SystemUserId,
                 UpdatedByUserId = TestData.SystemUserId
             });
@@ -58,8 +58,8 @@ namespace HistoryTracking.DAL
                 Email = "reseller@tmp.com",
                 Name = "Some Reseller",
                 UserType = UserType.Reseller,
-                CreatedDate = now,
-                UpdatedDate = now,
+                CreatedDateUtc = now,
+                UpdatedDateUtc = now,
                 CreatedByUserId = TestData.SystemUserId,
                 UpdatedByUserId = TestData.SystemUserId
             });
@@ -69,8 +69,8 @@ namespace HistoryTracking.DAL
                 Email = "customer@tmp.com",
                 Name = "Some Customer",
                 UserType = UserType.Customer,
-                CreatedDate = now,
-                UpdatedDate = now,
+                CreatedDateUtc = now,
+                UpdatedDateUtc = now,
                 CreatedByUserId = TestData.SystemUserId,
                 UpdatedByUserId = TestData.SystemUserId
             });
@@ -80,8 +80,8 @@ namespace HistoryTracking.DAL
                 Email = "another.customer@tmp.com",
                 Name = "Another Customer",
                 UserType = UserType.Customer,
-                CreatedDate = now,
-                UpdatedDate = now,
+                CreatedDateUtc = now,
+                UpdatedDateUtc = now,
                 CreatedByUserId = TestData.SystemUserId,
                 UpdatedByUserId = TestData.SystemUserId
             });
@@ -94,8 +94,8 @@ namespace HistoryTracking.DAL
                 DistributorMarkupAsPercent = 5,
                 ResellerMarkupAsPercent = 10,
                 Title = "Super Subscription Product",
-                CreatedDate = now,
-                UpdatedDate = now,
+                CreatedDateUtc = now,
+                UpdatedDateUtc = now,
                 CreatedByUserId = TestData.SystemUserId,
                 UpdatedByUserId = TestData.SystemUserId,
                 OwnerUsers = new List<UserEntity>(new []{distributor, reseller}),
@@ -107,8 +107,8 @@ namespace HistoryTracking.DAL
                 OrderStatus = OrderStatusType.Draft,
                 PaymentStatus = PaymentStatusType.NotPaid,
                 SubscriptionProducts = new List<SubscriptionProductEntity>(new []{offer}),
-                CreatedDate = now,
-                UpdatedDate = now,
+                CreatedDateUtc = now,
+                UpdatedDateUtc = now,
                 CreatedByUserId = TestData.SystemUserId,
                 UpdatedByUserId = TestData.SystemUserId,
                 CustomerUser = customer

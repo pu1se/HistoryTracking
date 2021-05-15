@@ -26,7 +26,7 @@ namespace HistoryTracking.BL.Services
                         {
                             Id = e.Id,
                             OrderStatus = e.OrderStatus,
-                            OrderDate = e.CreatedDate,
+                            OrderDate = e.CreatedDateUtc,
                             CustomerUser = new GetUserModel
                             {
                                 Name = e.CustomerUser.Name,

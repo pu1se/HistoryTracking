@@ -17,11 +17,13 @@ namespace HistoryTracking.DAL.Entities
 
         public string EventType { get; set; }
 
+        public DateTime EventDateUtc { get; set; }
+
         public string EntityTable { get; set; }
 
-        public string EntityBeforeChange { get; set; }
+        public string OldValue { get; set; }
 
-        public string EntityAfterChange { get; set; }
+        public string NewValue { get; set; }
 
         public bool TrackingPropertiesWasChanged { get; set; }
     }

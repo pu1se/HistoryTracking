@@ -11,8 +11,8 @@ namespace HistoryTracking.DAL.Entities
     {
         [Key]
         public Guid Id { get; set; }
-        public DateTime CreatedDate { get; set; }
-        public DateTime UpdatedDate { get; set; }
+        public DateTime CreatedDateUtc { get; set; }
+        public DateTime UpdatedDateUtc { get; set; }
         public Guid CreatedByUserId { get; set; }
         public Guid UpdatedByUserId { get; set; }
     }

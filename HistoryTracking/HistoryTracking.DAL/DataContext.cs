@@ -24,6 +24,7 @@ namespace HistoryTracking.DAL
         public DbSet<UserEntity> Users { get; set; }
         public DbSet<SubscriptionProductEntity> SubscriptionProducts { get; set; }
         public DbSet<OrderEntity> Orders { get; set; }
+        public DbSet<TrackEntityChange> TrackEntityChanges { get; set; }
 
 
         public DataContext() : base(DefaultConnectionStringName)
@@ -46,21 +47,21 @@ namespace HistoryTracking.DAL
                         {
                             entity.Id = Guid.NewGuid();
                         }
-                        entity.CreatedDate = now;
+                        entity.CreatedDateUtc = now;
                         entity.CreatedByUserId = UserManager.GetCurrentUser();
                     }
 
                     if (entry.State == EntityState.Modified)
                     {
-                        entry.Property(nameof(BaseEntity.CreatedDate)).IsModified = false;
+                        entry.Property(nameof(BaseEntity.CreatedDateUtc)).IsModified = false;
                         entry.Property(nameof(BaseEntity.CreatedByUserId)).IsModified = false;
                     }
 
                     if (entry.State == EntityState.Added || entry.State == EntityState.Modified)
                     {
-                        entity.UpdatedDate = now;
+                        entity.UpdatedDateUtc = now;
                         entity.UpdatedByUserId = UserManager.GetCurrentUser();
-                        entry.Property(nameof(BaseEntity.UpdatedDate)).IsModified = true;
+                        entry.Property(nameof(BaseEntity.UpdatedDateUtc)).IsModified = true;
                         entry.Property(nameof(BaseEntity.UpdatedByUserId)).IsModified = true;
                         
                         /*this.ActivityHistories.Add(new ActivityHistoryEntity
