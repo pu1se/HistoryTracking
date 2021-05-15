@@ -80,6 +80,10 @@
     <Compile Include="Migrations\202105151113321_AddTrackingEntityChangesTable.designer.cs">
       <DependentUpon>202105151113321_AddTrackingEntityChangesTable.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202105151401550_FieldsRenaming.cs" />
+    <Compile Include="Migrations\202105151401550_FieldsRenaming.designer.cs">
+      <DependentUpon>202105151401550_FieldsRenaming.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UserManager.cs" />
@@ -100,6 +104,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202105151113321_AddTrackingEntityChangesTable.resx">
       <DependentUpon>202105151113321_AddTrackingEntityChangesTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202105151401550_FieldsRenaming.resx">
+      <DependentUpon>202105151401550_FieldsRenaming.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

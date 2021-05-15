@@ -21,9 +21,13 @@ namespace HistoryTracking.DAL.Entities
 
         public string EntityTable { get; set; }
 
+        public string EntityId { get; set; }
+
         public string OldValue { get; set; }
 
         public string NewValue { get; set; }
+
+        public string TrackingPropertiesChanges { get; set; }
 
         public bool TrackingPropertiesWasChanged { get; set; }
     }
