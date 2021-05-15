@@ -63,7 +63,7 @@ namespace HistoryTracking.DAL
                         entity.UpdatedByUserId = UserManager.GetCurrentUser();
                         entry.Property(nameof(BaseEntity.UpdatedDateUtc)).IsModified = true;
                         entry.Property(nameof(BaseEntity.UpdatedByUserId)).IsModified = true;
-                        
+
                         /*this.ActivityHistories.Add(new ActivityHistoryEntity
                         {
                             Id = Guid.NewGuid(),
