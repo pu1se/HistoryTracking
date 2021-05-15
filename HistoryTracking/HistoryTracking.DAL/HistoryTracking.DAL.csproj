@@ -63,6 +63,7 @@
     <Compile Include="DatabaseInitializer.cs" />
     <Compile Include="DataContext.cs" />
     <Compile Include="Entities\BaseEntity.cs" />
+    <Compile Include="Entities\PropertyChange.cs" />
     <Compile Include="Entities\TrackEntityChange.cs" />
     <Compile Include="Entities\IHistoryTracking.cs" />
     <Compile Include="Entities\SubscriptionProductEntity.cs" />

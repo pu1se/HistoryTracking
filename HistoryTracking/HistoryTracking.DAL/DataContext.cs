@@ -89,11 +89,17 @@ namespace HistoryTracking.DAL
                 .Where(e => e.State == EntityState.Added || e.State == EntityState.Modified);
             var now = DateTime.UtcNow;
 
-            foreach (var entry in this.ChangeTracker.Entries<BaseEntity>())
+            foreach (var dbEntry in this.ChangeTracker.Entries<BaseEntity>())
             {
-                var entity = entry.Entity;
+                var entity = dbEntry.Entity;
 
-                if (entry.State == EntityState.Added)
+                if (entity is IHistoryTracking historyTrackingEntity)
+                {
+                    var trackEntityChange = GetTrackEntityChange(dbEntry);
+                    TrackEntityChanges.Add(trackEntityChange);
+                }
+
+                if (dbEntry.State == EntityState.Added)
                 {
                     if (entity.Id == Guid.Empty)
                     {
@@ -103,24 +109,18 @@ namespace HistoryTracking.DAL
                     entity.CreatedByUserId = UserManager.GetCurrentUser();
                 }
 
-                if (entry.State == EntityState.Modified)
+                if (dbEntry.State == EntityState.Modified)
                 {
-                    entry.Property(nameof(BaseEntity.CreatedDateUtc)).IsModified = false;
-                    entry.Property(nameof(BaseEntity.CreatedByUserId)).IsModified = false;
+                    dbEntry.Property(nameof(BaseEntity.CreatedDateUtc)).IsModified = false;
+                    dbEntry.Property(nameof(BaseEntity.CreatedByUserId)).IsModified = false;
                 }
 
-                if (entry.State == EntityState.Added || entry.State == EntityState.Modified)
+                if (dbEntry.State == EntityState.Added || dbEntry.State == EntityState.Modified)
                 {
                     entity.UpdatedDateUtc = now;
                     entity.UpdatedByUserId = UserManager.GetCurrentUser();
-                    entry.Property(nameof(BaseEntity.UpdatedDateUtc)).IsModified = true;
-                    entry.Property(nameof(BaseEntity.UpdatedByUserId)).IsModified = true;
-
-                    if (entity is IHistoryTracking historyTrackingEntity)
-                    {
-                        var trackEntityChange = GetTrackEntityChange(entry);
-                        TrackEntityChanges.Add(trackEntityChange);
-                    }
+                    dbEntry.Property(nameof(BaseEntity.UpdatedDateUtc)).IsModified = true;
+                    dbEntry.Property(nameof(BaseEntity.UpdatedByUserId)).IsModified = true;
                 }
             }
         }
@@ -140,7 +140,8 @@ namespace HistoryTracking.DAL
                 EntityId = entityId,
                 EventType = dbEntry.State.ToString(),
                 EventDateUtc = DateTime.UtcNow,
-                NewValue = dbEntry.Entity.ToJson()
+                NewValue = dbEntry.Entity.ToJson(),
+                TrackingPropertiesChanges = getPropertyChanges(dbEntry).ToJson()
             };
 
             if (dbEntry.State == EntityState.Modified)
@@ -172,64 +173,46 @@ namespace HistoryTracking.DAL
             return originalEntity;
         }
 
-        /*private List<AuditLog> GetAuditRecordsForChange(DbEntityEntry dbEntry)
+        private List<PropertyChange> getPropertyChanges(DbEntityEntry dbEntry)
         {
-            List<AuditLog> result = new List<AuditLog>();
+            var result = new List<PropertyChange>();
 
-            DateTime changeTime = DateTime.UtcNow;
-
-            // Get primary key value (If you have more than one key column, this will need to be adjusted)
-            var keyNames = dbEntry.Entity.GetType().GetProperties().Where(p => p.GetCustomAttributes(typeof(KeyAttribute), false).Count() > 0).ToList();
-
-            string keyName = keyNames[0].Name; //dbEntry.Entity.GetType().GetProperties().Single(p => p.GetCustomAttributes(typeof(KeyAttribute), false).Count() > 0).Name;
-
-            if (dbEntry.State == EntityState.Added)
+            switch (dbEntry.State)
             {
-                // For Inserts, just add the whole record
-                // If the entity implements IDescribableEntity, use the description from Describe(), otherwise use ToString()
-
-                foreach (string propertyName in dbEntry.CurrentValues.PropertyNames)
+                case EntityState.Added:
                 {
-                    result.Add(new AuditLog()
+                    foreach (string propertyName in dbEntry.CurrentValues.PropertyNames)
                     {
-                        AuditLogId = Guid.NewGuid(),
-                        UserId = userId,
-                        EventDateUTC = changeTime,
-                        EventType = "A",    // Added
-                        TableName = tableName,
-                        RecordId = dbEntry.CurrentValues.GetValue<object>(keyName).ToString(),
-                        ColumnName = propertyName,
-                        NewValue = dbEntry.CurrentValues.GetValue<object>(propertyName) == null ? null : dbEntry.CurrentValues.GetValue<object>(propertyName).ToString()
-                    }
-                            );
-                }
-            }
-            else if (dbEntry.State == EntityState.Modified)
-            {
-                foreach (string propertyName in dbEntry.OriginalValues.PropertyNames)
-                {
-                    // For updates, we only want to capture the columns that actually changed
-                    if (!object.Equals(dbEntry.OriginalValues.GetValue<object>(propertyName), dbEntry.CurrentValues.GetValue<object>(propertyName)))
-                    {
-                        result.Add(new AuditLog()
+                        result.Add(new PropertyChange
                         {
-                            AuditLogId = Guid.NewGuid(),
-                            UserId = userId,
-                            EventDateUTC = changeTime,
-                            EventType = "M",    // Modified
-                            TableName = tableName,
-                            RecordId = dbEntry.OriginalValues.GetValue<object>(keyName).ToString(),
-                            ColumnName = propertyName,
-                            OriginalValue = dbEntry.OriginalValues.GetValue<object>(propertyName) == null ? null : dbEntry.OriginalValues.GetValue<object>(propertyName).ToString(),
+                            PropertyName = propertyName,
+                            OldValue = null,
                             NewValue = dbEntry.CurrentValues.GetValue<object>(propertyName) == null ? null : dbEntry.CurrentValues.GetValue<object>(propertyName).ToString()
-                        }
-                            );
+                        });
                     }
+
+                    break;
+                }
+                case EntityState.Modified:
+                {
+                    foreach (string propertyName in dbEntry.CurrentValues.PropertyNames)
+                    {
+                        if (!object.Equals(dbEntry.OriginalValues.GetValue<object>(propertyName), dbEntry.CurrentValues.GetValue<object>(propertyName)))
+                        {
+                            result.Add(new PropertyChange
+                            {
+                                PropertyName = propertyName,
+                                OldValue = dbEntry.OriginalValues.GetValue<object>(propertyName) == null ? null : dbEntry.OriginalValues.GetValue<object>(propertyName).ToString(),
+                                NewValue = dbEntry.CurrentValues.GetValue<object>(propertyName) == null ? null : dbEntry.CurrentValues.GetValue<object>(propertyName).ToString()
+                            });
+                        }
+                    }
+
+                    break;
                 }
             }
-            // Otherwise, don't do anything, we don't care about Unchanged or Detached entities
 
             return result;
-        }*/
+        }
     }
 }
