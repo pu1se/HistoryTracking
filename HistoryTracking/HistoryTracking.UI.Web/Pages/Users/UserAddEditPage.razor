@@ -29,9 +29,9 @@
             <select @bind="Model.UserConfig.UserType">
                 @foreach (var userType in Model.UserTypeList)
                 {
-                <option value="@userType">
-                    @userType
-                </option>
+                    <option value="@userType">
+                        @userType
+                    </option>
                 }
             </select>
         </div>
@@ -44,6 +44,8 @@
             <a href="/users" class="btn btn-outline-info">Cancel</a>
         </div>
     </div>
+
+    <Changes EntityId="@Model.UserConfig.Id" EntityTableName="Users"></Changes>
 </PageViewer>
 
 

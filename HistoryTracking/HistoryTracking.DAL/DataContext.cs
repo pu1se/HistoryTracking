@@ -125,6 +125,7 @@ namespace HistoryTracking.DAL
             }
         }
 
+        // todo: move this logic to a separated class
         private TrackEntityChange GetTrackEntityChange(DbEntityEntry dbEntry)
         {
             var tableAttr = dbEntry.Entity.GetType().GetCustomAttributes(typeof(TableAttribute), true).SingleOrDefault() as TableAttribute;
@@ -206,6 +207,20 @@ namespace HistoryTracking.DAL
                                 NewValue = dbEntry.CurrentValues.GetValue<object>(propertyName) == null ? null : dbEntry.CurrentValues.GetValue<object>(propertyName).ToString()
                             });
                         }
+                    }
+
+                    break;
+                }
+                case EntityState.Deleted:
+                {
+                    foreach (string propertyName in dbEntry.OriginalValues.PropertyNames)
+                    {
+                        result.Add(new PropertyChange
+                        {
+                            PropertyName = propertyName,
+                            OldValue = dbEntry.OriginalValues.GetValue<object>(propertyName) == null ? null : dbEntry.OriginalValues.GetValue<object>(propertyName).ToString(),
+                            NewValue = null
+                        });
                     }
 
                     break;

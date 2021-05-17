@@ -36,7 +36,7 @@
             Price
         </div>
         <div class="col-1">
-            <input @bind="Model.SubscriptionConfig.Price" type="number" style=""/>
+            <input @bind="Model.SubscriptionConfig.Price" type="number" style="" />
         </div>
         <div class="col-1">
             <select @bind="Model.SubscriptionConfig.Currency" style="margin-left: -5px;">
@@ -57,6 +57,8 @@
             <a href="/subscriptions" class="btn btn-outline-info">Cancel</a>
         </div>
     </div>
+
+    <Changes EntityId="@Model.SubscriptionConfig.Id" EntityTableName="SubscriptionProducts"></Changes>
 </PageViewer>
 
 

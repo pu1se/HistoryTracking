@@ -1,0 +1,99 @@
+﻿@page "/changes"
+
+<h3>Activity History</h3>
+<br />
+<PageViewer PageModel="@Model">
+
+    <div class="row">
+        <div class="col-2">
+            <div>Activity</div>
+            <select>
+                <option>Subscriptions</option>
+                <option>Users</option>
+            </select>
+        </div>
+        <div class="col-2">
+            <div>User</div>
+            <select>
+                <option>Subscriptions</option>
+                <option>Users</option>
+            </select>
+        </div>
+        <div class="col-2">
+            <div>Period</div>
+            <select>
+                <option>7 days</option>
+                <option>30 days</option>
+                <option>3 month</option>
+                <option>6 month</option>
+                <option>1 year</option>
+                <option>all time</option>
+            </select>
+        </div>
+    </div>
+
+    <br />
+    <br />
+
+    <div class="row">
+        @if (Model.ChangeList.Any())
+        {
+            <div class="col-7">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>User</th>
+                            <th>Activity</th>
+                            <th>Properties</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var change in Model.ChangeList)
+                        {
+                            <tr>
+                                @change
+                                @*<td>@user.Name</td>
+                                    <td>@user.Email</td>
+                                    <td>@user.UserType</td>
+                                    <td>
+                                        <a href="/users/@user.Id">
+                                            edit
+                                        </a>
+                                    </td>*@
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="col-5">
+                some info
+            </div>
+        }
+        else
+        {
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <p>Activity history is empty.</p>
+        }
+    </div>
+
+</PageViewer>
+
+
+
+@code {
+    private ActivityHistoryPageModel Model { get; } = new ActivityHistoryPageModel();
+
+    protected override Task OnInitializedAsync()
+    {
+        Model.IsReady = true;
+
+        return base.OnInitializedAsync();
+    }
+
+}
