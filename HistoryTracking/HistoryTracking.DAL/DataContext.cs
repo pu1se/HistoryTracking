@@ -93,9 +93,9 @@ namespace HistoryTracking.DAL
             {
                 var entity = dbEntry.Entity;
 
-                if (entity is IHistoryTracking historyTrackingEntity)
+                if (entity is ITrackEntityChanges historyTrackingEntity)
                 {
-                    var trackEntityChange = GetTrackEntityChange(dbEntry);
+                    var trackEntityChange = TrackChanges.GetTrackEntityChange(dbEntry);
                     TrackEntityChanges.Add(trackEntityChange);
                 }
 
@@ -123,111 +123,6 @@ namespace HistoryTracking.DAL
                     dbEntry.Property(nameof(BaseEntity.UpdatedByUserId)).IsModified = true;
                 }
             }
-        }
-
-        // todo: move this logic to a separated class
-        private TrackEntityChange GetTrackEntityChange(DbEntityEntry dbEntry)
-        {
-            var tableAttr = dbEntry.Entity.GetType().GetCustomAttributes(typeof(TableAttribute), true).SingleOrDefault() as TableAttribute;
-            var entityTableName = tableAttr != null ? tableAttr.Name : dbEntry.Entity.GetType().Name;
-
-            var keyName = dbEntry.Entity.GetType().GetProperties().FirstOrDefault(p => p.GetCustomAttributes(typeof(KeyAttribute), false).Count() > 0)?.Name;
-            var entityId = keyName != null ? dbEntry.CurrentValues.GetValue<object>(keyName).ToString() : string.Empty;
-
-            var trackEntityChange = new TrackEntityChange
-            {
-                Id = Guid.NewGuid(),
-                EntityTable = entityTableName,
-                EntityId = entityId,
-                EventType = dbEntry.State.ToString(),
-                EventDateUtc = DateTime.UtcNow,
-                NewValue = dbEntry.Entity.ToJson(),
-                TrackingPropertiesChanges = getPropertyChanges(dbEntry).ToJson()
-            };
-
-            if (dbEntry.State == EntityState.Modified)
-            {
-                trackEntityChange.OldValue = GetOriginalEntity(dbEntry.OriginalValues, dbEntry.Entity.GetType()).ToJson();
-            }
-
-            return trackEntityChange;
-        }
-
-        object GetOriginalEntity(DbPropertyValues originalValues, Type tEntity)
-        {
-            var originalEntity = Activator.CreateInstance(tEntity, true);
-            foreach (var propertyName in originalValues.PropertyNames)
-            {
-                var property = tEntity.GetProperty(propertyName);
-                var value = originalValues[propertyName];
-                if (!(value is DbPropertyValues))
-                {
-                    property.SetValue(originalEntity, value);
-                }
-                /*else
-                {
-                    // nested entity
-                    property.SetValue(originalEntity, GetOriginalEntity(value as DbPropertyValues, property.PropertyType));
-                }*/
-            }
-
-            return originalEntity;
-        }
-
-        private List<PropertyChange> getPropertyChanges(DbEntityEntry dbEntry)
-        {
-            var result = new List<PropertyChange>();
-
-            switch (dbEntry.State)
-            {
-                case EntityState.Added:
-                {
-                    foreach (string propertyName in dbEntry.CurrentValues.PropertyNames)
-                    {
-                        result.Add(new PropertyChange
-                        {
-                            PropertyName = propertyName,
-                            OldValue = null,
-                            NewValue = dbEntry.CurrentValues.GetValue<object>(propertyName) == null ? null : dbEntry.CurrentValues.GetValue<object>(propertyName).ToString()
-                        });
-                    }
-
-                    break;
-                }
-                case EntityState.Modified:
-                {
-                    foreach (string propertyName in dbEntry.CurrentValues.PropertyNames)
-                    {
-                        if (!object.Equals(dbEntry.OriginalValues.GetValue<object>(propertyName), dbEntry.CurrentValues.GetValue<object>(propertyName)))
-                        {
-                            result.Add(new PropertyChange
-                            {
-                                PropertyName = propertyName,
-                                OldValue = dbEntry.OriginalValues.GetValue<object>(propertyName) == null ? null : dbEntry.OriginalValues.GetValue<object>(propertyName).ToString(),
-                                NewValue = dbEntry.CurrentValues.GetValue<object>(propertyName) == null ? null : dbEntry.CurrentValues.GetValue<object>(propertyName).ToString()
-                            });
-                        }
-                    }
-
-                    break;
-                }
-                case EntityState.Deleted:
-                {
-                    foreach (string propertyName in dbEntry.OriginalValues.PropertyNames)
-                    {
-                        result.Add(new PropertyChange
-                        {
-                            PropertyName = propertyName,
-                            OldValue = dbEntry.OriginalValues.GetValue<object>(propertyName) == null ? null : dbEntry.OriginalValues.GetValue<object>(propertyName).ToString(),
-                            NewValue = null
-                        });
-                    }
-
-                    break;
-                }
-            }
-
-            return result;
         }
     }
 }

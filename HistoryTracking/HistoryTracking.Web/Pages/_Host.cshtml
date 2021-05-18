@@ -1,5 +1,5 @@
 ﻿@page "/"
-@namespace HistoryTracking.UI.Web.Pages
+@namespace HistoryTracking.Web.Pages
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @{
     Layout = null;
@@ -10,16 +10,17 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>History Tracking POC</title>
+    <title>HistoryTracking.Web</title>
     <base href="~/" />
     <link rel="stylesheet" href="css/bootstrap/bootstrap.min.css" />
     <link href="css/site.css" rel="stylesheet" />
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet" />
+    <link href="HistoryTracking.Web.styles.css" rel="stylesheet" />
+    <link rel="stylesheet" href="HistoryTracking.Web.styles.css" />
+    <link rel="stylesheet" href="https://static2.sharepointonline.com/files/fabric/office-ui-fabric-core/11.0.0/css/fabric.min.css" />
+    <script src="_content/BlazorFluentUI.BFUBaseComponent/blazorFluentUi.min.js"></script>
 </head>
 <body>
-    <app>
-        <component type="typeof(App)" render-mode="ServerPrerendered" />
-    </app>
+    <component type="typeof(App)" render-mode="ServerPrerendered" />
 
     <div id="blazor-error-ui">
         <environment include="Staging,Production">
@@ -32,6 +33,6 @@
         <a class="dismiss">🗙</a>
     </div>
 
-<script src="_framework/blazor.server.js"></script>
+    <script src="_framework/blazor.server.js"></script>
 </body>
 </html>

@@ -51,19 +51,17 @@
 
 
 @using HistoryTracking.DAL.Enums
-@inject UserApiClient UserApi
-@inject NavigationManager Navigation
-@inject IJSRuntime script
+@inherits BasePageComponent<UserAddEditPageModel>
 @code {
-    [Parameter]
-    public string SelectedUser { get; set; }
-    private UserAddEditPageModel Model { get; } = new UserAddEditPageModel();
+
+    [Parameter] public string SelectedUser { get; set; }
+
 
     protected override async Task OnInitializedAsync()
     {
         Model.IsAddingNewOne = SelectedUser == "Add";
 
-        var getUserTypeListResult = await UserApi.GetUserTypeListAsync();
+        var getUserTypeListResult = await ApiCall.Users.GetUserTypeListAsync();
         if (!getUserTypeListResult.IsSuccess)
         {
             ShowError(getUserTypeListResult.ErrorMessage);
@@ -80,7 +78,7 @@
         }
         else
         {
-            var getCurrentUserConfigResult = await UserApi.GetUserAsync(new Guid(SelectedUser));
+            var getCurrentUserConfigResult = await ApiCall.Users.GetUserAsync(new Guid(SelectedUser));
             if (!getCurrentUserConfigResult.IsSuccess)
             {
                 ShowError(getCurrentUserConfigResult.ErrorMessage);
@@ -101,8 +99,8 @@
 
     async Task OnSaveBtnClick()
     {
-        await script.InvokeAsync<string>("console.log", "Save: ", Model.UserConfig.ToJson());
-        var saveResult = await UserApi.AddEditUserAsync(Model.UserConfig);
+        await Script.InvokeAsync<string>("console.log", "Save: ", Model.UserConfig.ToJson());
+        var saveResult = await ApiCall.Users.AddEditUserAsync(Model.UserConfig);
 
         if (!saveResult.IsSuccess)
         {
@@ -121,10 +119,5 @@
         }
 
         return "Edit User";
-    }
-
-    void ShowError(string errorMessage)
-    {
-        Model.ErrorMessage = errorMessage;
     }
 }

@@ -55,17 +55,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ChangeTrackingLogic\AttributeExtensions.cs" />
-    <Compile Include="ChangeTrackingLogic\ChangeItem.cs" />
-    <Compile Include="ChangeTrackingLogic\DisplayPropertyChangesAttribute.cs" />
-    <Compile Include="ChangeTrackingLogic\GetChanges.cs" />
-    <Compile Include="ChangeTrackingLogic\TrackEntityChangesAttribute.cs" />
+    <Compile Include="TrackChangesLogic\AttributeExtensions.cs" />
+    <Compile Include="TrackChangesLogic\TrackPropertyChangesAttribute.cs" />
+    <Compile Include="TrackChangesLogic\TrackChanges.cs" />
     <Compile Include="DatabaseInitializer.cs" />
     <Compile Include="DataContext.cs" />
     <Compile Include="Entities\BaseEntity.cs" />
-    <Compile Include="Entities\PropertyChange.cs" />
+    <Compile Include="TrackChangesLogic\PropertyChangeDescription.cs" />
     <Compile Include="Entities\TrackEntityChange.cs" />
-    <Compile Include="Entities\IHistoryTracking.cs" />
+    <Compile Include="TrackChangesLogic\ITrackEntityChanges.cs" />
     <Compile Include="Entities\SubscriptionProductEntity.cs" />
     <Compile Include="Entities\OrderEntity.cs" />
     <Compile Include="Entities\UserEntity.cs" />

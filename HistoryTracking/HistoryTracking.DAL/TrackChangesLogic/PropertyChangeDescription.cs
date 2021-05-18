@@ -1,6 +1,6 @@
-﻿namespace HistoryTracking.DAL.Entities
+﻿namespace HistoryTracking.DAL
 {
-    public class PropertyChange
+    public class PropertyChangeDescription
     {
         public string PropertyName { get; set; }
         public string OldValue { get; set; }

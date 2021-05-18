@@ -1,0 +1,29 @@
+﻿@page "/"
+
+<h1>Hello, world!</h1>
+
+Welcome to your new app.
+
+<SurveyPrompt Title="How is Blazor working for you?" />
+
+<Dropdown ItemsSource=@items
+          MultiSelect="true"
+          Placeholder="Select options..."/>
+
+@code
+{
+    List<IDropdownOption>? items;
+
+    protected override Task OnInitializedAsync()
+    {
+        items = new List<IDropdownOption>
+        {
+            new DropdownOption {Text = "123"},
+            new DropdownOption {Text = "123"},
+            new DropdownOption {Text = "123"},
+            new DropdownOption {Text = "123"},
+        };
+
+        return base.OnInitializedAsync();
+    }
+}

@@ -120,19 +120,16 @@
 
 
 
-@inject OrderApiClient OrderApi
-@inject NavigationManager Navigation
-@inject IJSRuntime script
+@inherits BasePageComponent<OrderAddEditPageModel>
 @code {
-    [Parameter]
-    public string SelectedOrder { get; set; }
-    private OrderAddEditPageModel Model { get; } = new OrderAddEditPageModel();
+
+    [Parameter] public string SelectedOrder { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
         Model.IsAddingNewOne = SelectedOrder == "Add";
 
-        var getOrderStatusTypeListResult = await OrderApi.GetOrderStatusTypeListAsync();
+        var getOrderStatusTypeListResult = await ApiCall.Orders.GetOrderStatusTypeListAsync();
         if (!getOrderStatusTypeListResult.IsSuccess)
         {
             ShowError(getOrderStatusTypeListResult.ErrorMessage);
@@ -141,7 +138,7 @@
         Model.OrderStatusTypeList = getOrderStatusTypeListResult.Data;
 
 
-        var getCustomerListResult = await OrderApi.GetCustomerListAsync();
+        var getCustomerListResult = await ApiCall.Orders.GetCustomerListAsync();
         if (!getCustomerListResult.IsSuccess)
         {
             ShowError(getCustomerListResult.ErrorMessage);
@@ -150,7 +147,7 @@
         Model.CustomerList = getCustomerListResult.Data;
 
 
-        var getSubscriptionListResult = await OrderApi.GetSubscriptionList();
+        var getSubscriptionListResult = await ApiCall.Orders.GetSubscriptionList();
         if (!getSubscriptionListResult.IsSuccess)
         {
             ShowError(getSubscriptionListResult.ErrorMessage);
@@ -169,7 +166,7 @@
         }
         else
         {
-            var getCurrentOrderConfigResult = await OrderApi.GetOrderAsync(new Guid(SelectedOrder));
+            var getCurrentOrderConfigResult = await ApiCall.Orders.GetOrderAsync(new Guid(SelectedOrder));
             if (!getCurrentOrderConfigResult.IsSuccess)
             {
                 ShowError(getCurrentOrderConfigResult.ErrorMessage);
@@ -190,8 +187,8 @@
 
     async Task OnSaveBtnClick()
     {
-        await script.InvokeAsync<string>("console.log", "Save: ", Model.OrderConfig.ToJson());
-        var saveResult = await OrderApi.AddEditOrderAsync(Model.OrderConfig);
+        await Script.ExecuteAsync("console.log", "Save: ", Model.OrderConfig.ToJson());
+        var saveResult = await ApiCall.Orders.AddEditOrderAsync(Model.OrderConfig);
 
         if (!saveResult.IsSuccess)
         {
@@ -222,10 +219,5 @@
         }
 
         return "Edit Order";
-    }
-
-    void ShowError(string errorMessage)
-    {
-        Model.ErrorMessage = errorMessage;
     }
 }

@@ -14,10 +14,16 @@
         </div>
         <div class="col-2">
             <div>User</div>
-            <select>
-                <option>Subscriptions</option>
-                <option>Users</option>
+            <select multiple="multiple">
+                <option>Perter Parker</option>
+                <option>Vova Parker</option>
+                <option>Sasha Parker</option>
+                <option>Pety Parker</option>
             </select>
+        </div>
+        <div class="col-2">
+            <div>User</div>
+            <MultiDropdown></MultiDropdown>
         </div>
         <div class="col-2">
             <div>Period</div>
@@ -84,16 +90,29 @@
 
 </PageViewer>
 
-
-
+@inherits BasePageComponent<ActivityHistoryPageModel>
 @code {
-    private ActivityHistoryPageModel Model { get; } = new ActivityHistoryPageModel();
 
-    protected override Task OnInitializedAsync()
+    protected override async Task OnInitializedAsync()
     {
+        var getUsersResult = await ApiCall.Users.GetUserListAsync();
+        if (!getUsersResult.IsSuccess)
+        {
+            ShowError(getUsersResult.ErrorMessage);
+            return;
+        }
+        @*Model.UserList = getUsersResult.Data.Select(x => new DropdownOption{
+                Key = x.Id.ToString(),
+                Text = $"{x.Name} ({x.Email})"
+            });*@
+
+        Model.ChangeList = new List<string>
+{
+            "fdafdsf df123 34 4",
+            "fdafdsf df123 34 4",
+            "fdafdsf df123 34 4",
+            "fdafdsf df123 34 4",
+        };
         Model.IsReady = true;
-
-        return base.OnInitializedAsync();
     }
-
 }

@@ -9,29 +9,29 @@
         <br />
         <table class="table table-hover">
             <thead>
-            <tr>
-                <th>Order Date</th>
-                <th>Customer</th>
-                <th>Subscriptions</th>
-                <th>Order Status</th>
-                <th></th>
-            </tr>
+                <tr>
+                    <th>Order Date</th>
+                    <th>Customer</th>
+                    <th>Subscriptions</th>
+                    <th>Order Status</th>
+                    <th></th>
+                </tr>
             </thead>
             <tbody>
-            @foreach (var order in Model.OrderList)
-            {
-                <tr>
-                    <td>@order.OrderDate</td>
-                    <td>@order.CustomerUser.Name</td>
-                    <td>@order.SubscriptionList.Select(item => item.Title).Join(", ")</td>
-                    <td>@order.OrderStatus</td>
-                    <td>
-                        <a href="/orders/@order.Id">
-                            edit
-                        </a>
-                    </td>
-                </tr>
-            }
+                @foreach (var order in Model.OrderList)
+                {
+                    <tr>
+                        <td>@order.OrderDate</td>
+                        <td>@order.CustomerUser.Name</td>
+                        <td>@order.SubscriptionList.Select(item => item.Title).Join(", ")</td>
+                        <td>@order.OrderStatus</td>
+                        <td>
+                            <a href="/orders/@order.Id">
+                                edit
+                            </a>
+                        </td>
+                    </tr>
+                }
             </tbody>
         </table>
     }
@@ -53,14 +53,12 @@
 
 
 
-@inject OrderApiClient OrderApi
+@inherits BasePageComponent<OrderListPageModel>
 @code {
-
-    private OrderListPageModel Model = new OrderListPageModel();
 
     protected override async Task OnInitializedAsync()
     {
-        var getOrderListResult = await OrderApi.GetOrderListAsync();
+        var getOrderListResult = await ApiCall.Orders.GetOrderListAsync();
         if (!getOrderListResult.IsSuccess)
         {
             ShowError(getOrderListResult.ErrorMessage);
@@ -68,11 +66,5 @@
         }
         Model.OrderList = getOrderListResult.Data;
         Model.IsReady = true;
-    }
-
-
-    void ShowError(string errorMessage)
-    {
-        Model.ErrorMessage = errorMessage;
     }
 }

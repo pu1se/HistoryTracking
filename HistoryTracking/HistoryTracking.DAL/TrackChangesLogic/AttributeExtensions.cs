@@ -5,7 +5,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HistoryTracking.DAL.ChangeTrackingLogic
+namespace HistoryTracking.DAL
 {
     public static class AttributeExtensions
     {
@@ -15,9 +15,9 @@ namespace HistoryTracking.DAL.ChangeTrackingLogic
             return attribute;
         }
 
-        public static bool HasTrackChangesAttribute(this PropertyInfo property)
+        /*public static bool HasTrackChangesAttribute(this PropertyInfo property)
         {
             return property.GetAttribute<TrackEntityChangesAttribute>() != null;
-        }
+        }*/
     }
 }

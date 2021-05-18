@@ -1,8 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using HistoryTracking.UI.Web.ApiRequests;
+using HistoryTracking.Web.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Hosting;
@@ -10,8 +6,13 @@ using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using BlazorFluentUI;
 
-namespace HistoryTracking.UI.Web
+namespace HistoryTracking.Web
 {
     public class Startup
     {
@@ -28,14 +29,8 @@ namespace HistoryTracking.UI.Web
         {
             services.AddRazorPages();
             services.AddServerSideBlazor();
-            services.AddSignalR(hubOptions =>
-            {
-                hubOptions.EnableDetailedErrors = true;
-                hubOptions.KeepAliveInterval = TimeSpan.FromMinutes(60);
-            });
-            services.AddTransient<ServerApiCall>();
-            services.AddSingleton<UiSettings>();
-            services.AddSingleton<UserApiClient>();
+            services.AddSingleton<WeatherForecastService>();
+            services.AddBlazorFluentUI();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

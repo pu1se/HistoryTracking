@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace HistoryTracking.DAL
 {
-    public class DisplayPropertyChangesAttribute : Attribute
+    internal interface ITrackEntityChanges
     {
     }
 }

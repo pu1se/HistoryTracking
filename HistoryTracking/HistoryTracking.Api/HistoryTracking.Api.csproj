@@ -121,7 +121,7 @@
     <Compile Include="App_Start\UnityConfig.cs" />
     <Compile Include="App_Start\UnityWebApiActivator.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
-    <Compile Include="Controllers\HistoryController.cs" />
+    <Compile Include="Controllers\ChangesController.cs" />
     <Compile Include="Controllers\OrdersController.cs" />
     <Compile Include="Controllers\SubscriptionProductsController.cs" />
     <Compile Include="Controllers\UsersController.cs" />

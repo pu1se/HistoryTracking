@@ -55,14 +55,12 @@
 
 
 
-@inject SubscriptionApiClient SubscriptionApi
+@inherits BasePageComponent<SubscriptionListPageModel>
 @code {
-
-    private SubscriptionListPageModel Model = new SubscriptionListPageModel();
 
     protected override async Task OnInitializedAsync()
     {
-        var getSubscriptionListResult = await SubscriptionApi.GetSubscriptionListAsync();
+        var getSubscriptionListResult = await ApiCall.Subscriptions.GetSubscriptionListAsync();
         if (!getSubscriptionListResult.IsSuccess)
         {
             ShowError(getSubscriptionListResult.ErrorMessage);
@@ -71,11 +69,5 @@
         Model.SubscriptionList = getSubscriptionListResult.Data;
 
         Model.IsReady = true;
-    }
-
-
-    void ShowError(string errorMessage)
-    {
-        Model.ErrorMessage = errorMessage;
     }
 }

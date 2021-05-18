@@ -52,14 +52,12 @@
 
 
 
-@inject UserApiClient UserApi
+@inherits BasePageComponent<UserListPageModel>
 @code {
-
-    private UserListPageModel Model = new UserListPageModel();
 
     protected override async Task OnInitializedAsync()
     {
-        var getUserListResult = await UserApi.GetUserListAsync();
+        var getUserListResult = await ApiCall.Users.GetUserListAsync();
         if (!getUserListResult.IsSuccess)
         {
             ShowError(getUserListResult.ErrorMessage);
@@ -68,11 +66,5 @@
         Model.UserList = getUserListResult.Data;
 
         Model.IsReady = true;
-    }
-
-
-    void ShowError(string errorMessage)
-    {
-        Model.ErrorMessage = errorMessage;
     }
 }

@@ -1,5 +1,4 @@
 ﻿@page "/subscriptions/{SelectedSubscription}"
-@using HistoryTracking.BL.Services.SubscriptionProducts.Models
 
 <h3>@GetTitle()</h3>
 <br />
@@ -63,19 +62,17 @@
 
 
 
-@inject SubscriptionApiClient SubscriptionApi
-@inject NavigationManager Navigation
-@inject IJSRuntime script
+@using HistoryTracking.BL.Services.SubscriptionProducts.Models
+@inherits BasePageComponent<SubscriptionAddEditPageModel>
 @code {
-    [Parameter]
-    public string SelectedSubscription { get; set; }
-    private SubscriptionAddEditPageModel Model { get; } = new SubscriptionAddEditPageModel();
+
+    [Parameter] public string SelectedSubscription { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
         Model.IsAddingNewOne = SelectedSubscription == "Add";
 
-        var getCurrencyListResult = await SubscriptionApi.GetCurrencyListAsync();
+        var getCurrencyListResult = await ApiCall.Subscriptions.GetCurrencyListAsync();
         if (!getCurrencyListResult.IsSuccess)
         {
             ShowError(getCurrencyListResult.ErrorMessage);
@@ -91,7 +88,7 @@
         }
         else
         {
-            var getCurrentSubscriptionConfigResult = await SubscriptionApi.GetSibscriptionAsync(new Guid(SelectedSubscription));
+            var getCurrentSubscriptionConfigResult = await ApiCall.Subscriptions.GetSibscriptionAsync(new Guid(SelectedSubscription));
             if (!getCurrentSubscriptionConfigResult.IsSuccess)
             {
                 ShowError(getCurrentSubscriptionConfigResult.ErrorMessage);
@@ -114,8 +111,8 @@
 
     async Task OnSaveBtnClick()
     {
-        await script.InvokeAsync<string>("console.log", "Save: ", Model.SubscriptionConfig.ToJson());
-        var saveResult = await SubscriptionApi.AddEditSubscriptionAsync(Model.SubscriptionConfig);
+        await Script.ExecuteAsync("console.log", "Save: ", Model.SubscriptionConfig.ToJson());
+        var saveResult = await ApiCall.Subscriptions.AddEditSubscriptionAsync(Model.SubscriptionConfig);
 
         if (!saveResult.IsSuccess)
         {
@@ -134,10 +131,5 @@
         }
 
         return "Edit Subscription";
-    }
-
-    void ShowError(string errorMessage)
-    {
-        Model.ErrorMessage = errorMessage;
     }
 }
