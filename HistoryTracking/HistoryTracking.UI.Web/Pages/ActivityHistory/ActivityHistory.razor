@@ -13,19 +13,6 @@
             </select>
         </div>
         <div class="col-2">
-            <div>User</div>
-            <select multiple="multiple">
-                <option>Perter Parker</option>
-                <option>Vova Parker</option>
-                <option>Sasha Parker</option>
-                <option>Pety Parker</option>
-            </select>
-        </div>
-        <div class="col-2">
-            <div>User</div>
-            <MultiDropdown></MultiDropdown>
-        </div>
-        <div class="col-2">
             <div>Period</div>
             <select>
                 <option>7 days</option>
@@ -35,6 +22,10 @@
                 <option>1 year</option>
                 <option>all time</option>
             </select>
+        </div>
+        <div class="col-3">
+            <div>User</div>
+            <MultiDropdown Items="@Model.UserList" Changed="OnUserDropdownChanged"></MultiDropdown>
         </div>
     </div>
 
@@ -101,10 +92,10 @@
             ShowError(getUsersResult.ErrorMessage);
             return;
         }
-        @*Model.UserList = getUsersResult.Data.Select(x => new DropdownOption{
-                Key = x.Id.ToString(),
-                Text = $"{x.Name} ({x.Email})"
-            });*@
+        Model.UserList = getUsersResult.Data.Select(x => new DropdownItem{
+            Key = x.Id.ToString(),
+            Text = $"{x.Name}"
+        });
 
         Model.ChangeList = new List<string>
 {
@@ -114,5 +105,10 @@
             "fdafdsf df123 34 4",
         };
         Model.IsReady = true;
+    }
+
+    void OnUserDropdownChanged(string e)
+    {
+        Script.ExecuteAsync("console.info", e.ToJson());
     }
 }

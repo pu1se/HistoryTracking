@@ -67,9 +67,7 @@ namespace HistoryTracking
 
         public static string Join(this IEnumerable<string> list, string delimiter)
         {
-            return list.Aggregate(string.Empty,
-                (result, part) =>
-                    result + (string.IsNullOrEmpty(result) ? string.Empty : delimiter) + part);
+            return string.Join(delimiter, list);
         }
 
         public static StringContent ToJsonStringContent(this Object obj)
