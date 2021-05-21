@@ -85,18 +85,26 @@ namespace HistoryTracking.DAL
 
         private void ProcessChangesBeforeSave()
         {
+            ChangeTracker.DetectChanges();
             var changes = this.ChangeTracker.Entries()
                 .Where(e => e.State == EntityState.Added || e.State == EntityState.Modified);
             var now = DateTime.UtcNow;
 
-            foreach (var dbEntry in this.ChangeTracker.Entries<BaseEntity>())
+            foreach (var dbEntry in changes)
             {
-                var entity = dbEntry.Entity;
+                var entity = dbEntry.Entity as BaseEntity;
+                if (entity is null)
+                {
+                    continue;
+                }
 
                 if (entity is ITrackEntityChanges historyTrackingEntity)
                 {
                     var trackEntityChange = TrackChanges.GetTrackEntityChange(dbEntry);
-                    TrackEntityChanges.Add(trackEntityChange);
+                    if (trackEntityChange != null)
+                    {
+                        TrackEntityChanges.Add(trackEntityChange);
+                    }
                 }
 
                 if (dbEntry.State == EntityState.Added)
@@ -115,7 +123,7 @@ namespace HistoryTracking.DAL
                     dbEntry.Property(nameof(BaseEntity.CreatedByUserId)).IsModified = false;
                 }
 
-                if (dbEntry.State == EntityState.Added || dbEntry.State == EntityState.Modified)
+                if (dbEntry.State == EntityState.Modified)
                 {
                     entity.UpdatedDateUtc = now;
                     entity.UpdatedByUserId = UserManager.GetCurrentUser();

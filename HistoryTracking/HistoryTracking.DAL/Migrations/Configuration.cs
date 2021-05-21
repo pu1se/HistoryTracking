@@ -11,10 +11,5 @@ namespace HistoryTracking.DAL.Migrations
         {
             AutomaticMigrationsEnabled = false;
         }
-
-        protected override void Seed(HistoryTracking.DAL.DataContext context)
-        {
-            DatabaseInitializer.SeedWithTestData(context);
-        }
     }
 }

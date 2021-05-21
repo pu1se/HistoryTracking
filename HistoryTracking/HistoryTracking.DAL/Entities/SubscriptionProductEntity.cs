@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using HistoryTracking.DAL.Enums;
+using Newtonsoft.Json;
 
 namespace HistoryTracking.DAL.Entities
 {

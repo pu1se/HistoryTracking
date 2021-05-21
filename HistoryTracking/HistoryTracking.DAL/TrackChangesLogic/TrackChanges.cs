@@ -17,6 +17,12 @@ namespace HistoryTracking.DAL
         // todo: ppontus: use lymbda stead of attributes and interfaces to set properties and entities that will be tracking
         public static TrackEntityChange GetTrackEntityChange(DbEntityEntry dbEntry)
         {
+            var supportedEntryState = new List<EntityState> {EntityState.Modified, EntityState.Added, EntityState.Deleted};
+            if (!supportedEntryState.Contains(dbEntry.State))
+            {
+                return null;
+            }
+
             var tableAttr = dbEntry.Entity.GetType().GetCustomAttributes(typeof(TableAttribute), true).SingleOrDefault() as TableAttribute;
             var entityTableName = tableAttr != null ? tableAttr.Name : dbEntry.Entity.GetType().Name;
 
@@ -28,15 +34,16 @@ namespace HistoryTracking.DAL
                 Id = Guid.NewGuid(),
                 EntityTable = entityTableName,
                 EntityId = entityId,
-                EventType = dbEntry.State.ToString(),
-                EventDateUtc = DateTime.UtcNow,
-                NewValue = dbEntry.Entity.ToJson(),
-                TrackingPropertiesChanges = getPropertyChanges(dbEntry).ToJson()
+                ChangeType = dbEntry.State.ToString(),
+                ChangeDateUtc = DateTime.UtcNow,
+                EntityAfterChangeSnapshot = dbEntry.Entity.ToJson(),
+                PropertiesChanges = getPropertyChanges(dbEntry).ToJson(),
+                ChangedByUserId = UserManager.GetCurrentUser()
             };
 
             if (dbEntry.State == EntityState.Modified)
             {
-                trackEntityChange.OldValue = GetOriginalEntity(dbEntry.OriginalValues, dbEntry.Entity.GetType()).ToJson();
+                trackEntityChange.EntityBeforeChangeSnapshot = GetOriginalEntity(dbEntry.OriginalValues, dbEntry.Entity.GetType()).ToJson();
             }
 
             return trackEntityChange;

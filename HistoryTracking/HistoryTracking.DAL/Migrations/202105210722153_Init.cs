@@ -1,4 +1,4 @@
-namespace HistoryTracking.DAL.Migrations
+﻿namespace HistoryTracking.DAL.Migrations
 {
     using System;
     using System.Data.Entity.Migrations;
@@ -16,8 +16,8 @@ namespace HistoryTracking.DAL.Migrations
                         OrderStatus = c.Int(nullable: false),
                         PaymentStatus = c.Int(nullable: false),
                         CustomerUserId = c.Guid(nullable: false),
-                        CreatedDate = c.DateTime(nullable: false, precision: 7, storeType: "datetime2"),
-                        UpdatedDate = c.DateTime(nullable: false, precision: 7, storeType: "datetime2"),
+                        CreatedDateUtc = c.DateTime(nullable: false, precision: 7, storeType: "datetime2"),
+                        UpdatedDateUtc = c.DateTime(nullable: false, precision: 7, storeType: "datetime2"),
                         CreatedByUserId = c.Guid(nullable: false),
                         UpdatedByUserId = c.Guid(nullable: false),
                     })
@@ -33,8 +33,8 @@ namespace HistoryTracking.DAL.Migrations
                         Name = c.String(),
                         Email = c.String(),
                         UserType = c.Int(nullable: false),
-                        CreatedDate = c.DateTime(nullable: false, precision: 7, storeType: "datetime2"),
-                        UpdatedDate = c.DateTime(nullable: false, precision: 7, storeType: "datetime2"),
+                        CreatedDateUtc = c.DateTime(nullable: false, precision: 7, storeType: "datetime2"),
+                        UpdatedDateUtc = c.DateTime(nullable: false, precision: 7, storeType: "datetime2"),
                         CreatedByUserId = c.Guid(nullable: false),
                         UpdatedByUserId = c.Guid(nullable: false),
                     })
@@ -50,12 +50,31 @@ namespace HistoryTracking.DAL.Migrations
                         DistributorMarkupAsPercent = c.Decimal(nullable: false, precision: 18, scale: 2),
                         ResellerMarkupAsPercent = c.Decimal(nullable: false, precision: 18, scale: 2),
                         Currency = c.Int(nullable: false),
-                        CreatedDate = c.DateTime(nullable: false, precision: 7, storeType: "datetime2"),
-                        UpdatedDate = c.DateTime(nullable: false, precision: 7, storeType: "datetime2"),
+                        CreatedDateUtc = c.DateTime(nullable: false, precision: 7, storeType: "datetime2"),
+                        UpdatedDateUtc = c.DateTime(nullable: false, precision: 7, storeType: "datetime2"),
                         CreatedByUserId = c.Guid(nullable: false),
                         UpdatedByUserId = c.Guid(nullable: false),
                     })
                 .PrimaryKey(t => t.Id);
+            
+            CreateTable(
+                "dbo.TrackEntityChanges",
+                c => new
+                    {
+                        Id = c.Guid(nullable: false),
+                        ChangeType = c.String(),
+                        ChangeDateUtc = c.DateTime(nullable: false, precision: 7, storeType: "datetime2"),
+                        EntityTable = c.String(),
+                        EntityId = c.String(),
+                        EntityBeforeChangeSnapshot = c.String(),
+                        EntityAfterChangeSnapshot = c.String(),
+                        PropertiesChanges = c.String(),
+                        AltPropertiesChanges = c.String(),
+                        ChangedByUserId = c.Guid(nullable: false),
+                    })
+                .PrimaryKey(t => t.Id)
+                .ForeignKey("dbo.Users", t => t.ChangedByUserId)
+                .Index(t => t.ChangedByUserId);
             
             CreateTable(
                 "dbo.SubscriptionProducts_Users",
@@ -89,6 +108,7 @@ namespace HistoryTracking.DAL.Migrations
         {
             DropForeignKey("dbo.SubscriptionProducts_Orders", "OrderId", "dbo.SubscriptionProducts");
             DropForeignKey("dbo.SubscriptionProducts_Orders", "SubscriptionProductId", "dbo.Orders");
+            DropForeignKey("dbo.TrackEntityChanges", "ChangedByUserId", "dbo.Users");
             DropForeignKey("dbo.SubscriptionProducts_Users", "UserId", "dbo.SubscriptionProducts");
             DropForeignKey("dbo.SubscriptionProducts_Users", "SubscriptionProductId", "dbo.Users");
             DropForeignKey("dbo.Orders", "CustomerUserId", "dbo.Users");
@@ -96,9 +116,11 @@ namespace HistoryTracking.DAL.Migrations
             DropIndex("dbo.SubscriptionProducts_Orders", new[] { "SubscriptionProductId" });
             DropIndex("dbo.SubscriptionProducts_Users", new[] { "UserId" });
             DropIndex("dbo.SubscriptionProducts_Users", new[] { "SubscriptionProductId" });
+            DropIndex("dbo.TrackEntityChanges", new[] { "ChangedByUserId" });
             DropIndex("dbo.Orders", new[] { "CustomerUserId" });
             DropTable("dbo.SubscriptionProducts_Orders");
             DropTable("dbo.SubscriptionProducts_Users");
+            DropTable("dbo.TrackEntityChanges");
             DropTable("dbo.SubscriptionProducts");
             DropTable("dbo.Users");
             DropTable("dbo.Orders");

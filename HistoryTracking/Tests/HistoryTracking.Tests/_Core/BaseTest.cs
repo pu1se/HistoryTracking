@@ -11,13 +11,21 @@ namespace HistoryTracking.Tests
 {
     public abstract class BaseTest
     {
+        private static bool _isFirstCall = true;
         protected DataContext Storage { get; private set; }
+        protected DateTime DateWhenProjectWasStarted = new DateTime(2021, 05, 10);
 
         [TestInitialize]
         public void BaseInitialize()
         {
             DependencyManager.RegisterComponents();
             Storage = DependencyManager.Resolve<DataContext>();
+
+            if (_isFirstCall)
+            {
+                DatabaseInitializer.SeedWithTestData(Storage);
+                _isFirstCall = false;
+            }
         }
 
         [TestCleanup]

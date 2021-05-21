@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using HistoryTracking.DAL;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using Unity;
 using Unity.Lifetime;
 
@@ -21,6 +23,16 @@ namespace HistoryTracking.BL
             services.RegisterType<DataContext>(new TransientLifetimeManager());
             AddTransientServices();
             wasInitialized = true;
+
+            JsonConvert.DefaultSettings = () => new JsonSerializerSettings {
+                ContractResolver = new CamelCasePropertyNamesContractResolver(),
+                Formatting = Newtonsoft.Json.Formatting.Indented,
+                NullValueHandling = NullValueHandling.Ignore,
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
+                PreserveReferencesHandling = PreserveReferencesHandling.Objects, // to prevent json Circular Object Reference issues
+                FloatFormatHandling = FloatFormatHandling.String,
+                FloatParseHandling = FloatParseHandling.Decimal                
+            };
         }
 
         public static T Resolve<T>() where T: class

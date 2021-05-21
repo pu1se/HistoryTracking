@@ -15,20 +15,25 @@ namespace HistoryTracking.DAL.Entities
         [Key]
         public Guid Id { get; set; }
 
-        public string EventType { get; set; }
+        public string ChangeType { get; set; }
 
-        public DateTime EventDateUtc { get; set; }
+        public DateTime ChangeDateUtc { get; set; }
 
         public string EntityTable { get; set; }
 
         public string EntityId { get; set; }
 
-        public string OldValue { get; set; }
+        public string EntityBeforeChangeSnapshot { get; set; }
 
-        public string NewValue { get; set; }
+        public string EntityAfterChangeSnapshot { get; set; }
 
-        public string TrackingPropertiesChanges { get; set; }
+        public string PropertiesChanges { get; set; }
 
-        public bool TrackingPropertiesWasChanged { get; set; }
+        public string AltPropertiesChanges { get; set; }
+
+
+        public Guid ChangedByUserId { get; set; }
+        [ForeignKey("ChangedByUserId")]
+        public UserEntity ChangedByUser { get; set; }
     }
 }
