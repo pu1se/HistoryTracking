@@ -10,7 +10,7 @@
             <select>
                 @foreach (var entity in Model.TrackingEntityNames)
                 {
-                    <option key="@entity">@entity</option>
+                    <option key="@entity.EntityName">@entity.EntityNameForDisplaying</option>
                 }
             </select>
         </div>
@@ -41,22 +41,22 @@
                 <table class="table table-hover">
                     <thead>
                         <tr>
-                            <th>Date</th>
-                            <th>User</th>
-                            <th>Activity</th>
-                            <th>Change Type</th>
+                            <th style="width: 20%">Date</th>
+                            <th style="width: 10%">User</th>
+                            <th style="width: 10%">Activity</th>
+                            <th style="width: 10%">Change Type</th>
                             <th>Properties</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody style="cursor: pointer">
                         @foreach (var change in Model.ChangeList)
                         {
-                            <tr>
-                                <td>@change.ChangeDate</td>
+                            <tr @onclick="@(() => OnEntityChangeClick(change.Id))">
+                                <td>@change.ChangeDate.ToString("dd/MM/yyyy HH:mm")</td>
                                 <td>@change.ChangedByUser.Name</td>
                                 <td>@change.EntityName</td>
                                 <td>@change.ChangeType</td>
-                                <td>@change.PropertyChanges.Select(x => x.PropertyName).Join(",")</td>
+                                <td>@change.PropertyChanges.Select(x => x.PropertyName).Join(", ")</td>
                             </tr>
                         }
                     </tbody>
@@ -64,7 +64,36 @@
             </div>
 
             <div class="col-5">
-                some info
+                @if (Model.SelectedEntityChange != null)
+                {
+                    <hr style="margin: 0" />
+                    <br />
+                    <div class="row">
+                        <div class="col-12"><span>@Model.SelectedEntityChange.ChangeType</span> by 
+                            <span style="font-weight: bold;">@Model.SelectedEntityChange.ChangedByUser.Name</span> <span>( @Model.SelectedEntityChange.ChangedByUser.Email )</span></div>
+                    </div>
+                    <br />
+                    <hr style="margin: 0" />
+                    <br/>
+
+                    @foreach (var property in Model.SelectedEntityChange.PropertyChanges)
+                    {
+                        <div class="row" style="font-size: 15px;">
+                            <div class="col-2" style="font-weight: bold; font-size: 14px;">
+                                @property.PropertyName.SplitByCaps()
+                            </div>
+                            @if (!property.OldValue.IsNullOrEmpty())
+                            {
+                                <div class="col" style="text-decoration: line-through; color: #aaa; background-color: #d9d9d9; ">@property.OldValue</div>
+                            }
+                            @if (!property.NewValue.IsNullOrEmpty())
+                            {
+                                <div  class="col" style="background-color: #dff6dd;">@property.NewValue</div>
+                            }
+                        </div>
+                        <br/>
+                    }
+                }
             </div>
         }
         else
@@ -106,7 +135,7 @@
         Model.TrackingEntityNames = getTrackingEntitiesResult.Data;
         if (Model.TrackingEntityNames.Any())
         {
-            Model.FilterEntityName = Model.TrackingEntityNames.First();
+            Model.FilterEntityName = Model.TrackingEntityNames.First().EntityName;
         }
 
 
@@ -123,5 +152,10 @@
     void OnUserDropdownChanged(string e)
     {
         Script.ExecuteAsync("console.info", e.ToJson());
+    }
+
+    void OnEntityChangeClick(Guid entityChangeId)
+    {
+        Model.SelectedEntityChange = Model.ChangeList.First(x => x.Id == entityChangeId);
     }
 }

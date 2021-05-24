@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using HistoryTracking.BL.Services.Changes.Models;
 using HistoryTracking.BL.Services.User;
@@ -17,11 +18,15 @@ namespace HistoryTracking.BL.Services.Changes
         {
         }
 
-        public async Task<List<string>> GetTrackingTableNames()
+        public async Task<List<GetEntityNameModel>> GetTrackingTableNames()
         {
             var trackingTableNames = await Storage.TrackEntityChanges.GroupBy(e => e.EntityTable).ToListAsync();
 
-            return trackingTableNames.Select(x => x.Key).ToList();
+            return trackingTableNames.Select(x => new GetEntityNameModel
+            {
+                EntityName = x.Key,
+                EntityNameForDisplaying = x.Key.SplitByCaps()
+            }).ToList();
         }
 
         public async Task<List<GetChangeModel>> GetChanges()
@@ -29,6 +34,7 @@ namespace HistoryTracking.BL.Services.Changes
             var changes = await Storage.TrackEntityChanges
                 .Select(e => new GetChangeModel
                 {
+                    Id = e.Id,
                     ChangeDate = e.ChangeDateUtc,
                     ChangeType = e.ChangeType,
                     PropertyChangesAsJson = e.PropertiesChanges,
@@ -41,7 +47,11 @@ namespace HistoryTracking.BL.Services.Changes
                     }
                 })
                 .ToListAsync();
-            changes.ForEach(x => x.PropertyChanges = JsonConvert.DeserializeObject<List<PropertyChangeDescription>>(x.PropertyChangesAsJson));
+            changes.ForEach(x =>
+            {
+                x.PropertyChanges = JsonConvert.DeserializeObject<List<PropertyChangeDescription>>(x.PropertyChangesAsJson);
+                x.EntityName = x.EntityName.SplitByCaps();
+            });
 
             return changes;
         }

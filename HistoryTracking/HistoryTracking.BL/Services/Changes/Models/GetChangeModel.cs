@@ -18,5 +18,6 @@ namespace HistoryTracking.BL.Services.Changes.Models
         public List<PropertyChangeDescription> PropertyChanges { get; set; } = new List<PropertyChangeDescription>();
 
         public string EntityName { get; set; }
+        public Guid Id { get; set; }
     }
 }

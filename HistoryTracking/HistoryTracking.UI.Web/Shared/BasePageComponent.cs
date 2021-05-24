@@ -21,5 +21,10 @@ namespace HistoryTracking.UI.Web.Shared
         {
             Model.ErrorMessage = errorMessage;
         }
+
+        protected void ShowInfo(string message)
+        {
+            Model.LogMessage = message;
+        }
     }
 }

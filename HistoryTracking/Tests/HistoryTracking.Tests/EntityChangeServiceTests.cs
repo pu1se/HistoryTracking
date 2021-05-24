@@ -17,7 +17,8 @@ namespace HistoryTracking.Tests
             var tableNames = await Service.GetTrackingTableNames();
 
             Assert.IsTrue(tableNames.Any());
-            Assert.IsTrue(tableNames.First().IsNullOrEmpty() == false);
+            Assert.IsTrue(tableNames.First().EntityName.IsNullOrEmpty() == false);
+            Assert.IsTrue(tableNames.First().EntityNameForDisplaying.IsNullOrEmpty() == false);
         }
 
         [TestMethod]

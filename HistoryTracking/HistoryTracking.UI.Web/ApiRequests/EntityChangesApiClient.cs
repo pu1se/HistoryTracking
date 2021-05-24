@@ -12,9 +12,9 @@ namespace HistoryTracking.UI.Web.ApiRequests
         {
         }
 
-        public Task<ApiCallDataResult<List<string>>> GetTrackingEntityNames()
+        public Task<ApiCallDataResult<List<GetEntityNameModel>>> GetTrackingEntityNames()
         {
-            return Api.GetAsync<List<string>>("entity-changes/tracking-entity-names");
+            return Api.GetAsync<List<GetEntityNameModel>>("entity-changes/tracking-entity-names");
         }
 
         public Task<ApiCallDataResult<List<GetChangeModel>>> GetEntityChanges()

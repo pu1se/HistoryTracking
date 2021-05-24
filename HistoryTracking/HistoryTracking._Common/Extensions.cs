@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 
@@ -58,6 +59,16 @@ namespace HistoryTracking
                 return st;
 
             return st.Substring(0, maxLength);
+        }
+
+        public static string SplitByCaps(this string value)
+        {
+            if (value.IsNullOrEmpty())
+            {
+                return value;
+            }
+
+            return Regex.Replace(value, "(\\B[A-Z])", " $1");
         }
 
         public static TEnum AsEnum<TEnum>(this string value) where TEnum : struct, IConvertible
