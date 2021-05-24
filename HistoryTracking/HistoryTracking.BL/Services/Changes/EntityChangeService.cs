@@ -11,9 +11,9 @@ using Newtonsoft.Json;
 
 namespace HistoryTracking.BL.Services.Changes
 {
-    public class ChangeService : BaseService
+    public class EntityChangeService : BaseService
     {
-        public ChangeService(DataContext storage) : base(storage)
+        public EntityChangeService(DataContext storage) : base(storage)
         {
         }
 
@@ -32,6 +32,7 @@ namespace HistoryTracking.BL.Services.Changes
                     ChangeDate = e.ChangeDateUtc,
                     ChangeType = e.ChangeType,
                     PropertyChangesAsJson = e.PropertiesChanges,
+                    EntityName = e.EntityTable,
                     ChangedByUser = new GetUserModel
                     {
                         Name = e.ChangedByUser.Name,

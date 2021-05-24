@@ -138,7 +138,7 @@
         Model.OrderStatusTypeList = getOrderStatusTypeListResult.Data;
 
 
-        var getCustomerListResult = await ApiCall.Orders.GetCustomerListAsync();
+        var getCustomerListResult = await ApiCall.Users.GetCustomerListAsync();
         if (!getCustomerListResult.IsSuccess)
         {
             ShowError(getCustomerListResult.ErrorMessage);
@@ -147,7 +147,7 @@
         Model.CustomerList = getCustomerListResult.Data;
 
 
-        var getSubscriptionListResult = await ApiCall.Orders.GetSubscriptionList();
+        var getSubscriptionListResult = await ApiCall.Subscriptions.GetSubscriptionListAsync();
         if (!getSubscriptionListResult.IsSuccess)
         {
             ShowError(getSubscriptionListResult.ErrorMessage);

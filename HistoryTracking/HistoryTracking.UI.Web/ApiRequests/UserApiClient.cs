@@ -39,5 +39,17 @@ namespace HistoryTracking.UI.Web.ApiRequests
                 $"users/user-types"
             );
         }
+
+        public async Task<ApiCallDataResult<List<GetUserModel>>> GetCustomerListAsync()
+        {
+            var getUserListResult = await GetUserListAsync();
+            if (!getUserListResult.IsSuccess)
+            {
+                return getUserListResult;
+            }
+
+            var customerList = getUserListResult.Data.Where(item => item.UserType == UserType.Customer).ToList();
+            return new ApiCallDataResult<List<GetUserModel>>(customerList);
+        }
     }
 }

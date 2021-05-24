@@ -87,7 +87,7 @@ namespace HistoryTracking.DAL
         {
             ChangeTracker.DetectChanges();
             var changes = this.ChangeTracker.Entries()
-                .Where(e => e.State == EntityState.Added || e.State == EntityState.Modified);
+                .Where(e => e.State == EntityState.Added || e.State == EntityState.Modified || e.State == EntityState.Deleted);
             var now = DateTime.UtcNow;
 
             foreach (var dbEntry in changes)
@@ -100,7 +100,7 @@ namespace HistoryTracking.DAL
 
                 if (entity is ITrackEntityChanges historyTrackingEntity)
                 {
-                    var trackEntityChange = TrackChanges.GetTrackEntityChange(dbEntry);
+                    var trackEntityChange = TrackChanges.GetTrackEntityChange(this, dbEntry);
                     if (trackEntityChange != null)
                     {
                         TrackEntityChanges.Add(trackEntityChange);

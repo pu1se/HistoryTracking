@@ -35,7 +35,7 @@ namespace HistoryTracking.UI.Web.ApiRequests
 
             var restClient = new RestClient(this.BaseUrl);
             var request = GenerateRequest(httpMethod, path, data);
-            request.AddCookie("CurrentUser", UserManager.CurrentUser);
+            request.AddCookie("CurrentUser", UserManager.CurrentUserId);
 
             var response = await restClient.ExecuteTaskAsync(request);
             var callResult = ApiErrorHandler.HandleResponse(response);
@@ -51,7 +51,7 @@ namespace HistoryTracking.UI.Web.ApiRequests
 
             var restClient = new RestClient(this.BaseUrl);
             var request = GenerateRequest(httpMethod, path, data);
-            request.AddCookie("CurrentUser", UserManager.CurrentUser);
+            request.AddCookie("CurrentUser", UserManager.CurrentUserId);
 
             var response = await restClient.ExecuteTaskAsync<T>(request);
             var callResult = ApiErrorHandler.HandleResponse(response);

@@ -17,10 +17,13 @@ namespace HistoryTracking.DAL.Entities
 
         public string ChangeType { get; set; }
 
+        // todo: add index
         public DateTime ChangeDateUtc { get; set; }
 
+        // todo: add index
         public string EntityTable { get; set; }
 
+        // todo: add index
         public string EntityId { get; set; }
 
         public string EntityBeforeChangeSnapshot { get; set; }

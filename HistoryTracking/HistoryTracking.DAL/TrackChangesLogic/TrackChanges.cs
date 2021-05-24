@@ -3,50 +3,84 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Entity;
+using System.Data.Entity.Core.Objects;
 using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using HistoryTracking.DAL.Entities;
+using HistoryTracking.DAL.TrackChangesLogic;
 
 namespace HistoryTracking.DAL
 {
     public static class TrackChanges
     {
         // todo: ppontus: use lymbda stead of attributes and interfaces to set properties and entities that will be tracking
-        public static TrackEntityChange GetTrackEntityChange(DbEntityEntry dbEntry)
+        // todo: make three implementation of changes tracking -
+        // from dbEntry,
+        // from old and new entities comparing using reflection
+        // from object state entry
+        public static TrackEntityChange GetTrackEntityChange(DataContext dataContext, DbEntityEntry dbEntry)
         {
-            var supportedEntryState = new List<EntityState> {EntityState.Modified, EntityState.Added, EntityState.Deleted};
+            var supportedEntryState = new List<EntityState> { EntityState.Modified, EntityState.Added, EntityState.Deleted };
             if (!supportedEntryState.Contains(dbEntry.State))
             {
                 return null;
             }
 
-            var tableAttr = dbEntry.Entity.GetType().GetCustomAttributes(typeof(TableAttribute), true).SingleOrDefault() as TableAttribute;
-            var entityTableName = tableAttr != null ? tableAttr.Name : dbEntry.Entity.GetType().Name;
-
-            var keyName = dbEntry.Entity.GetType().GetProperties().FirstOrDefault(p => p.GetCustomAttributes(typeof(KeyAttribute), false).Count() > 0)?.Name;
-            var entityId = keyName != null ? dbEntry.CurrentValues.GetValue<object>(keyName).ToString() : string.Empty;
 
             var trackEntityChange = new TrackEntityChange
             {
                 Id = Guid.NewGuid(),
-                EntityTable = entityTableName,
-                EntityId = entityId,
+                EntityTable = GetTableName(dbEntry),
+                EntityId = GetPrimaryKeyId(dataContext, dbEntry),
                 ChangeType = dbEntry.State.ToString(),
-                ChangeDateUtc = DateTime.UtcNow,
-                EntityAfterChangeSnapshot = dbEntry.Entity.ToJson(),
+                ChangeDateUtc = DateTime.UtcNow, // todo: get change date from Entity or from ModifiedDate
+                EntityAfterChangeSnapshot = GetCurrentEntitySnapshot(dbEntry),
                 PropertiesChanges = getPropertyChanges(dbEntry).ToJson(),
-                ChangedByUserId = UserManager.GetCurrentUser()
+                ChangedByUserId = UserManager.GetCurrentUser(),
             };
 
             if (dbEntry.State == EntityState.Modified)
             {
-                trackEntityChange.EntityBeforeChangeSnapshot = GetOriginalEntity(dbEntry.OriginalValues, dbEntry.Entity.GetType()).ToJson();
+                var originalEntity = GetOriginalEntity(dbEntry.OriginalValues, dbEntry.Entity.GetType());
+                trackEntityChange.EntityBeforeChangeSnapshot = originalEntity.ToJson();
+                trackEntityChange.AltPropertiesChanges = GetChanges.For(originalEntity, dbEntry.Entity).ToJson();
+            }
+            else
+            {
+                trackEntityChange.AltPropertiesChanges = GetChanges.For(null, dbEntry.Entity).ToJson();
             }
 
             return trackEntityChange;
+        }
+
+        private static string GetCurrentEntitySnapshot(DbEntityEntry dbEntry)
+        {
+            return dbEntry.State != EntityState.Deleted ? dbEntry.Entity.ToJson() : null;
+        }
+
+        private static string GetTableName(DbEntityEntry dbEntry)
+        {
+            var tableAttr = dbEntry.Entity.GetType().GetCustomAttributes(typeof(TableAttribute), true).SingleOrDefault() as TableAttribute;
+            var entityTableName = tableAttr != null ? tableAttr.Name : dbEntry.Entity.GetType().Name;
+
+            return entityTableName;
+        }
+
+        private static string GetPrimaryKeyId(DataContext dataContext, DbEntityEntry dbEntry)
+        {
+            try
+            {
+                var objectStateEntry = ((IObjectContextAdapter)dataContext).ObjectContext.ObjectStateManager.GetObjectStateEntry(dbEntry.Entity);
+                var entityId = objectStateEntry.EntityKey.EntityKeyValues[0].Value.ToString();
+                return entityId;
+            }
+            catch (Exception e)
+            {
+                return Guid.Empty.ToString();
+            }
         }
 
         private static object GetOriginalEntity(DbPropertyValues originalValues, Type tEntity)

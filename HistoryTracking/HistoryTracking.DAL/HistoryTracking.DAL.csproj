@@ -60,6 +60,7 @@
       <DependentUpon>202105210722153_Init.cs</DependentUpon>
     </Compile>
     <Compile Include="TrackChangesLogic\AttributeExtensions.cs" />
+    <Compile Include="TrackChangesLogic\GetChanges.cs" />
     <Compile Include="TrackChangesLogic\TrackPropertyChangesAttribute.cs" />
     <Compile Include="TrackChangesLogic\TrackChanges.cs" />
     <Compile Include="DatabaseInitializer.cs" />

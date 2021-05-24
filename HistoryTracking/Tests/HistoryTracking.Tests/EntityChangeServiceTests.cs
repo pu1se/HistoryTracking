@@ -9,7 +9,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace HistoryTracking.Tests
 {
     [TestClass]
-    public class ChangeServiceTests : BaseServiceTests<ChangeService>
+    public class EntityChangeServiceTests : BaseServiceTests<EntityChangeService>
     {
         [TestMethod]
         public async Task CheckGetTableNamesTest()

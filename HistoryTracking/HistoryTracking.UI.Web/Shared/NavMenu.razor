@@ -1,4 +1,5 @@
 ﻿@using Microsoft.AspNetCore.Http
+@using HistoryTracking.DAL.Enums
 <div class="top-row pl-4 navbar navbar-dark">
     <a class="navbar-brand" href="">History Tracking POC</a>
     <button class="navbar-toggler" @onclick="ToggleNavMenu">
@@ -8,21 +9,30 @@
 
 <div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
     <ul class="nav flex-column">
-        <li class="nav-item px-3">
-            <NavLink class="nav-link" href="users">
-                <span class="oi oi-list" aria-hidden="true"></span> Users
-            </NavLink>
-        </li>
-        <li class="nav-item px-3">
-            <NavLink class="nav-link" href="subscriptions" Match="NavLinkMatch.Prefix" style="font-size: 14px;">
-                <span class="oi oi-list" aria-hidden="true"></span> Subscriptions
-            </NavLink>
-        </li>
-        <li class="nav-item px-3">
-            <NavLink class="nav-link" href="orders">
-                <span class="oi oi-list" aria-hidden="true"></span> Orders
-            </NavLink>
-        </li>
+        @if (UserManager.CurrentUserType == UserType.SystemUser || UserManager.CurrentUserType == UserType.Distributor)
+        {
+            <li class="nav-item px-3">
+                <NavLink class="nav-link" href="users">
+                    <span class="oi oi-list" aria-hidden="true"></span> Users
+                </NavLink>
+            </li>
+        }
+        @if (UserManager.CurrentUserType == UserType.Distributor || UserManager.CurrentUserType == UserType.Reseller)
+        {
+            <li class="nav-item px-3">
+                <NavLink class="nav-link" href="subscriptions" Match="NavLinkMatch.Prefix" style="font-size: 14px;">
+                    <span class="oi oi-list" aria-hidden="true"></span> Subscriptions
+                </NavLink>
+            </li>
+        } 
+        @if (UserManager.CurrentUserType == UserType.Customer || UserManager.CurrentUserType == UserType.Reseller)
+        {
+            <li class="nav-item px-3">
+                <NavLink class="nav-link" href="orders">
+                    <span class="oi oi-list" aria-hidden="true"></span> Orders
+                </NavLink>
+            </li>
+        }
         <li class="nav-item px-3">
             <NavLink class="nav-link" href="changes">
                 <span class="oi oi-list" aria-hidden="true"></span> Activity History
@@ -57,7 +67,7 @@
     }
 
     private List<GetUserModel> UserList { get; set; } = new List<GetUserModel>();
-    private string CurrentUser { get; set; }
+    private UserType CurrentUserType { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
@@ -89,10 +99,12 @@
         await SetSelectedUser(selectedUser);
     }
 
-    async Task SetSelectedUser(string selectedUser)
+    async Task SetSelectedUser(string selectedUserId)
     {
-        await script.InvokeAsync<string>("console.info", "Selected User: ", selectedUser);
-        UserManager.CurrentUser = selectedUser;
+        await script.InvokeAsync<string>("console.info", "Selected User: ", selectedUserId);
+        var selectedUser = UserList.First(x => x.Id.ToString() == selectedUserId);
+        UserManager.CurrentUserId = selectedUser.Id.ToString();
+        UserManager.CurrentUserType = selectedUser.UserType;
     }
 }
 

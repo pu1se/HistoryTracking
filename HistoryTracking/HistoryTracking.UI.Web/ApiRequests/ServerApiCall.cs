@@ -11,12 +11,14 @@ namespace HistoryTracking.UI.Web
         public OrderApiClient Orders { get; }
         public SubscriptionApiClient Subscriptions { get; }
         public UserApiClient Users { get; }
+        public EntityChangesApiClient EntityChanges { get; }
 
         public ServerApiCall(UiSettings settings)
         {
             Users = new UserApiClient(settings);
             Subscriptions = new SubscriptionApiClient(settings);
-            Orders = new OrderApiClient(settings, Subscriptions, Users);
+            Orders = new OrderApiClient(settings);
+            EntityChanges = new EntityChangesApiClient(settings);
         }
     }
 }

@@ -8,8 +8,10 @@
         <div class="col-2">
             <div>Activity</div>
             <select>
-                <option>Subscriptions</option>
-                <option>Users</option>
+                @foreach (var entity in Model.TrackingEntityNames)
+                {
+                    <option key="@entity">@entity</option>
+                }
             </select>
         </div>
         <div class="col-2">
@@ -42,6 +44,7 @@
                             <th>Date</th>
                             <th>User</th>
                             <th>Activity</th>
+                            <th>Change Type</th>
                             <th>Properties</th>
                         </tr>
                     </thead>
@@ -49,15 +52,11 @@
                         @foreach (var change in Model.ChangeList)
                         {
                             <tr>
-                                @change
-                                @*<td>@user.Name</td>
-                                    <td>@user.Email</td>
-                                    <td>@user.UserType</td>
-                                    <td>
-                                        <a href="/users/@user.Id">
-                                            edit
-                                        </a>
-                                    </td>*@
+                                <td>@change.ChangeDate</td>
+                                <td>@change.ChangedByUser.Name</td>
+                                <td>@change.EntityName</td>
+                                <td>@change.ChangeType</td>
+                                <td>@change.PropertyChanges.Select(x => x.PropertyName).Join(",")</td>
                             </tr>
                         }
                     </tbody>
@@ -97,13 +96,27 @@
             Text = $"{x.Name}"
         });
 
-        Model.ChangeList = new List<string>
-{
-            "fdafdsf df123 34 4",
-            "fdafdsf df123 34 4",
-            "fdafdsf df123 34 4",
-            "fdafdsf df123 34 4",
-        };
+
+        var getTrackingEntitiesResult = await ApiCall.EntityChanges.GetTrackingEntityNames();
+        if (!getTrackingEntitiesResult.IsSuccess)
+        {
+            ShowError(getTrackingEntitiesResult.ErrorMessage);
+            return;
+        }
+        Model.TrackingEntityNames = getTrackingEntitiesResult.Data;
+        if (Model.TrackingEntityNames.Any())
+        {
+            Model.FilterEntityName = Model.TrackingEntityNames.First();
+        }
+
+
+        var getEntityChangesResult = await ApiCall.EntityChanges.GetEntityChanges();
+        if (!getEntityChangesResult.IsSuccess)
+        {
+            ShowError(getEntityChangesResult.ErrorMessage);
+            return;
+        }
+        Model.ChangeList = getEntityChangesResult.Data;
         Model.IsReady = true;
     }
 

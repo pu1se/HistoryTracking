@@ -65,7 +65,7 @@
   <ItemGroup>
     <Compile Include="DependencyManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Services\Changes\ChangeService.cs" />
+    <Compile Include="Services\Changes\EntityChangeService.cs" />
     <Compile Include="Services\Changes\Models\GetChangeModel.cs" />
     <Compile Include="Services\Orders\Models\AddEditOrderModel.cs" />
     <Compile Include="Services\Orders\Models\GetOrderModel.cs" />

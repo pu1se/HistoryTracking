@@ -1,0 +1,11 @@
+.net core history tracking
+https://codewithmukesh.com/blog/audit-trail-implementation-in-aspnet-core/
+https://www.codeproject.com/Articles/5259677/Creating-Simple-Audit-Trail-With-Entity-Framework
+https://www.meziantou.net/entity-framework-core-history-audit-table.htm
+
+the best for .net core
+https://dejanstojanovic.net/aspnet/2018/november/tracking-data-changes-with-entity-framework-core/
+
+
+ef 6
+https://www.codeproject.com/Articles/34491/Implementing-Audit-Trail-using-Entity-Framework-3
