@@ -11,10 +11,10 @@ namespace HistoryTracking.UI.Web.Pages.ActivityHistory
 {
     public class ActivityHistoryPageModel : BasePageModel
     {
-        public List<GetChangeModel> ChangeList { get; set; } = new List<GetChangeModel>();
+        public List<ChangeModel> ChangeList { get; set; } = new List<ChangeModel>();
         public IEnumerable<DropdownItem> UserList { get; set; } = new List<DropdownItem>();
-        public List<GetEntityNameModel> TrackingEntityNames { get; set; } = new List<GetEntityNameModel>();
+        public List<EntityNameModel> TrackingEntityNames { get; set; } = new List<EntityNameModel>();
         public string FilterEntityName { get; set; }
-        public GetChangeModel SelectedEntityChange { get; set; }
+        public ChangeModel SelectedEntityChange { get; set; }
     }
 }

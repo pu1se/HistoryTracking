@@ -8,6 +8,6 @@ namespace HistoryTracking.UI.Web
 {
     public class UserListPageModel : BasePageModel
     {
-        public List<GetUserModel> UserList { get; set; } = new List<GetUserModel>();
+        public List<UserModel> UserList { get; set; } = new List<UserModel>();
     }
 }

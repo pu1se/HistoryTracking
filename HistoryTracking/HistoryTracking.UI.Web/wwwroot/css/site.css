@@ -312,3 +312,11 @@ select {
 input {
     width: 100%;
 }
+
+.grey {
+    background-color: #ebebeb;
+}
+
+.right-board {
+    border-right: 1px #ebebeb solid;
+}

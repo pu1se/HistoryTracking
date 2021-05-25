@@ -18,28 +18,28 @@ namespace HistoryTracking.BL.Services.Changes
         {
         }
 
-        public async Task<List<GetEntityNameModel>> GetTrackingTableNames()
+        public async Task<List<EntityNameModel>> GetTrackingTableNames()
         {
             var trackingTableNames = await Storage.TrackEntityChanges.GroupBy(e => e.EntityTable).ToListAsync();
 
-            return trackingTableNames.Select(x => new GetEntityNameModel
+            return trackingTableNames.Select(x => new EntityNameModel
             {
                 EntityName = x.Key,
                 EntityNameForDisplaying = x.Key.SplitByCaps()
             }).ToList();
         }
 
-        public async Task<List<GetChangeModel>> GetChanges()
+        public async Task<List<ChangeModel>> GetChanges()
         {
             var changes = await Storage.TrackEntityChanges
-                .Select(e => new GetChangeModel
+                .Select(e => new ChangeModel
                 {
                     Id = e.Id,
                     ChangeDate = e.ChangeDateUtc,
                     ChangeType = e.ChangeType,
                     PropertyChangesAsJson = e.PropertiesChanges,
                     EntityName = e.EntityTable,
-                    ChangedByUser = new GetUserModel
+                    ChangedByUser = new UserModel
                     {
                         Name = e.ChangedByUser.Name,
                         Email = e.ChangedByUser.Email,

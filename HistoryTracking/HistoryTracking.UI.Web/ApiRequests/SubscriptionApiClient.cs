@@ -14,9 +14,9 @@ namespace HistoryTracking.UI.Web.ApiRequests
         {
         }
 
-        public Task<ApiCallDataResult<List<GetSubscriptionModel>>> GetSubscriptionListAsync()
+        public Task<ApiCallDataResult<List<SubscriptionModel>>> GetSubscriptionListAsync()
         {
-            return Api.GetAsync<List<GetSubscriptionModel>>("subscriptions");
+            return Api.GetAsync<List<SubscriptionModel>>("subscriptions");
         }
 
         public Task<ApiCallResult> AddEditSubscriptionAsync(AddEditSubscriptionModel model)
@@ -27,9 +27,9 @@ namespace HistoryTracking.UI.Web.ApiRequests
             );
         }
 
-        public Task<ApiCallDataResult<GetSubscriptionModel>> GetSibscriptionAsync(Guid subscriptionId)
+        public Task<ApiCallDataResult<SubscriptionModel>> GetSibscriptionAsync(Guid subscriptionId)
         {
-            return Api.GetAsync<GetSubscriptionModel>(
+            return Api.GetAsync<SubscriptionModel>(
                 $"subscriptions/{subscriptionId}"
             );
         }

@@ -79,6 +79,7 @@ namespace HistoryTracking.DAL
             }
             catch (Exception e)
             {
+                Console.Write(e.ToJson());
                 return Guid.Empty.ToString();
             }
         }
@@ -107,6 +108,10 @@ namespace HistoryTracking.DAL
         private static List<PropertyChangeDescription> getPropertyChanges(DbEntityEntry dbEntry)
         {
             var result = new List<PropertyChangeDescription>();
+            var trackPropertiesWithName = dbEntry.Entity.GetType().GetProperties()
+                .Where(x => x.GetCustomAttributes<TrackPropertyChangesAttribute>().Any())
+                .Select(x => x.Name)
+                .ToList();
 
             switch (dbEntry.State)
             {
@@ -114,6 +119,11 @@ namespace HistoryTracking.DAL
                 {
                     foreach (string propertyName in dbEntry.CurrentValues.PropertyNames)
                     {
+                        if (!trackPropertiesWithName.Contains(propertyName))
+                        {
+                            continue;
+                        }
+
                         result.Add(new PropertyChangeDescription
                         {
                             PropertyName = propertyName,
@@ -128,6 +138,10 @@ namespace HistoryTracking.DAL
                 {
                     foreach (string propertyName in dbEntry.CurrentValues.PropertyNames)
                     {
+                        if (!trackPropertiesWithName.Contains(propertyName))
+                        {
+                            continue;
+                        }
                         if (!object.Equals(dbEntry.OriginalValues.GetValue<object>(propertyName), dbEntry.CurrentValues.GetValue<object>(propertyName)))
                         {
                             result.Add(new PropertyChangeDescription
@@ -145,6 +159,10 @@ namespace HistoryTracking.DAL
                 {
                     foreach (string propertyName in dbEntry.OriginalValues.PropertyNames)
                     {
+                        if (!trackPropertiesWithName.Contains(propertyName))
+                        {
+                            continue;
+                        }
                         result.Add(new PropertyChangeDescription
                         {
                             PropertyName = propertyName,

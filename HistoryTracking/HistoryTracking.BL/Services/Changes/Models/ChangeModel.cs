@@ -5,13 +5,13 @@ using HistoryTracking.DAL;
 
 namespace HistoryTracking.BL.Services.Changes.Models
 {
-    public class GetChangeModel
+    public class ChangeModel
     {
         public DateTime ChangeDate { get; set; }
 
         public string ChangeType { get; set; }
 
-        public GetUserModel ChangedByUser { get; set; }
+        public UserModel ChangedByUser { get; set; }
 
         public string PropertyChangesAsJson { get; set; }
 

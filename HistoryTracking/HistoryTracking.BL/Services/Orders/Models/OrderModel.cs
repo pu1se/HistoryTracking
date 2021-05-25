@@ -9,12 +9,12 @@ using HistoryTracking.DAL.Enums;
 
 namespace HistoryTracking.BL.Services.Order.Models
 {
-    public class GetOrderModel
+    public class OrderModel
     {
         public Guid Id { get; set; }
         public OrderStatusType OrderStatus { get; set; }
-        public GetUserModel CustomerUser { get; set; }
+        public UserModel CustomerUser { get; set; }
         public DateTime OrderDate { get; set; }
-        public List<GetSubscriptionModel> SubscriptionList { get; set; } = new List<GetSubscriptionModel>();
+        public List<SubscriptionModel> SubscriptionList { get; set; } = new List<SubscriptionModel>();
     }
 }

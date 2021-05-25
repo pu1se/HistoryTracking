@@ -16,11 +16,11 @@ namespace HistoryTracking.BL.Services
         {
         }
 
-        public async Task<List<GetUserModel>> GetList()
+        public async Task<List<UserModel>> GetList()
         {
             var users = await Storage.Users.Select(
                     e =>
-                    new GetUserModel
+                    new UserModel
                     {
                         Id = e.Id,
                         Email = e.Email,
@@ -32,7 +32,7 @@ namespace HistoryTracking.BL.Services
             return users;
         }
 
-        public async Task<GetUserModel> GetItem(Guid userId)
+        public async Task<UserModel> GetItem(Guid userId)
         {
             var users = await GetList();
 

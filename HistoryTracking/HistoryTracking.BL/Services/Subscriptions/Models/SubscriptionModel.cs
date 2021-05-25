@@ -7,7 +7,7 @@ using HistoryTracking.DAL.Enums;
 
 namespace HistoryTracking.BL.Services.SubscriptionProducts.Models
 {
-    public class GetSubscriptionModel
+    public class SubscriptionModel
     {
         public Guid Id { get; set; }
         public decimal Price { get; set; }

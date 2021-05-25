@@ -15,9 +15,9 @@ namespace HistoryTracking.UI.Web.ApiRequests
         {
         }
 
-        public Task<ApiCallDataResult<List<GetOrderModel>>> GetOrderListAsync()
+        public Task<ApiCallDataResult<List<OrderModel>>> GetOrderListAsync()
         {
-            return Api.GetAsync<List<GetOrderModel>>("orders");
+            return Api.GetAsync<List<OrderModel>>("orders");
         }
 
         public Task<ApiCallResult> AddEditOrderAsync(AddEditOrderModel model)
@@ -28,9 +28,9 @@ namespace HistoryTracking.UI.Web.ApiRequests
             );
         }
 
-        public Task<ApiCallDataResult<GetOrderModel>> GetOrderAsync(Guid orderId)
+        public Task<ApiCallDataResult<OrderModel>> GetOrderAsync(Guid orderId)
         {
-            return Api.GetAsync<GetOrderModel>(
+            return Api.GetAsync<OrderModel>(
                 $"orders/{orderId}"
             );
         }

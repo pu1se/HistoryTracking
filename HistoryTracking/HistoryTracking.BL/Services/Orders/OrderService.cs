@@ -18,23 +18,23 @@ namespace HistoryTracking.BL.Services
         {
         }
 
-        public async Task<List<GetOrderModel>> GetList()
+        public async Task<List<OrderModel>> GetList()
         {
             var users = await Storage.Orders.Select(
                     e =>
-                        new GetOrderModel
+                        new OrderModel
                         {
                             Id = e.Id,
                             OrderStatus = e.OrderStatus,
                             OrderDate = e.CreatedDateUtc,
-                            CustomerUser = new GetUserModel
+                            CustomerUser = new UserModel
                             {
                                 Name = e.CustomerUser.Name,
                                 Email = e.CustomerUser.Email,
                                 Id = e.CustomerUserId,
                                 UserType = e.CustomerUser.UserType
                             },
-                            SubscriptionList = e.SubscriptionProducts.Select(s => new GetSubscriptionModel
+                            SubscriptionList = e.SubscriptionProducts.Select(s => new SubscriptionModel
                             {
                                 Id = s.Id,
                                 DistributorMarkupAsPercent = s.DistributorMarkupAsPercent,
@@ -49,7 +49,7 @@ namespace HistoryTracking.BL.Services
             return users;
         }
 
-        public async Task<GetOrderModel> GetItem(Guid orderId)
+        public async Task<OrderModel> GetItem(Guid orderId)
         {
             var list = await GetList();
             return list.FirstOrDefault(item => item.Id == orderId);

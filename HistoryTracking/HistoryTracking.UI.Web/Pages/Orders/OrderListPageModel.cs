@@ -8,6 +8,6 @@ namespace HistoryTracking.UI.Web.Pages.Orders
 {
     public class OrderListPageModel : BasePageModel
     {
-        public List<GetOrderModel> OrderList { get; set; } = new List<GetOrderModel>();
+        public List<OrderModel> OrderList { get; set; } = new List<OrderModel>();
     }
 }

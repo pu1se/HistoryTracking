@@ -13,18 +13,15 @@ namespace HistoryTracking.Tests
     {
         protected TService Service { get; private set; }
 
-        protected DataContext Storage { get; private set; }
-
         [TestInitialize]
-        public void BaseInitialize()
+        public void BaseServiceTestInitialize()
         {
             DependencyManager.RegisterComponents();
-            Storage = DependencyManager.Resolve<DataContext>();
             Service = DependencyManager.Resolve<TService>();
         }
 
         [TestCleanup]
-        public void BaseCleanup()
+        public void BaseServiceTestCleanup()
         {
             Service.Dispose();
         }

@@ -13,9 +13,9 @@ namespace HistoryTracking.UI.Web.ApiRequests
         {
         }
 
-        public Task<ApiCallDataResult<List<GetUserModel>>> GetUserListAsync()
+        public Task<ApiCallDataResult<List<UserModel>>> GetUserListAsync()
         {
-            return Api.GetAsync<List<GetUserModel>>("users");
+            return Api.GetAsync<List<UserModel>>("users");
         }
 
         public Task<ApiCallResult> AddEditUserAsync(AddEditUserModel model)
@@ -26,9 +26,9 @@ namespace HistoryTracking.UI.Web.ApiRequests
             );
         }
 
-        public Task<ApiCallDataResult<GetUserModel>> GetUserAsync(Guid userId)
+        public Task<ApiCallDataResult<UserModel>> GetUserAsync(Guid userId)
         {
-            return Api.GetAsync<GetUserModel>(
+            return Api.GetAsync<UserModel>(
                 $"users/{userId}"
             );
         }
@@ -40,7 +40,7 @@ namespace HistoryTracking.UI.Web.ApiRequests
             );
         }
 
-        public async Task<ApiCallDataResult<List<GetUserModel>>> GetCustomerListAsync()
+        public async Task<ApiCallDataResult<List<UserModel>>> GetCustomerListAsync()
         {
             var getUserListResult = await GetUserListAsync();
             if (!getUserListResult.IsSuccess)
@@ -49,7 +49,7 @@ namespace HistoryTracking.UI.Web.ApiRequests
             }
 
             var customerList = getUserListResult.Data.Where(item => item.UserType == UserType.Customer).ToList();
-            return new ApiCallDataResult<List<GetUserModel>>(customerList);
+            return new ApiCallDataResult<List<UserModel>>(customerList);
         }
     }
 }

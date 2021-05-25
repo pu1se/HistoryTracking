@@ -25,14 +25,14 @@ namespace HistoryTracking.Api.Controllers
 
         [HttpGet]
         [Route("")]
-        public async Task<List<GetOrderModel>> GetUserList()
+        public async Task<List<OrderModel>> GetUserList()
         {
             return await OrderService.GetList();
         }
         
         [HttpGet]
         [Route("{orderId:guid}")]
-        public async Task<GetOrderModel> GetOrder(Guid orderId)
+        public async Task<OrderModel> GetOrder(Guid orderId)
         {
             return await OrderService.GetItem(orderId);
         }

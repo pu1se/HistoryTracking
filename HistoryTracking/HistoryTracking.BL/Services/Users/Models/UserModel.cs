@@ -7,7 +7,7 @@ using HistoryTracking.DAL.Enums;
 
 namespace HistoryTracking.BL.Services.User
 {
-    public class GetUserModel
+    public class UserModel
     {
         public Guid Id { get; set; }
         public string Name { get; set; }

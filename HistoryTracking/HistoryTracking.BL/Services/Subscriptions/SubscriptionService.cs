@@ -17,11 +17,11 @@ namespace HistoryTracking.BL.Services.SubscriptionProducts
         {
         }
 
-        public async Task<List<GetSubscriptionModel>> GetList()
+        public async Task<List<SubscriptionModel>> GetList()
         {
             var subscriptions = await Storage.SubscriptionProducts.Select(
                     e =>
-                        new GetSubscriptionModel
+                        new SubscriptionModel
                         {
                             Id = e.Id,
                             Title = e.Title,
@@ -36,7 +36,7 @@ namespace HistoryTracking.BL.Services.SubscriptionProducts
             return subscriptions;
         }
 
-        public async Task<GetSubscriptionModel> GetItem(Guid subscriptionId)
+        public async Task<SubscriptionModel> GetItem(Guid subscriptionId)
         {
             var list = await GetList();
             return list.FirstOrDefault(item => item.Id == subscriptionId);

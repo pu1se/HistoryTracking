@@ -14,7 +14,7 @@ namespace HistoryTracking.UI.Web.Pages.Orders
         public bool IsAddingNewOne { get; set; }
         public AddEditOrderModel OrderConfig { get; set; }
         public List<OrderStatusType> OrderStatusTypeList { get; set; }
-        public List<GetUserModel> CustomerList { get; set; }
-        public List<GetSubscriptionModel> SubscriptionList { get; set; }
+        public List<UserModel> CustomerList { get; set; }
+        public List<SubscriptionModel> SubscriptionList { get; set; }
     }
 }
