@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Results;
 using HistoryTracking.BL.Services.Changes;
+using HistoryTracking.BL.Services.Changes.Models;
 
 namespace HistoryTracking.Api.Controllers
 {
@@ -30,11 +31,19 @@ namespace HistoryTracking.Api.Controllers
         }
 
         [Route("")]
-        [HttpGet]
-        public async Task<IHttpActionResult> GetEntityChanges()
+        [HttpPost]
+        public async Task<IHttpActionResult> GetEntityChanges([FromBody]GetChangesListModel model)
         {
-            var result = await EntityChangeService.GetChanges();
+            var result = await EntityChangeService.GetChanges(model);
             return Ok(result);
         }
+
+        /*[Route("{entityId}")]
+        [HttpGet]
+        public async Task<IHttpActionResult> GetEntityChangesById([FromUri]Guid entityId)
+        {
+            var result = await EntityChangeService.GetChanges(model);
+            return Ok(result);
+        }*/
     }
 }

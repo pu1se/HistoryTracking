@@ -5,28 +5,23 @@
 <PageViewer PageModel="@Model">
 
     <div class="row">
-        <div class="col-2">
+        <div class="col-3">
             <div>Activity</div>
-            <select>
-                @foreach (var entity in Model.TrackingEntityNames)
-                {
-                    <option key="@entity.EntityName">@entity.EntityNameForDisplaying</option>
-                }
-            </select>
+            <MultiDropdown Items="@Model.TrackingEntityNames" Changed="OnEntityNameDropdownChanged"></MultiDropdown>
+
         </div>
-        <div class="col-2">
+        <div class="col-3">
             <div>User</div>
             <MultiDropdown Items="@Model.UserList" Changed="OnUserDropdownChanged"></MultiDropdown>
         </div>
         <div class="col-1">
             <div>Period</div>
-            <select>
-                <option>7 days</option>
-                <option>30 days</option>
-                <option>3 month</option>
-                <option>6 month</option>
-                <option>1 year</option>
-                <option>all time</option>
+            <select @onchange="OnPeriodChange">
+                <option value="7">7 days</option>
+                <option value="30">30 days</option>
+                <option value="91">3 month</option>
+                <option value="365">1 year</option>
+                <option value="">all time</option>
             </select>
         </div>
     </div>
@@ -142,30 +137,44 @@
             ShowError(getTrackingEntitiesResult.ErrorMessage);
             return;
         }
-        Model.TrackingEntityNames = getTrackingEntitiesResult.Data;
-        if (Model.TrackingEntityNames.Any())
-        {
-            Model.FilterEntityName = Model.TrackingEntityNames.First().EntityName;
-        }
+        Model.TrackingEntityNames = getTrackingEntitiesResult.Data.Select(x => new DropdownItem{Key = x.EntityName, Text = x.EntityNameForDisplaying});
 
+        await RefreshEntityChangesTable();
 
-        var getEntityChangesResult = await ApiCall.EntityChanges.GetEntityChanges();
+        Model.IsReady = true;
+    }
+
+    async Task OnUserDropdownChanged(List<string> userIds)
+    {
+        Model.Filter.UserIds = userIds.Select(x => new Guid(x)).ToList();
+        await RefreshEntityChangesTable();
+    }
+
+    async Task OnEntityNameDropdownChanged(List<string> entityNames)
+    {
+        Model.Filter.EntityNames = entityNames;
+        await RefreshEntityChangesTable();
+    }
+
+    void OnEntityChangeClick(Guid entityChangeId)
+    {
+        Model.SelectedEntityChange = Model.ChangeList.First(x => x.Id == entityChangeId);
+    }
+
+    async Task RefreshEntityChangesTable()
+    {
+        var getEntityChangesResult = await ApiCall.EntityChanges.GetEntityChanges(Model.Filter);
         if (!getEntityChangesResult.IsSuccess)
         {
             ShowError(getEntityChangesResult.ErrorMessage);
             return;
         }
         Model.ChangeList = getEntityChangesResult.Data;
-        Model.IsReady = true;
     }
 
-    void OnUserDropdownChanged(string e)
+    async Task OnPeriodChange(ChangeEventArgs e)
     {
-        Script.ExecuteAsync("console.info", e.ToJson());
-    }
-
-    void OnEntityChangeClick(Guid entityChangeId)
-    {
-        Model.SelectedEntityChange = Model.ChangeList.First(x => x.Id == entityChangeId);
+        Model.Filter.TakeHistoryForLastNumberOfDays = e.Value.ToString().IsNullOrEmpty() ? null : int.Parse(e.Value?.ToString());
+        await RefreshEntityChangesTable();
     }
 }

@@ -38,7 +38,7 @@ namespace HistoryTracking.DAL
                 ChangeType = dbEntry.State.ToString(),
                 ChangeDateUtc = DateTime.UtcNow, // todo: get change date from Entity or from ModifiedDate
                 EntityAfterChangeSnapshot = GetCurrentEntitySnapshot(dbEntry),
-                PropertiesChanges = getPropertyChanges(dbEntry).ToJson(),
+                PropertiesChangesWay1 = getPropertyChanges(dbEntry).ToJson(),
                 ChangedByUserId = UserManager.GetCurrentUser(),
             };
 
@@ -46,11 +46,11 @@ namespace HistoryTracking.DAL
             {
                 var originalEntity = GetOriginalEntity(dbEntry.OriginalValues, dbEntry.Entity.GetType());
                 trackEntityChange.EntityBeforeChangeSnapshot = originalEntity.ToJson();
-                trackEntityChange.AltPropertiesChanges = GetChanges.For(originalEntity, dbEntry.Entity).ToJson();
+                trackEntityChange.PropertiesChangesWay2 = GetChanges.For(originalEntity, dbEntry.Entity).ToJson();
             }
             else
             {
-                trackEntityChange.AltPropertiesChanges = GetChanges.For(null, dbEntry.Entity).ToJson();
+                trackEntityChange.PropertiesChangesWay2 = GetChanges.For(null, dbEntry.Entity).ToJson();
             }
 
             return trackEntityChange;
@@ -69,18 +69,18 @@ namespace HistoryTracking.DAL
             return entityTableName;
         }
 
-        private static string GetPrimaryKeyId(DataContext dataContext, DbEntityEntry dbEntry)
+        private static Guid? GetPrimaryKeyId(DataContext dataContext, DbEntityEntry dbEntry)
         {
             try
             {
                 var objectStateEntry = ((IObjectContextAdapter)dataContext).ObjectContext.ObjectStateManager.GetObjectStateEntry(dbEntry.Entity);
                 var entityId = objectStateEntry.EntityKey.EntityKeyValues[0].Value.ToString();
-                return entityId;
+                return new Guid(entityId);
             }
             catch (Exception e)
             {
                 Console.Write(e.ToJson());
-                return Guid.Empty.ToString();
+                return null;
             }
         }
 

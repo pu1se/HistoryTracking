@@ -17,9 +17,9 @@ namespace HistoryTracking.UI.Web.ApiRequests
             return Api.GetAsync<List<EntityNameModel>>("entity-changes/tracking-entity-names");
         }
 
-        public Task<ApiCallDataResult<List<ChangeModel>>> GetEntityChanges(/*Guid? id, string entityName, int? takeHistoryForLastDaysPeriod, List<Guid> userIds*/)
+        public Task<ApiCallDataResult<List<ChangeModel>>> GetEntityChanges(GetChangesListModel model = null)
         {
-            return Api.GetAsync<List<ChangeModel>>("entity-changes");
+            return Api.PostAsync<List<ChangeModel>>("entity-changes", model);
         }
     }
 }

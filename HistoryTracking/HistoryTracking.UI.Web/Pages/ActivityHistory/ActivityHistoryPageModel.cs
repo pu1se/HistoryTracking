@@ -13,8 +13,8 @@ namespace HistoryTracking.UI.Web.Pages.ActivityHistory
     {
         public List<ChangeModel> ChangeList { get; set; } = new List<ChangeModel>();
         public IEnumerable<DropdownItem> UserList { get; set; } = new List<DropdownItem>();
-        public List<EntityNameModel> TrackingEntityNames { get; set; } = new List<EntityNameModel>();
-        public string FilterEntityName { get; set; }
+        public IEnumerable<DropdownItem> TrackingEntityNames { get; set; } = new List<DropdownItem>();
         public ChangeModel SelectedEntityChange { get; set; }
+        public GetChangesListModel Filter { get; set; } = new GetChangesListModel{TakeHistoryForLastNumberOfDays = 7};
     }
 }

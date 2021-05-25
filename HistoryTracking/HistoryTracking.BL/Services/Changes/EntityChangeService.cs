@@ -29,9 +29,56 @@ namespace HistoryTracking.BL.Services.Changes
             }).ToList();
         }
 
-        public async Task<List<ChangeModel>> GetChanges()
+        public async Task<List<ChangeModel>> GetChanges(GetChangesListModel query = null)
         {
-            var changes = await Storage.TrackEntityChanges
+            query = query ?? new GetChangesListModel();
+            var getEntityChangesDbQuery = Storage.TrackEntityChanges.AsQueryable();
+
+            if (query.EntityNames.Any())
+            {
+                getEntityChangesDbQuery = getEntityChangesDbQuery.Where(e => query.EntityNames.Contains(e.EntityTable));
+            }
+            if (query.UserIds.Any())
+            {
+                getEntityChangesDbQuery = getEntityChangesDbQuery.Where(e => query.UserIds.Contains(e.ChangedByUserId));
+            }
+
+            if (query.TakeHistoryForLastNumberOfDays.HasValue)
+            {
+                var fromDate = DateTime.UtcNow.AddDays(-query.TakeHistoryForLastNumberOfDays.Value);
+                getEntityChangesDbQuery = getEntityChangesDbQuery.Where(e => fromDate <= e.ChangeDateUtc);
+            }
+
+            var changes = await getEntityChangesDbQuery
+
+                .Select(e => new ChangeModel
+                {
+                    Id = e.Id,
+                    ChangeDate = e.ChangeDateUtc,
+                    ChangeType = e.ChangeType,
+                    PropertyChangesAsJson = e.PropertiesChangesWay1,
+                    EntityName = e.EntityTable,
+                    ChangedByUser = new UserModel
+                    {
+                        Name = e.ChangedByUser.Name,
+                        Email = e.ChangedByUser.Email,
+                        UserType = e.ChangedByUser.UserType
+                    }
+                })
+                .OrderByDescending(x => x.ChangeDate)
+                .ToListAsync();
+            changes.ForEach(x =>
+            {
+                x.PropertyChanges = JsonConvert.DeserializeObject<List<PropertyChangeDescription>>(x.PropertyChangesAsJson);
+                x.EntityName = x.EntityName.SplitByCaps();
+            });
+
+            return changes;
+        }
+
+        /*public async Task<List<ChangeModel>> GetChange(Guid id)
+        {
+            var changes = await Storage.TrackEntityChanges.Where(e => e.EntityId == id)
                 .Select(e => new ChangeModel
                 {
                     Id = e.Id,
@@ -54,6 +101,6 @@ namespace HistoryTracking.BL.Services.Changes
             });
 
             return changes;
-        }
+        }*/
     }
 }

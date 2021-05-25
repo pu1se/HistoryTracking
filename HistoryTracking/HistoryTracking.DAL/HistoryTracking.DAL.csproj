@@ -55,10 +55,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Migrations\202105210722153_Init.cs" />
-    <Compile Include="Migrations\202105210722153_Init.designer.cs">
-      <DependentUpon>202105210722153_Init.cs</DependentUpon>
+    <Compile Include="Migrations\202105251728404_Init.cs" />
+    <Compile Include="Migrations\202105251728404_Init.designer.cs">
+      <DependentUpon>202105251728404_Init.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="TrackChangesLogic\AttributeExtensions.cs" />
     <Compile Include="TrackChangesLogic\GetChanges.cs" />
     <Compile Include="TrackChangesLogic\TrackPropertyChangesAttribute.cs" />
@@ -76,7 +77,6 @@
     <Compile Include="Enums\OrderStatusType.cs" />
     <Compile Include="Enums\PaymentStatusType.cs" />
     <Compile Include="Enums\UserType.cs" />
-    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UserManager.cs" />
   </ItemGroup>
@@ -91,8 +91,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\202105210722153_Init.resx">
-      <DependentUpon>202105210722153_Init.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\202105251728404_Init.resx">
+      <DependentUpon>202105251728404_Init.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

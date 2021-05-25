@@ -68,6 +68,7 @@
     <Compile Include="Services\Changes\EntityChangeService.cs" />
     <Compile Include="Services\Changes\Models\ChangeModel.cs" />
     <Compile Include="Services\Changes\Models\EntityNameModel.cs" />
+    <Compile Include="Services\Changes\Models\GetChangesListModel.cs" />
     <Compile Include="Services\Orders\Models\AddEditOrderModel.cs" />
     <Compile Include="Services\Orders\Models\OrderModel.cs" />
     <Compile Include="Services\Orders\OrderService.cs" />

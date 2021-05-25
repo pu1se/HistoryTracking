@@ -19,7 +19,7 @@
 @code {
 
     [Parameter]public IEnumerable<DropdownItem> Items { get; set; } = new List<DropdownItem>();
-    [Parameter]public EventCallback<string> Changed { get; set; }
+    [Parameter]public EventCallback<List<string>> Changed { get; set; }
     private Dictionary<string, DropdownItem> DictItems { get; set; } = new Dictionary<string, DropdownItem>();
     private string Placeholder = "Select options...";
     private bool IsActive { get; set; } = false;
@@ -36,7 +36,7 @@
         DictItems[key].IsSelected = (bool) isChecked;
         RefreshMainWindowText();
 
-        await Changed.InvokeAsync(MainWindowText);
+        await Changed.InvokeAsync(DictItems.Where(x => x.Value.IsSelected).Select(x=>x.Key).ToList());
     }
 
     void RefreshMainWindowText()

@@ -65,15 +65,21 @@
                         ChangeType = c.String(),
                         ChangeDateUtc = c.DateTime(nullable: false, precision: 7, storeType: "datetime2"),
                         EntityTable = c.String(),
-                        EntityId = c.String(),
+                        EntityId = c.Guid(),
                         EntityBeforeChangeSnapshot = c.String(),
                         EntityAfterChangeSnapshot = c.String(),
-                        PropertiesChanges = c.String(),
-                        AltPropertiesChanges = c.String(),
+                        PropertiesChangesWay1 = c.String(),
+                        TimeOfWay1 = c.Time(nullable: false, precision: 7),
+                        PropertiesChangesWay2 = c.String(),
+                        TimeOfWay2 = c.Time(nullable: false, precision: 7),
+                        PropertiesChangesWay3 = c.String(),
+                        TimeOfWay3 = c.Time(nullable: false, precision: 7),
                         ChangedByUserId = c.Guid(nullable: false),
                     })
                 .PrimaryKey(t => t.Id)
                 .ForeignKey("dbo.Users", t => t.ChangedByUserId)
+                .Index(t => t.ChangeDateUtc)
+                .Index(t => t.EntityId)
                 .Index(t => t.ChangedByUserId);
             
             CreateTable(
@@ -117,6 +123,8 @@
             DropIndex("dbo.SubscriptionProducts_Users", new[] { "UserId" });
             DropIndex("dbo.SubscriptionProducts_Users", new[] { "SubscriptionProductId" });
             DropIndex("dbo.TrackEntityChanges", new[] { "ChangedByUserId" });
+            DropIndex("dbo.TrackEntityChanges", new[] { "EntityId" });
+            DropIndex("dbo.TrackEntityChanges", new[] { "ChangeDateUtc" });
             DropIndex("dbo.Orders", new[] { "CustomerUserId" });
             DropTable("dbo.SubscriptionProducts_Orders");
             DropTable("dbo.SubscriptionProducts_Users");

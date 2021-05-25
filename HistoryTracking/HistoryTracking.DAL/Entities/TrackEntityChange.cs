@@ -17,22 +17,30 @@ namespace HistoryTracking.DAL.Entities
 
         public string ChangeType { get; set; }
 
-        // todo: add index
+        [Index]
         public DateTime ChangeDateUtc { get; set; }
 
-        // todo: add index
+        // todo: find a way how to index this field
         public string EntityTable { get; set; }
 
-        // todo: add index
-        public string EntityId { get; set; }
+        [Index]
+        public Guid? EntityId { get; set; }
 
         public string EntityBeforeChangeSnapshot { get; set; }
 
         public string EntityAfterChangeSnapshot { get; set; }
 
-        public string PropertiesChanges { get; set; }
+        public string PropertiesChangesWay1 { get; set; }
 
-        public string AltPropertiesChanges { get; set; }
+        public TimeSpan TimeOfWay1 { get; set; }
+
+        public string PropertiesChangesWay2 { get; set; }
+
+        public TimeSpan TimeOfWay2 { get; set; }
+
+        public string PropertiesChangesWay3 { get; set; }
+
+        public TimeSpan TimeOfWay3 { get; set; }
 
 
         public Guid ChangedByUserId { get; set; }
