@@ -42,11 +42,15 @@ namespace HistoryTracking.BL.Services.Changes
             {
                 getEntityChangesDbQuery = getEntityChangesDbQuery.Where(e => query.UserIds.Contains(e.ChangedByUserId));
             }
-
             if (query.TakeHistoryForLastNumberOfDays.HasValue)
             {
                 var fromDate = DateTime.UtcNow.AddDays(-query.TakeHistoryForLastNumberOfDays.Value);
                 getEntityChangesDbQuery = getEntityChangesDbQuery.Where(e => fromDate <= e.ChangeDateUtc);
+            }
+
+            if (query.EntityId.HasValue)
+            {
+                getEntityChangesDbQuery = getEntityChangesDbQuery.Where(e => e.EntityId == query.EntityId.Value);
             }
 
             var changes = await getEntityChangesDbQuery
@@ -75,32 +79,5 @@ namespace HistoryTracking.BL.Services.Changes
 
             return changes;
         }
-
-        /*public async Task<List<ChangeModel>> GetChange(Guid id)
-        {
-            var changes = await Storage.TrackEntityChanges.Where(e => e.EntityId == id)
-                .Select(e => new ChangeModel
-                {
-                    Id = e.Id,
-                    ChangeDate = e.ChangeDateUtc,
-                    ChangeType = e.ChangeType,
-                    PropertyChangesAsJson = e.PropertiesChanges,
-                    EntityName = e.EntityTable,
-                    ChangedByUser = new UserModel
-                    {
-                        Name = e.ChangedByUser.Name,
-                        Email = e.ChangedByUser.Email,
-                        UserType = e.ChangedByUser.UserType
-                    }
-                })
-                .ToListAsync();
-            changes.ForEach(x =>
-            {
-                x.PropertyChanges = JsonConvert.DeserializeObject<List<PropertyChangeDescription>>(x.PropertyChangesAsJson);
-                x.EntityName = x.EntityName.SplitByCaps();
-            });
-
-            return changes;
-        }*/
     }
 }

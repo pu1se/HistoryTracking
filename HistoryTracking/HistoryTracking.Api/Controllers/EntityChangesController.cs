@@ -37,13 +37,5 @@ namespace HistoryTracking.Api.Controllers
             var result = await EntityChangeService.GetChanges(model);
             return Ok(result);
         }
-
-        /*[Route("{entityId}")]
-        [HttpGet]
-        public async Task<IHttpActionResult> GetEntityChangesById([FromUri]Guid entityId)
-        {
-            var result = await EntityChangeService.GetChanges(model);
-            return Ok(result);
-        }*/
     }
 }

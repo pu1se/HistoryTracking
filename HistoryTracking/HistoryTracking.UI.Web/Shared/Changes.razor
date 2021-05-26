@@ -1,8 +1,114 @@
 ﻿<br/>
 <br/>
 <br/>
-<h3>Changes @EntityId</h3>
+<h3>History</h3>
+<PageViewer PageModel="@Model">
 
+    <div class="row">
+        <div class="col-3">
+            <div>User</div>
+            <MultiDropdown Items="@Model.UserList" Changed="OnUserDropdownChanged"></MultiDropdown>
+        </div>
+        <div class="col-1">
+            <div>Period</div>
+            <select @onchange="OnPeriodChange" style="cursor: pointer;">
+                <option value="7">7 days</option>
+                <option value="30">30 days</option>
+                <option value="91">3 month</option>
+                <option value="365">1 year</option>
+                <option value="">all time</option>
+            </select>
+        </div>
+    </div>
+
+    <br />
+    <br />
+
+    <div class="row">
+        @if (Model.ChangeList.Any())
+        {
+            <div class="col-7" style="padding-right: 0;">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th style="width: 10%">Activity</th>
+                            <th style="width: 15%">User</th>
+                            <th style="width: 18%">Date</th>
+                            <th>Properties</th>
+                        </tr>
+                    </thead>
+                    <tbody style="cursor: pointer" class="@(Model.SelectedEntityChange != null ? "right-board" : "")">
+                        @foreach (var change in Model.ChangeList)
+                        {
+                            <tr @onclick="@(() => OnEntityChangeClick(change.Id))" class="@(Model.SelectedEntityChange != null && Model.SelectedEntityChange.Id == change.Id ? "grey" : "")">
+                                <td>@change.EntityName</td>
+                                <td>@change.ChangedByUser.Name</td>
+                                <td>@change.ChangeDate.ToString("dd/MM/yy HH:mm")</td>
+                                <td>@change.PropertyChanges.Select(x => x.PropertyName).Join(", ")</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+
+            @if (Model.SelectedEntityChange != null)
+            {
+                <div class="col-5 grey">
+                    <hr style="margin: 0" />
+                    <br />
+                    <div class="row">
+                        <div class="col-12">
+                            <span>@Model.SelectedEntityChange.ChangeType</span> by
+                            <span style="font-weight: bold;">
+                                <a href="mailto:@Model.SelectedEntityChange.ChangedByUser.Email">@Model.SelectedEntityChange.ChangedByUser.Name</a>
+                            </span> on @Model.SelectedEntityChange.ChangeDate.ToString("dd/MM/yy HH:mm")
+                        </div>
+                    </div>
+                    <br />
+                    <hr style="margin: 0" />
+                    <br />
+
+                    @foreach (var property in Model.SelectedEntityChange.PropertyChanges)
+                    {
+                        <div class="row" style="font-size: 15px;">
+                            <div class="col-2" style="font-weight: bold; font-size: 14px;">
+                                @property.PropertyName.SplitByCaps()
+                            </div>
+                            @if (!property.OldValue.IsNullOrEmpty())
+                            {
+                                <div class="col" style="text-decoration: line-through; color: #999; background-color: #d9d9d9; ">@property.OldValue</div>
+                            }
+                            @if (!property.NewValue.IsNullOrEmpty())
+                            {
+                                <div class="col" style="background-color: #dff6dd;">@property.NewValue</div>
+                            }
+                        </div>
+                        <br />
+                    }
+                </div>
+            }
+            else
+            {
+                <div class="col-5">
+
+                </div>
+            }
+        }
+        else
+        {
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <p>Activity history is empty.</p>
+        }
+    </div>
+
+</PageViewer>
+
+@inherits BasePageComponent<ChangesComponentModel>
 @code {
 
     [Parameter]
@@ -10,4 +116,60 @@
 
     [Parameter]
     public string EntityTableName { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var getUsersResult = await ApiCall.Users.GetUserListAsync();
+        if (!getUsersResult.IsSuccess)
+        {
+            ShowError(getUsersResult.ErrorMessage);
+            return;
+        }
+        Model.UserList = getUsersResult.Data.Select(x => new DropdownItem
+        {
+            Key = x.Id.ToString(),
+            Text = $"{x.Name}"
+        });
+
+
+        await RefreshEntityChangesTable();
+
+        Model.IsReady = true;
+    }
+
+    async Task OnUserDropdownChanged(List<string> userIds)
+    {
+        Model.Filter.UserIds = userIds.Select(x => new Guid(x)).ToList();
+        await RefreshEntityChangesTable();
+    }
+
+    async Task OnEntityNameDropdownChanged(List<string> entityNames)
+    {
+        Model.Filter.EntityNames = entityNames;
+        await RefreshEntityChangesTable();
+    }
+
+    void OnEntityChangeClick(Guid entityChangeId)
+    {
+        Model.SelectedEntityChange = Model.ChangeList.First(x => x.Id == entityChangeId);
+    }
+
+    async Task RefreshEntityChangesTable()
+    {
+        Model.Filter.EntityNames = new List<string> {EntityTableName};
+        Model.Filter.EntityId = EntityId;
+        var getEntityChangesResult = await ApiCall.EntityChanges.GetEntityChanges(Model.Filter);
+        if (!getEntityChangesResult.IsSuccess)
+        {
+            ShowError(getEntityChangesResult.ErrorMessage);
+            return;
+        }
+        Model.ChangeList = getEntityChangesResult.Data;
+    }
+
+    async Task OnPeriodChange(ChangeEventArgs e)
+    {
+        Model.Filter.TakeHistoryForLastNumberOfDays = e.Value.ToString().IsNullOrEmpty() ? null : int.Parse(e.Value?.ToString());
+        await RefreshEntityChangesTable();
+    }
 }
