@@ -48,7 +48,7 @@
                         <tr @onclick="@(() => OnEntityChangeClick(change.Id))" class="@(Model.SelectedEntityChange != null && Model.SelectedEntityChange.Id == change.Id ? "grey" : "")">
                             <td>@change.EntityName</td>
                             <td>@change.ChangedByUser.Name</td>
-                            <td>@change.ChangeDate.ToString("dd/MM/yy HH:mm")</td>
+                            <td>@change.ChangeDate.ToString("ddd dd-MMM-yy HH:mm")</td>
                             <td>@change.PropertyChanges.Select(x => x.PropertyName).Join(", ")</td>
                         </tr>
                         }
@@ -67,7 +67,7 @@
                             <span>@Model.SelectedEntityChange.ChangeType</span> by
                             <span style="font-weight: bold;">
                                 <a href="mailto:@Model.SelectedEntityChange.ChangedByUser.Email">@Model.SelectedEntityChange.ChangedByUser.Name</a>
-                            </span> on @Model.SelectedEntityChange.ChangeDate.ToString("dd/MM/yy HH:mm")
+                            </span> on @Model.SelectedEntityChange.ChangeDate.ToString("ddd dd-MMM-yy") at @Model.SelectedEntityChange.ChangeDate.ToString("HH:mm")
                         </div>
                     </div>
                     <br />
@@ -170,6 +170,7 @@
             return;
         }
         Model.ChangeList = getEntityChangesResult.Data;
+        Model.SelectedEntityChange = Model.ChangeList.FirstOrDefault();
     }
 
     async Task OnPeriodChange(ChangeEventArgs e)
