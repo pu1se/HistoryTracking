@@ -14,6 +14,11 @@ namespace HistoryTracking
             return Enum.GetValues(typeof(T)).Cast<T>().ToList();
         }
 
+        public static T[] ToArray<T>()
+        {
+            return Enum.GetValues(typeof(T)).Cast<T>().ToArray();
+        }
+
         public static string GetDescription<TEnum>(TEnum value) where TEnum : struct, IConvertible
         {
             var fieldInfo = value.GetType().GetField(value.ToString());

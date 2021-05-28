@@ -11,21 +11,16 @@ using Newtonsoft.Json;
 namespace HistoryTracking.DAL.Entities
 {
     [Table("SubscriptionProducts")]
-    public class SubscriptionProductEntity : BaseEntity, ITrackEntityChanges
+    public class SubscriptionProductEntity : BaseEntity
     {
-        [TrackPropertyChanges]
         public string Title { get; set; }
 
-        [TrackPropertyChanges]
         public decimal Price { get; set; }
 
-        [TrackPropertyChanges]
         public decimal DistributorMarkupAsPercent { get; set; }
 
-        [TrackPropertyChanges]
         public decimal ResellerMarkupAsPercent { get; set; }
 
-        [TrackPropertyChanges]
         public CurrencyType Currency { get; set; }
 
         public virtual ICollection<OrderEntity> Orders { get; set; } = new List<OrderEntity>();

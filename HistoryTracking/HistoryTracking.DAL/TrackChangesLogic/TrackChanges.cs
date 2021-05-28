@@ -11,6 +11,7 @@ using System.Text;
 using System.Threading.Tasks;
 using HistoryTracking.DAL.Entities;
 using HistoryTracking.DAL.TrackChangesLogic;
+using HistoryTracking.DAL.TrackChangesLogic.PropertiesTrackingConfigurations;
 
 namespace HistoryTracking.DAL
 {
@@ -39,7 +40,7 @@ namespace HistoryTracking.DAL
                 ChangeDateUtc = DateTime.UtcNow, // todo: get change date from Entity or from ModifiedDate
                 EntityAfterChangeSnapshot = GetCurrentEntitySnapshot(dbEntry),
                 PropertiesChangesWay1 = getPropertyChanges(dbEntry).ToJson(),
-                ChangedByUserId = UserManager.GetCurrentUser(),
+                ChangedByUserId = UserManager.GetCurrentUserId(),
             };
 
             if (dbEntry.State == EntityState.Modified)
@@ -107,11 +108,11 @@ namespace HistoryTracking.DAL
 
         private static List<PropertyChangeDescription> getPropertyChanges(DbEntityEntry dbEntry)
         {
+            var trackEntityConfig = TrackEntitiesChangesConfig.GetConfigsInfo()
+                .First(x => x.EntityName == dbEntry.Entity.GetType().Name);
+            var trackPropertiesWithName = trackEntityConfig.PropertyList.Select(x => x.Name).ToList();
             var result = new List<PropertyChangeDescription>();
-            var trackPropertiesWithName = dbEntry.Entity.GetType().GetProperties()
-                .Where(x => x.GetCustomAttributes<TrackPropertyChangesAttribute>().Any())
-                .Select(x => x.Name)
-                .ToList();
+            
 
             switch (dbEntry.State)
             {

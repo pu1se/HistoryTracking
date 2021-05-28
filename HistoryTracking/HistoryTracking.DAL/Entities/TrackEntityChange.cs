@@ -20,7 +20,6 @@ namespace HistoryTracking.DAL.Entities
         [Index]
         public DateTime ChangeDateUtc { get; set; }
 
-        // todo: find a way how to index this field
         public string EntityTable { get; set; }
 
         [Index]

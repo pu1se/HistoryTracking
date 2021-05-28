@@ -15,6 +15,7 @@ using System.Web;
 using HistoryTracking.DAL.Entities;
 using HistoryTracking.DAL.Enums;
 using HistoryTracking.DAL.Migrations;
+using HistoryTracking.DAL.TrackChangesLogic.PropertiesTrackingConfigurations;
 
 namespace HistoryTracking.DAL
 {
@@ -89,6 +90,7 @@ namespace HistoryTracking.DAL
             var changes = this.ChangeTracker.Entries()
                 .Where(e => e.State == EntityState.Added || e.State == EntityState.Modified || e.State == EntityState.Deleted);
             var now = DateTime.UtcNow;
+            var trackEntityConfigs = TrackEntitiesChangesConfig.GetConfigsInfo();
 
             foreach (var dbEntry in changes)
             {
@@ -98,7 +100,7 @@ namespace HistoryTracking.DAL
                     continue;
                 }
 
-                if (entity is ITrackEntityChanges historyTrackingEntity)
+                if (trackEntityConfigs.Any(x => x.EntityName == entity.GetType().Name))
                 {
                     var trackEntityChange = TrackChanges.GetTrackEntityChange(this, dbEntry);
                     if (trackEntityChange != null)
@@ -114,7 +116,7 @@ namespace HistoryTracking.DAL
                         entity.Id = Guid.NewGuid();
                     }
                     entity.CreatedDateUtc = now;
-                    entity.CreatedByUserId = UserManager.GetCurrentUser();
+                    entity.CreatedByUserId = UserManager.GetCurrentUserId();
                 }
 
                 if (dbEntry.State == EntityState.Modified)
@@ -126,7 +128,7 @@ namespace HistoryTracking.DAL
                 if (dbEntry.State == EntityState.Modified)
                 {
                     entity.UpdatedDateUtc = now;
-                    entity.UpdatedByUserId = UserManager.GetCurrentUser();
+                    entity.UpdatedByUserId = UserManager.GetCurrentUserId();
                     dbEntry.Property(nameof(BaseEntity.UpdatedDateUtc)).IsModified = true;
                     dbEntry.Property(nameof(BaseEntity.UpdatedByUserId)).IsModified = true;
                 }

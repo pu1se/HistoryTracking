@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 using HistoryTracking.BL.Services.Changes.Models;
 using HistoryTracking.BL.Services.User;
 using HistoryTracking.DAL;
+using HistoryTracking.DAL.Enums;
+using HistoryTracking.DAL.TrackChangesLogic.PropertiesTrackingConfigurations;
 using Newtonsoft.Json;
 
 namespace HistoryTracking.BL.Services.Changes
@@ -20,12 +22,12 @@ namespace HistoryTracking.BL.Services.Changes
 
         public async Task<List<EntityNameModel>> GetTrackingTableNames()
         {
-            var trackingTableNames = await Storage.TrackEntityChanges.GroupBy(e => e.EntityTable).ToListAsync();
+            var trackingEntityNames = TrackEntitiesChangesConfig.GetConfigsInfo().Select(x => x.EntityName);
 
-            return trackingTableNames.Select(x => new EntityNameModel
+            return trackingEntityNames.Select(x => new EntityNameModel
             {
-                EntityName = x.Key,
-                EntityNameForDisplaying = x.Key.SplitByCaps()
+                EntityName = x,
+                EntityNameForDisplaying = x.SplitByCaps()
             }).ToList();
         }
 
@@ -53,7 +55,7 @@ namespace HistoryTracking.BL.Services.Changes
                 getEntityChangesDbQuery = getEntityChangesDbQuery.Where(e => e.EntityId == query.EntityId.Value);
             }
 
-            var changes = await getEntityChangesDbQuery
+            var entityChanges = await getEntityChangesDbQuery
 
                 .Select(e => new ChangeModel
                 {
@@ -71,13 +73,53 @@ namespace HistoryTracking.BL.Services.Changes
                 })
                 .OrderByDescending(x => x.ChangeDate)
                 .ToListAsync();
-            changes.ForEach(x =>
+            entityChanges.ForEach(x =>
             {
                 x.PropertyChanges = JsonConvert.DeserializeObject<List<PropertyChangeDescription>>(x.PropertyChangesAsJson);
                 x.EntityName = x.EntityName.SplitByCaps();
             });
 
-            return changes;
+
+            entityChanges = FilterChangesByCurrentUserRole(entityChanges, UserManager.GetCurrentUserType());
+
+            return entityChanges;
+        }
+
+        private List<ChangeModel> FilterChangesByCurrentUserRole(List<ChangeModel> entityChanges, UserType currentUserRole)
+        {
+            var configs = TrackEntitiesChangesConfig.GetConfigsInfo();
+            var result = new List<ChangeModel>();
+            foreach (var entityChange in entityChanges)
+            {
+                var configForEntity = configs.FirstOrDefault(x => x.EntityName == entityChange.EntityName);
+                if (configForEntity == null)
+                {
+                    continue;
+                }
+
+                var visibleProperties = new List<PropertyChangeDescription>();
+                foreach (var property in entityChange.PropertyChanges)
+                {
+                    var configForProperty = configForEntity.PropertyList.FirstOrDefault(x => x.Name == property.PropertyName);
+                    if (configForProperty == null)
+                    {
+                        continue;
+                    }
+
+                    if (configForProperty.IsVisibleForUserRoles.Contains(currentUserRole))
+                    {
+                        visibleProperties.Add(property);
+                    }
+                }
+
+                if (visibleProperties.Any())
+                {
+                    entityChange.PropertyChanges = visibleProperties;
+                    result.Add(entityChange);
+                }
+            }
+
+            return result;
         }
     }
 }

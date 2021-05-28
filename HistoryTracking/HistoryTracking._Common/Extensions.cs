@@ -20,6 +20,11 @@ namespace HistoryTracking
             return JsonConvert.SerializeObject(objectForSerialization);
         }
 
+        public static T[] ExceptItem<T>(this IEnumerable<T> list, params T[] exceptList)
+        {
+            return list.Except(exceptList).ToArray();
+        }
+
         public static string ToFormattedString(this Exception exception)
         {
             while (exception.InnerException != null)

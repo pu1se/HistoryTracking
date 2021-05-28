@@ -10,15 +10,12 @@ using HistoryTracking.DAL.Enums;
 namespace HistoryTracking.DAL.Entities
 {
     [Table("Users")]
-    public class UserEntity : BaseEntity, ITrackEntityChanges
+    public class UserEntity : BaseEntity
     {
-        [TrackPropertyChanges]
         public string Name { get; set; }
 
-        [TrackPropertyChanges]
         public string Email { get; set; }
 
-        [TrackPropertyChanges]
         public UserType UserType { get; set; }
 
         public virtual ICollection<SubscriptionProductEntity> SubscriptionProducts { get; set; }
