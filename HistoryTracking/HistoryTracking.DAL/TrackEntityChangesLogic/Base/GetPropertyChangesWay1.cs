@@ -12,7 +12,7 @@ namespace HistoryTracking.DAL.TrackEntityChangesLogic.Base
 {
     public class GetPropertyChangesWay1
     {
-        public static IEnumerable<PropertyChangeDescription> For(
+        public static List<PropertyChangeDescription> For(
             DbEntityEntry dbEntry,
             TrackingEntityInfo trackingEntityConfig)
         {
@@ -70,7 +70,7 @@ namespace HistoryTracking.DAL.TrackEntityChangesLogic.Base
                 }
             }
 
-            return propertyChanges;
+            return propertyChanges.ToList();
         }
     }
 }

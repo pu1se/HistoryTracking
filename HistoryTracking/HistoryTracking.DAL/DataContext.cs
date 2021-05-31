@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Entity;
+using System.Data.Entity.Core.Objects;
 using System.Data.Entity.Infrastructure;
 using System.Data.Entity.Migrations;
 using System.Data.Entity.ModelConfiguration.Configuration;
@@ -124,6 +125,7 @@ namespace HistoryTracking.DAL
                     dbEntry.Property(nameof(BaseEntity.UpdatedDateUtc)).IsModified = true;
                     dbEntry.Property(nameof(BaseEntity.UpdatedByUserId)).IsModified = true;
                 }
+
 
                 var currentTrackingEntityConfig = TrackingEntitiesConfiguration.GetConfigFor(x => x.EntityType == entity.GetType() || x.EntityType == entity.GetType().BaseType);
                 if (currentTrackingEntityConfig != null)
