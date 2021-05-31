@@ -90,7 +90,6 @@ namespace HistoryTracking.DAL
             var changes = this.ChangeTracker.Entries()
                 .Where(e => e.State == EntityState.Added || e.State == EntityState.Modified || e.State == EntityState.Deleted);
             var now = DateTime.UtcNow;
-            var trackingEntityConfigList = TrackingEntitiesConfiguration.GetConfigList();
 
             foreach (var dbEntry in changes)
             {
@@ -126,8 +125,7 @@ namespace HistoryTracking.DAL
                     dbEntry.Property(nameof(BaseEntity.UpdatedByUserId)).IsModified = true;
                 }
 
-                //todo: use GetConfigFor
-                var currentTrackingEntityConfig = trackingEntityConfigList.FirstOrDefault(x => x.EntityType == entity.GetType() || x.EntityType == entity.GetType().BaseType);
+                var currentTrackingEntityConfig = TrackingEntitiesConfiguration.GetConfigFor(x => x.EntityType == entity.GetType() || x.EntityType == entity.GetType().BaseType);
                 if (currentTrackingEntityConfig != null)
                 {
                     var trackEntityChange = TrackChangesLogic.GetTrackEntityChangeRecord(this, dbEntry, currentTrackingEntityConfig);

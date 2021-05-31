@@ -97,7 +97,7 @@ namespace HistoryTracking.BL.Services.Changes
             var result = new List<ChangeModel>();
             foreach (var entityChange in entityChanges)
             {
-                var configForEntity = configs.FirstOrDefault(x => x.EntityName == entityChange.EntityName);
+                var configForEntity = TrackingEntitiesConfiguration.GetConfigFor(entityChange.EntityName);
                 if (configForEntity == null)
                 {
                     continue;

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace HistoryTracking.DAL.TrackEntityChangesLogic.Base
 {
-    class GetEntityChangesWay3
+    public class GetEntityChangesWay3
     {
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using HistoryTracking.DAL.Entities;
@@ -49,10 +50,20 @@ namespace HistoryTracking.DAL.TrackEntityChangesLogic.PropertiesTrackingConfigur
         {
             return new TrackingPropertiesConfig<T>();
         }
-
+        
         public static TrackingEntityInfo GetConfigFor(Type searchingEntityType)
         {
             return ConfigList.FirstOrDefault(x => x.EntityType == searchingEntityType);
+        }
+
+        public static TrackingEntityInfo GetConfigFor(Func<TrackingEntityInfo, bool> searchingEntityTypePredicate)
+        {
+            return ConfigList.FirstOrDefault(searchingEntityTypePredicate);
+        }
+
+        public static TrackingEntityInfo GetConfigFor(string searchingEntityTypeName)
+        {
+            return ConfigList.FirstOrDefault(x => x.EntityName == searchingEntityTypeName);
         }
     }
 }
