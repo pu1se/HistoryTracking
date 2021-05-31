@@ -55,22 +55,23 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Migrations\202105251728404_Init.cs" />
-    <Compile Include="Migrations\202105251728404_Init.designer.cs">
-      <DependentUpon>202105251728404_Init.cs</DependentUpon>
+    <Compile Include="Migrations\202105280951245_Init.cs" />
+    <Compile Include="Migrations\202105280951245_Init.designer.cs">
+      <DependentUpon>202105280951245_Init.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
-    <Compile Include="TrackChangesLogic\AttributeExtensions.cs" />
-    <Compile Include="TrackChangesLogic\GetChanges.cs" />
-    <Compile Include="TrackChangesLogic\PropertiesTrackingConfigurations\TrackEntitiesChangesConfig.cs" />
-    <Compile Include="TrackChangesLogic\PropertiesTrackingConfigurations\Base\PropertyChangeConfiguration.cs" />
-    <Compile Include="TrackChangesLogic\PropertiesTrackingConfigurations\Base\TrackEntityInfo.cs" />
-    <Compile Include="TrackChangesLogic\PropertiesTrackingConfigurations\Base\TrackPropertyInfo.cs" />
-    <Compile Include="TrackChangesLogic\TrackChanges.cs" />
+    <Compile Include="TrackEntityChangesLogic\Base\GetPropertyChangesWay1.cs" />
+    <Compile Include="TrackEntityChangesLogic\Base\GetPropertyChangesWay2.cs" />
+    <Compile Include="TrackEntityChangesLogic\Base\GetEntityChangesWay3.cs" />
+    <Compile Include="TrackEntityChangesLogic\TrackingEntitiesConfiguration.cs" />
+    <Compile Include="TrackEntityChangesLogic\Base\Configuration\TrackingPropertiesConfig.cs" />
+    <Compile Include="TrackEntityChangesLogic\Base\Configuration\TrackingEntityInfo.cs" />
+    <Compile Include="TrackEntityChangesLogic\Base\Configuration\TrackingPropertyInfo.cs" />
+    <Compile Include="TrackEntityChangesLogic\TrackChangesLogic.cs" />
     <Compile Include="DatabaseInitializer.cs" />
     <Compile Include="DataContext.cs" />
     <Compile Include="Entities\BaseEntity.cs" />
-    <Compile Include="TrackChangesLogic\PropertyChangeDescription.cs" />
+    <Compile Include="TrackEntityChangesLogic\Base\PropertyChangeDescription.cs" />
     <Compile Include="Entities\TrackEntityChange.cs" />
     <Compile Include="Entities\SubscriptionProductEntity.cs" />
     <Compile Include="Entities\OrderEntity.cs" />
@@ -93,11 +94,10 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\202105251728404_Init.resx">
-      <DependentUpon>202105251728404_Init.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\202105280951245_Init.resx">
+      <DependentUpon>202105280951245_Init.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

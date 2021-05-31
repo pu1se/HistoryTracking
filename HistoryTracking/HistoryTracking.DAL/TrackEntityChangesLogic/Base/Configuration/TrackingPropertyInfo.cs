@@ -5,9 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using HistoryTracking.DAL.Enums;
 
-namespace HistoryTracking.DAL.TrackChangesLogic.PropertiesTrackingConfigurations
+namespace HistoryTracking.DAL.TrackEntityChangesLogic.PropertiesTrackingConfigurations
 {
-    public class TrackPropertyInfo
+    public class TrackingPropertyInfo
     {
         public string Name { get; set; }
         public List<UserType> IsVisibleForUserRoles { get; set; }

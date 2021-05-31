@@ -9,7 +9,7 @@ using HistoryTracking.BL.Services.Changes.Models;
 using HistoryTracking.BL.Services.User;
 using HistoryTracking.DAL;
 using HistoryTracking.DAL.Enums;
-using HistoryTracking.DAL.TrackChangesLogic.PropertiesTrackingConfigurations;
+using HistoryTracking.DAL.TrackEntityChangesLogic.PropertiesTrackingConfigurations;
 using Newtonsoft.Json;
 
 namespace HistoryTracking.BL.Services.Changes
@@ -22,7 +22,7 @@ namespace HistoryTracking.BL.Services.Changes
 
         public async Task<List<EntityNameModel>> GetTrackingTableNames()
         {
-            var trackingEntityNames = TrackEntitiesChangesConfig.GetConfigsInfo().Select(x => x.EntityName);
+            var trackingEntityNames = TrackingEntitiesConfiguration.GetConfigList().Select(x => x.EntityName);
 
             return trackingEntityNames.Select(x => new EntityNameModel
             {
@@ -76,18 +76,24 @@ namespace HistoryTracking.BL.Services.Changes
             entityChanges.ForEach(x =>
             {
                 x.PropertyChanges = JsonConvert.DeserializeObject<List<PropertyChangeDescription>>(x.PropertyChangesAsJson);
-                x.EntityName = x.EntityName.SplitByCaps();
             });
 
-
+            //todo: fill up ChangeModel with allowed user roles and filter by it.
             entityChanges = FilterChangesByCurrentUserRole(entityChanges, UserManager.GetCurrentUserType());
+
+            entityChanges.ForEach(x =>
+            {
+                //todo: there should be EntityNameFor Displaying
+                x.EntityName = x.EntityName.SplitByCaps();
+            });
 
             return entityChanges;
         }
 
         private List<ChangeModel> FilterChangesByCurrentUserRole(List<ChangeModel> entityChanges, UserType currentUserRole)
         {
-            var configs = TrackEntitiesChangesConfig.GetConfigsInfo();
+            //todo: use GetConfigFor
+            var configs = TrackingEntitiesConfiguration.GetConfigList();
             var result = new List<ChangeModel>();
             foreach (var entityChange in entityChanges)
             {

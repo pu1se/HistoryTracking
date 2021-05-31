@@ -15,7 +15,7 @@ using System.Web;
 using HistoryTracking.DAL.Entities;
 using HistoryTracking.DAL.Enums;
 using HistoryTracking.DAL.Migrations;
-using HistoryTracking.DAL.TrackChangesLogic.PropertiesTrackingConfigurations;
+using HistoryTracking.DAL.TrackEntityChangesLogic.PropertiesTrackingConfigurations;
 
 namespace HistoryTracking.DAL
 {
@@ -90,7 +90,7 @@ namespace HistoryTracking.DAL
             var changes = this.ChangeTracker.Entries()
                 .Where(e => e.State == EntityState.Added || e.State == EntityState.Modified || e.State == EntityState.Deleted);
             var now = DateTime.UtcNow;
-            var trackEntityConfigs = TrackEntitiesChangesConfig.GetConfigsInfo();
+            var trackingEntityConfigList = TrackingEntitiesConfiguration.GetConfigList();
 
             foreach (var dbEntry in changes)
             {
@@ -98,15 +98,6 @@ namespace HistoryTracking.DAL
                 if (entity is null)
                 {
                     continue;
-                }
-
-                if (trackEntityConfigs.Any(x => x.EntityName == entity.GetType().Name))
-                {
-                    var trackEntityChange = TrackChanges.GetTrackEntityChange(this, dbEntry);
-                    if (trackEntityChange != null)
-                    {
-                        TrackEntityChanges.Add(trackEntityChange);
-                    }
                 }
 
                 if (dbEntry.State == EntityState.Added)
@@ -117,6 +108,8 @@ namespace HistoryTracking.DAL
                     }
                     entity.CreatedDateUtc = now;
                     entity.CreatedByUserId = UserManager.GetCurrentUserId();
+                    entity.UpdatedDateUtc = now;
+                    entity.UpdatedByUserId = UserManager.GetCurrentUserId();
                 }
 
                 if (dbEntry.State == EntityState.Modified)
@@ -131,6 +124,17 @@ namespace HistoryTracking.DAL
                     entity.UpdatedByUserId = UserManager.GetCurrentUserId();
                     dbEntry.Property(nameof(BaseEntity.UpdatedDateUtc)).IsModified = true;
                     dbEntry.Property(nameof(BaseEntity.UpdatedByUserId)).IsModified = true;
+                }
+
+                //todo: use GetConfigFor
+                var currentTrackingEntityConfig = trackingEntityConfigList.FirstOrDefault(x => x.EntityType == entity.GetType() || x.EntityType == entity.GetType().BaseType);
+                if (currentTrackingEntityConfig != null)
+                {
+                    var trackEntityChange = TrackChangesLogic.GetTrackEntityChangeRecord(this, dbEntry, currentTrackingEntityConfig);
+                    if (trackEntityChange != null)
+                    {
+                        TrackEntityChanges.Add(trackEntityChange);
+                    }
                 }
             }
         }

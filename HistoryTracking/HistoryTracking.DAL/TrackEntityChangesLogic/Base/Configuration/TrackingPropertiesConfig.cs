@@ -7,24 +7,24 @@ using System.Text;
 using System.Threading.Tasks;
 using HistoryTracking.DAL.Enums;
 
-namespace HistoryTracking.DAL.TrackChangesLogic.PropertiesTrackingConfigurations
+namespace HistoryTracking.DAL.TrackEntityChangesLogic.PropertiesTrackingConfigurations
 {
-    public class PropertyChangeConfiguration<TEntity>
+    public class TrackingPropertiesConfig<TEntity>
     {
-        private TrackEntityInfo EntityInfo { get; }
+        private TrackingEntityInfo EntityInfo { get; }
 
-        public PropertyChangeConfiguration()
+        public TrackingPropertiesConfig()
         {
-            EntityInfo = new TrackEntityInfo(GetEntityTableName());
+            EntityInfo = new TrackingEntityInfo(GetEntityTableName(), typeof(TEntity));
         }
 
-        public PropertyChangeConfiguration<TEntity> TrackProperty<TProperty>(
+        public TrackingPropertiesConfig<TEntity> TrackProperty<TProperty>(
             Expression<Func<TEntity, TProperty>> func,
             params UserType[] isVisibleForUserRoles)
         {
             var expression = (MemberExpression)func.Body;
             var propertyName = expression.Member.Name;
-            EntityInfo.PropertyList.Add(new TrackPropertyInfo{ Name = propertyName, IsVisibleForUserRoles = isVisibleForUserRoles.ToList()});
+            EntityInfo.PropertyList.Add(new TrackingPropertyInfo{ Name = propertyName, IsVisibleForUserRoles = isVisibleForUserRoles.ToList()});
             return this;
         }
 
@@ -37,7 +37,7 @@ namespace HistoryTracking.DAL.TrackChangesLogic.PropertiesTrackingConfigurations
             return entityTableName;
         }
 
-        public TrackEntityInfo BuildConfiguration()
+        public TrackingEntityInfo BuildConfiguration()
         {
             return EntityInfo;
         }

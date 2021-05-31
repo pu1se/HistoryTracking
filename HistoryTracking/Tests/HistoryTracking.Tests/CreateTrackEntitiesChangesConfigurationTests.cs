@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using HistoryTracking.DAL.Entities;
 using HistoryTracking.DAL.Enums;
-using HistoryTracking.DAL.TrackChangesLogic.PropertiesTrackingConfigurations;
+using HistoryTracking.DAL.TrackEntityChangesLogic.PropertiesTrackingConfigurations;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace HistoryTracking.Tests
@@ -17,7 +17,7 @@ namespace HistoryTracking.Tests
         public void TestConfigurationForUserEntity()
         {
             var allUserRoles = EnumHelper.ToArray<UserType>();
-            var trackingEntityConfig = TrackEntitiesChangesConfig
+            var trackingEntityConfig = TrackingEntitiesConfiguration
                 .TrackEntityChangesFor<UserEntity>()
                 .TrackProperty(x => x.Name, allUserRoles)
                 .TrackProperty(x => x.Email, allUserRoles.ExceptItem(UserType.Customer))

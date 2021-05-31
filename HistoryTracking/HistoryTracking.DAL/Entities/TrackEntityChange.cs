@@ -25,8 +25,6 @@ namespace HistoryTracking.DAL.Entities
         [Index]
         public Guid? EntityId { get; set; }
 
-        public string EntityBeforeChangeSnapshot { get; set; }
-
         public string EntityAfterChangeSnapshot { get; set; }
 
         public string PropertiesChangesWay1 { get; set; }

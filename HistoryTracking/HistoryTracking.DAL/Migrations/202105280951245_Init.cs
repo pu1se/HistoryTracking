@@ -66,7 +66,6 @@
                         ChangeDateUtc = c.DateTime(nullable: false, precision: 7, storeType: "datetime2"),
                         EntityTable = c.String(),
                         EntityId = c.Guid(),
-                        EntityBeforeChangeSnapshot = c.String(),
                         EntityAfterChangeSnapshot = c.String(),
                         PropertiesChangesWay1 = c.String(),
                         TimeOfWay1 = c.Time(nullable: false, precision: 7),
