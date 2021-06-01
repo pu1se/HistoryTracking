@@ -53,17 +53,17 @@ namespace HistoryTracking.DAL.TrackEntityChangesLogic.PropertiesTrackingConfigur
         
         public static TrackingEntityInfo GetConfigFor(Type searchingEntityType)
         {
-            return ConfigList.FirstOrDefault(x => x.EntityType == searchingEntityType);
+            return GetConfigList().FirstOrDefault(x => x.EntityType == searchingEntityType);
         }
 
         public static TrackingEntityInfo GetConfigFor(Func<TrackingEntityInfo, bool> searchingEntityTypePredicate)
         {
-            return ConfigList.FirstOrDefault(searchingEntityTypePredicate);
+            return GetConfigList().FirstOrDefault(searchingEntityTypePredicate);
         }
 
         public static TrackingEntityInfo GetConfigFor(string searchingEntityTypeName)
         {
-            return ConfigList.FirstOrDefault(x => x.EntityName == searchingEntityTypeName);
+            return GetConfigList().FirstOrDefault(x => x.EntityName == searchingEntityTypeName);
         }
     }
 }
