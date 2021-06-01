@@ -39,8 +39,7 @@ namespace HistoryTracking.DAL.TrackEntityChangesLogic
             return propertyChanges;
         }
 
-        //todo: calculate its executing time
-        private static object GetOriginalEntity(DbEntityEntry dbEntry)
+        public static object GetOriginalEntity(DbEntityEntry dbEntry)
         {
             var entityType = dbEntry.Entity.GetType();
             var originalEntity = dbEntry.Entity.DeepClone();

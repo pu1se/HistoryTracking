@@ -46,7 +46,12 @@ namespace HistoryTracking.DAL
             {
                 propertyChanges2 = GetPropertyChangesWay2.For(dbEntry, trackingEntityConfig);
             });
-            
+
+            var oldEntityAsJson = string.Empty;
+            var oldEntityGettingExecutionTime = CalcExecutionTime.For(() =>
+            {
+                oldEntityAsJson = dbEntry.State != EntityState.Added ? GetPropertyChangesWay2.GetOriginalEntity(dbEntry).ToJson() : null;
+            });
             
 
             var trackEntityChange = new TrackEntityChange
@@ -56,11 +61,13 @@ namespace HistoryTracking.DAL
                 EntityId = GetPrimaryKeyId(dataContext, dbEntry),
                 ChangeType = dbEntry.State.ToString(),
                 ChangeDateUtc = changedDateUtc,
+                EntityBeforeChangeSnapshot = oldEntityAsJson,
+                TimeOfGetOldEntity = oldEntityGettingExecutionTime.TotalMilliseconds,
                 EntityAfterChangeSnapshot = dbEntry.State != EntityState.Deleted ? dbEntry.Entity.ToJson() : null,
                 PropertiesChangesWay1 = propertyChanges1.ToJson(),
-                // TimeOfWay1 = way1ExecutionTime.Milliseconds;
+                TimeOfWay1 = way2ExecutionTime.TotalMilliseconds,
                 PropertiesChangesWay2 = propertyChanges2.ToJson(),
-                // TimeOfWay2 = way2ExecutionTime.Milliseconds;
+                TimeOfWay2 = way2ExecutionTime.TotalMilliseconds,
                 ChangedByUserId = UserManager.GetCurrentUserId(),
             };
             return trackEntityChange;

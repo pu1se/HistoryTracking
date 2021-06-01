@@ -18,7 +18,7 @@ namespace HistoryTracking.Tests
     [TestClass]
     public class PerformanceTest : BaseTest
     {
-        [TestMethod]
+        /*[TestMethod]
         public async Task AddEditLoop()
         {
             var index = 0;
@@ -48,6 +48,6 @@ namespace HistoryTracking.Tests
                 }
                 
             }
-        }
+        }*/
     }
 }

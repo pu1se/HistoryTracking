@@ -25,19 +25,19 @@ namespace HistoryTracking.DAL.Entities
         [Index]
         public Guid? EntityId { get; set; }
 
+        public string EntityBeforeChangeSnapshot { get; set; }
+
         public string EntityAfterChangeSnapshot { get; set; }
 
         public string PropertiesChangesWay1 { get; set; }
 
-        public TimeSpan TimeOfWay1 { get; set; }
+        public double TimeOfWay1 { get; set; }
 
         public string PropertiesChangesWay2 { get; set; }
 
-        public TimeSpan TimeOfWay2 { get; set; }
+        public double TimeOfWay2 { get; set; }
 
-        public string PropertiesChangesWay3 { get; set; }
-
-        public TimeSpan TimeOfWay3 { get; set; }
+        public double TimeOfGetOldEntity { get; set; }
 
 
         public Guid ChangedByUserId { get; set; }
