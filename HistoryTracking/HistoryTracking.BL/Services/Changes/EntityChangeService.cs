@@ -76,16 +76,11 @@ namespace HistoryTracking.BL.Services.Changes
             entityChanges.ForEach(x =>
             {
                 x.PropertyChanges = JsonConvert.DeserializeObject<List<PropertyChangeDescription>>(x.PropertyChangesAsJson);
+                x.EntityNameForDisplaying = x.EntityName.SplitByCaps();
             });
 
             //todo: fill up ChangeModel with allowed user roles and filter by it.
             entityChanges = FilterChangesByCurrentUserRole(entityChanges, UserManager.GetCurrentUserType());
-
-            entityChanges.ForEach(x =>
-            {
-                //todo: there should be EntityNameFor Displaying
-                x.EntityName = x.EntityName.SplitByCaps();
-            });
 
             return entityChanges;
         }

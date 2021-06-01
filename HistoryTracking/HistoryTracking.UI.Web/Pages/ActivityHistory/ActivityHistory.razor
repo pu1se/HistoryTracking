@@ -46,7 +46,7 @@
                         @foreach (var change in Model.ChangeList)
                         {
                         <tr @onclick="@(() => OnEntityChangeClick(change.Id))" class="@(Model.SelectedEntityChange != null && Model.SelectedEntityChange.Id == change.Id ? "grey" : "")">
-                            <td>@change.EntityName</td>
+                            <td>@change.EntityNameForDisplaying</td>
                             <td>@change.ChangedByUser.Name</td>
                             <td>@change.ChangeDate.ToString("ddd dd-MMM-yy HH:mm")</td>
                             <td>@change.PropertyChanges.Select(x => x.PropertyName).Join(", ")</td>
