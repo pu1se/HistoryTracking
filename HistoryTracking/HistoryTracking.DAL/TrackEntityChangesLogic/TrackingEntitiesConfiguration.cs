@@ -39,7 +39,7 @@ namespace HistoryTracking.DAL.TrackEntityChangesLogic.PropertiesTrackingConfigur
 
                 TrackEntityChangesFor<OrderEntity>()
                     .TrackProperty(x => x.Comments, allUserRoles)
-                    .TrackProperty(x => x.OrderStatus, allUserRoles)
+                    .TrackProperty(x => x.OrderStatus, allUserRoles, type => type.ToString().SplitByCaps())
                     .TrackProperty(x => x.PaymentStatus, allUserRoles)
                     .BuildConfiguration(),
             };

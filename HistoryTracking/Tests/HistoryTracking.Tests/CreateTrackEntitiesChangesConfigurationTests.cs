@@ -22,7 +22,7 @@ namespace HistoryTracking.Tests
                 .TrackProperty(x => x.Name, allUserRoles)
                 .TrackProperty(x => x.Email, allUserRoles.ExceptItem(UserType.Customer))
                 .TrackProperty(x => x.UserType, allUserRoles.ExceptItem(UserType.Customer, UserType.Reseller))
-                .TrackProperty(x => x.Orders, UserType.SystemUser)
+                .TrackProperty(x => x.Orders, new []{UserType.SystemUser})
                 .BuildConfiguration();
 
             Assert.IsTrue(trackingEntityConfig.EntityName.IsNullOrEmpty() == false);

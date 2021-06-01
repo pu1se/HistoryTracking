@@ -73,10 +73,33 @@ namespace HistoryTracking.BL.Services.Changes
                 })
                 .OrderByDescending(x => x.ChangeDate)
                 .ToListAsync();
-            entityChanges.ForEach(x =>
+
+            entityChanges.ForEach(changeModel =>
             {
-                x.PropertyChanges = JsonConvert.DeserializeObject<List<PropertyChangeDescription>>(x.PropertyChangesAsJson);
-                x.EntityNameForDisplaying = x.EntityName.SplitByCaps();
+                var config = TrackingEntitiesConfiguration.GetConfigFor(changeModel.EntityName);
+                if (config == null)
+                {
+                    return;
+                }
+
+                changeModel.PropertyChanges = JsonConvert.DeserializeObject<List<PropertyChangeDescription>>(changeModel.PropertyChangesAsJson) 
+                                    ?? new List<PropertyChangeDescription>(); 
+                changeModel.EntityNameForDisplaying = changeModel.EntityName.SplitByCaps();
+
+                
+                foreach (var property in changeModel.PropertyChanges)
+                {
+                    var propertyConfig = config.PropertyList.FirstOrDefault(x => x.Name == property.PropertyName);
+                    if (propertyConfig == null)
+                    {
+                        continue;
+                    }
+
+                    property.PropertyNameForDisplaying = property.PropertyName.SplitByCaps();
+                    property.IsVisibleForUserRoles = propertyConfig.IsVisibleForUserRoles;
+                    property.OldValueForDisplaying = propertyConfig.DisplayingPropertyFunction(property.OldValue);
+                    property.NewValueForDisplaying = propertyConfig.DisplayingPropertyFunction(property.NewValue);
+                }
             });
 
             //todo: fill up ChangeModel with allowed user roles and filter by it.
@@ -87,8 +110,6 @@ namespace HistoryTracking.BL.Services.Changes
 
         private List<ChangeModel> FilterChangesByCurrentUserRole(List<ChangeModel> entityChanges, UserType currentUserRole)
         {
-            //todo: use GetConfigFor
-            var configs = TrackingEntitiesConfiguration.GetConfigList();
             var result = new List<ChangeModel>();
             foreach (var entityChange in entityChanges)
             {
