@@ -31,7 +31,10 @@ namespace HistoryTracking.UI.Web
             services.AddSignalR(hubOptions =>
             {
                 hubOptions.EnableDetailedErrors = true;
-                hubOptions.KeepAliveInterval = TimeSpan.FromMinutes(60);
+                hubOptions.KeepAliveInterval = TimeSpan.FromMinutes(100);
+                hubOptions.MaximumReceiveMessageSize = 102400000;
+                hubOptions.ClientTimeoutInterval = TimeSpan.FromMinutes(30);
+                hubOptions.HandshakeTimeout = TimeSpan.FromMinutes(30);
             });
             services.AddTransient<ServerApiCall>();
             services.AddSingleton<UiSettings>();
