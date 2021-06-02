@@ -42,7 +42,12 @@ namespace HistoryTracking.DAL.TrackEntityChangesLogic
         public static object GetOriginalEntity(DbEntityEntry dbEntry)
         {
             var entityType = dbEntry.Entity.GetType();
-            var originalEntity = dbEntry.Entity.DeepClone();
+            if (TrackingEntitiesConfiguration.GetConfigFor(entityType) == null)
+            {
+                entityType = entityType.BaseType;
+            }
+
+            var originalEntity = Activator.CreateInstance(entityType, true);
             foreach (var propertyName in dbEntry.OriginalValues.PropertyNames)
             {
                 var property = entityType.GetProperty(propertyName);

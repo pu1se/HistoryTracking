@@ -130,6 +130,9 @@ namespace HistoryTracking.DAL
                 var currentTrackingEntityConfig = TrackingEntitiesConfiguration.GetConfigFor(x => x.EntityType == entity.GetType() || x.EntityType == entity.GetType().BaseType);
                 if (currentTrackingEntityConfig != null)
                 {
+                    //todo: create a task for Eugene Suhih to check how offten we make updates of table
+                    //todo: create 2 more entities Contacts and Addresses with relation to Users
+                    //todo: check if I save subscription and order entities 
                     var trackEntityChange = TrackChangesLogic.GetTrackEntityChangeRecord(this, dbEntry, currentTrackingEntityConfig);
                     if (trackEntityChange != null)
                     {
