@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Entity;
+using System.Data.Entity.Core.Objects;
 using System.Data.Entity.Infrastructure;
 using System.Data.Entity.Migrations;
 using System.Data.Entity.ModelConfiguration.Configuration;
@@ -125,9 +126,13 @@ namespace HistoryTracking.DAL
                     dbEntry.Property(nameof(BaseEntity.UpdatedByUserId)).IsModified = true;
                 }
 
+
                 var currentTrackingEntityConfig = TrackingEntitiesConfiguration.GetConfigFor(x => x.EntityType == entity.GetType() || x.EntityType == entity.GetType().BaseType);
                 if (currentTrackingEntityConfig != null)
                 {
+                    //todo: create a task for Eugene Suhih to check how offten we make updates of table
+                    //todo: create 2 more entities Contacts and Addresses with relation to Users
+                    //todo: check if I save subscription and order entities 
                     var trackEntityChange = TrackChangesLogic.GetTrackEntityChangeRecord(this, dbEntry, currentTrackingEntityConfig);
                     if (trackEntityChange != null)
                     {

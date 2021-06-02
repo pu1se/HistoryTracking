@@ -69,6 +69,7 @@
     <Compile Include="CreateTrackEntitiesChangesConfigurationTests.cs" />
     <Compile Include="EntityChangeServiceTests.cs" />
     <Compile Include="ExtractChangesTests.cs" />
+    <Compile Include="PerformanceTest.cs" />
     <Compile Include="_Core\BaseServiceTests.cs" />
     <Compile Include="_Core\BaseTest.cs" />
     <Compile Include="StorageTests.cs" />
