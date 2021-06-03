@@ -49,7 +49,7 @@
                             <td>@change.EntityNameForDisplaying</td>
                             <td>@change.ChangedByUser.Name</td>
                             <td>@change.ChangeDate.ToString("ddd dd-MMM-yy HH:mm")</td>
-                            <td>@change.PropertyChanges.Select(x => x.PropertyName).Join(", ")</td>
+                            <td>@change.PropertyChanges.Select(x => x.PropertyNameForDisplaying).Join(", ")</td>
                         </tr>
                         }
                     </tbody>
@@ -78,15 +78,15 @@
                     {
                         <div class="row" style="font-size: 15px;">
                             <div class="col-2" style="font-weight: bold; font-size: 14px;">
-                                @property.PropertyName.SplitByCaps()
+                                @property.PropertyNameForDisplaying
                             </div>
-                            @if (!property.OldValue.IsNullOrEmpty())
+                            @if (!property.OldValueForDisplaying.IsNullOrEmpty())
                             {
-                                <div class="col" style="text-decoration: line-through; color: #999; background-color: #d9d9d9; ">@property.OldValue</div>
+                                <div class="col" style="text-decoration: line-through; color: #999; background-color: #d9d9d9; ">@property.OldValueForDisplaying</div>
                             }
-                            @if (!property.NewValue.IsNullOrEmpty())
+                            @if (!property.NewValueForDisplaying.IsNullOrEmpty())
                             {
-                                <div class="col" style="background-color: #dff6dd;">@property.NewValue</div>
+                                <div class="col" style="background-color: #dff6dd;">@property.NewValueForDisplaying</div>
                             }
                         </div>
                         <br />

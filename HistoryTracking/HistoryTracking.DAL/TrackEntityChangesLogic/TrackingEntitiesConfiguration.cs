@@ -26,7 +26,7 @@ namespace HistoryTracking.DAL.TrackEntityChangesLogic.PropertiesTrackingConfigur
                 TrackEntityChangesFor<UserEntity>()
                     .TrackProperty(x => x.Name, allUserRoles)
                     .TrackProperty(x => x.Email, allUserRoles)
-                    .TrackProperty(x => x.UserType, allUserRoles)
+                    .TrackProperty(x => x.UserType, allUserRoles, type => type?.ToString().SplitByCaps())
                     .BuildConfiguration(),
 
                 TrackEntityChangesFor<SubscriptionProductEntity>()
@@ -39,8 +39,8 @@ namespace HistoryTracking.DAL.TrackEntityChangesLogic.PropertiesTrackingConfigur
 
                 TrackEntityChangesFor<OrderEntity>()
                     .TrackProperty(x => x.Comments, allUserRoles)
-                    .TrackProperty(x => x.OrderStatus, allUserRoles, type => type.ToString().SplitByCaps())
-                    .TrackProperty(x => x.PaymentStatus, allUserRoles)
+                    .TrackProperty(x => x.OrderStatus, allUserRoles, type => type?.ToString().SplitByCaps())
+                    .TrackProperty(x => x.PaymentStatus, allUserRoles, type => type?.ToString().SplitByCaps())
                     .BuildConfiguration(),
             };
             return ConfigList;

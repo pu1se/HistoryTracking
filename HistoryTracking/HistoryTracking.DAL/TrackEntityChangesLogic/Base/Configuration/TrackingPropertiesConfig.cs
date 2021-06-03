@@ -21,13 +21,12 @@ namespace HistoryTracking.DAL.TrackEntityChangesLogic.PropertiesTrackingConfigur
         public TrackingPropertiesConfig<TEntity> TrackProperty<TProperty>(
             Expression<Func<TEntity, TProperty>> func,
             UserType[] isVisibleForUserRoles, 
-            Func<object, string> displayPropertyFuncExpression = null)
+            Func<object, string> displayPropertyFunc = null)
         {
             var expression = (MemberExpression)func.Body;
             var propertyName = expression.Member.Name;
 
-            Func<object, string> displayPropertyFunc;
-            if (displayPropertyFuncExpression == null)
+            if (displayPropertyFunc == null)
             {
                 var defaultDisplayingPropertyFunc = new Func<object, string>(property => property != null ? property.ToString() : string.Empty);
                 displayPropertyFunc = defaultDisplayingPropertyFunc;
