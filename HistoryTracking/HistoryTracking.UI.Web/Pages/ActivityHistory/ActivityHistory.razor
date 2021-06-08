@@ -1,6 +1,4 @@
-﻿@page "/changes"
-
-<h3>Activity History</h3>
+﻿<h3>Activity History</h3>
 <br />
 <PageViewer PageModel="@Model">
 
@@ -45,12 +43,12 @@
                     <tbody style="cursor: pointer" class="@(Model.SelectedEntityChange != null ? "right-board" : "")">
                         @foreach (var change in Model.ChangeList)
                         {
-                        <tr @onclick="@(() => OnEntityChangeClick(change.Id))" class="@(Model.SelectedEntityChange != null && Model.SelectedEntityChange.Id == change.Id ? "grey" : "")">
-                            <td>@change.EntityNameForDisplaying</td>
-                            <td>@change.ChangedByUser.Name</td>
-                            <td>@change.ChangeDate.ToString("ddd dd-MMM-yy HH:mm")</td>
-                            <td>@change.PropertyChanges.Select(x => x.PropertyNameForDisplaying).Join(", ")</td>
-                        </tr>
+                            <tr @onclick="@(() => OnEntityChangeClick(change.Id))" class="@(Model.SelectedEntityChange != null && Model.SelectedEntityChange.Id == change.Id ? "grey" : "")">
+                                <td>@change.EntityNameForDisplaying</td>
+                                <td>@change.ChangedByUser.Name</td>
+                                <td>@change.ChangeDate.ToString("ddd dd-MMM-yy HH:mm")</td>
+                                <td>@change.PropertyChanges.Select(x => x.PropertyNameForDisplaying).Join(", ")</td>
+                            </tr>
                         }
                     </tbody>
                 </table>
@@ -113,6 +111,7 @@
 
 </PageViewer>
 
+@page "/changes"
 @inherits BasePageComponent<ActivityHistoryPageModel>
 @code {
 
@@ -137,7 +136,7 @@
             ShowError(getTrackingEntitiesResult.ErrorMessage);
             return;
         }
-        Model.TrackingEntityNames = getTrackingEntitiesResult.Data.Select(x => new DropdownItem{Key = x.EntityName, Text = x.EntityNameForDisplaying});
+        Model.TrackingEntityNames = getTrackingEntitiesResult.Data.Select(x => new DropdownItem { Key = x.EntityName, Text = x.EntityNameForDisplaying });
 
         await RefreshEntityChangesTable();
 

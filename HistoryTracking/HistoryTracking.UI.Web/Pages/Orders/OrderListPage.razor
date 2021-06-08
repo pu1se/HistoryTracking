@@ -1,50 +1,28 @@
-﻿@page "/orders"
-
-<h3>Orders</h3>
+﻿<h3>Orders</h3>
 
 <PageViewer PageModel="@Model">
-    @if (Model.OrderList.Any())
-    {
-        <br />
-        <br />
-        <table class="table table-hover">
-            <thead>
-                <tr>
-                    <th>Order Date</th>
-                    <th>Customer</th>
-                    <th>Subscriptions</th>
-                    <th>Order Status</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var order in Model.OrderList)
-                {
-                    <tr>
-                        <td>@order.OrderDate</td>
-                        <td>@order.CustomerUser.Name</td>
-                        <td>@order.SubscriptionList.Select(item => item.Title).Join(", ")</td>
-                        <td>@order.OrderStatus</td>
-                        <td>
-                            <a href="/orders/@order.Id">
-                                edit
-                            </a>
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-    }
-    else
-    {
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <p>Order list is empty.</p>
-    }
-
+    <br />
+    <br />
+    <Table TypeOfEntity="OrderModel" Items="Model.OrderList">
+        <Header>
+            <th>Order Date</th>
+            <th>Customer</th>
+            <th>Subscriptions</th>
+            <th>Order Status</th>
+            <th></th>
+        </Header>
+        <RowTemplate Context="order">
+            <td>@order.OrderDate</td>
+            <td>@order.CustomerUser.Name</td>
+            <td>@order.SubscriptionList.Select(item => item.Title).Join(", ")</td>
+            <td>@order.OrderStatus</td>
+            <td>
+                <a href="/orders/@order.Id">
+                    edit
+                </a>
+            </td>
+        </RowTemplate>
+    </Table>
 
     <a href='/orders/Add'>
         <span class="oi oi-plus" aria-hidden="true" style="vertical-align: text-bottom"></span> <span>add</span>
@@ -53,6 +31,8 @@
 
 
 
+@page "/orders"
+@using HistoryTracking.BL.Services.Order.Models
 @inherits BasePageComponent<OrderListPageModel>
 @code {
 

@@ -1,0 +1,36 @@
+﻿@if (Items.Any())
+{
+    <table class="table table-hover">
+    
+        @if (Header != null)
+        {
+            <thead>
+            <tr>@Header</tr>
+            </thead>
+        }
+
+        <tbody>
+            @foreach (var item in Items)
+            {
+                <tr>@RowTemplate(item)</tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <h4>List is empty.</h4>
+}
+
+@typeparam TypeOfEntity
+@code {
+    [Parameter]public RenderFragment Header { get; set; }
+    [Parameter]public RenderFragment Body { get; set; }
+    [Parameter]public IEnumerable<TypeOfEntity> Items { get; set; }
+    [Parameter]public RenderFragment<TypeOfEntity> RowTemplate { get; set; }
+}

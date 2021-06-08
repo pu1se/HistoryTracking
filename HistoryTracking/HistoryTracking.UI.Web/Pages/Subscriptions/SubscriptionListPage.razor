@@ -1,52 +1,30 @@
-﻿@page "/subscriptions"
-
-<h3>Subscriptions</h3>
+﻿<h3>Subscriptions</h3>
 
 <PageViewer PageModel="@Model">
-    @if (Model.SubscriptionList.Any())
-    {
-        <br />
-        <br />
-        <table class="table table-hover">
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Distributor Markup, %</th>
-                    <th>Reseller Markup, %</th>
-                    <th>Base Price</th>
-                    <th>Price with Markup</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var subscription in Model.SubscriptionList)
-                {
-                    <tr>
-                        <td>@subscription.Title</td>
-                        <td>@subscription.DistributorMarkupAsPercent %</td>
-                        <td>@subscription.ResellerMarkupAsPercent %</td>
-                        <td>@subscription.Price @subscription.Currency.ToString()</td>
-                        <td>@subscription.TotalPrice @subscription.Currency.ToString()</td>
-                        <td>
-                            <a href="/subscriptions/@subscription.Id">
-                                edit
-                            </a>
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-    }
-    else
-    {
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <p>Subscription list is empty.</p>
-    }
-
+    <br />
+    <br />
+    <Table TypeOfEntity="SubscriptionModel" Items="Model.SubscriptionList">
+        <Header>
+            <th>Name</th>
+            <th>Distributor Markup, %</th>
+            <th>Reseller Markup, %</th>
+            <th>Base Price</th>
+            <th>Price with Markup</th>
+            <th></th>
+        </Header>
+        <RowTemplate Context="subscription">
+            <td>@subscription.Title</td>
+            <td>@subscription.DistributorMarkupAsPercent %</td>
+            <td>@subscription.ResellerMarkupAsPercent %</td>
+            <td>@subscription.Price @subscription.Currency.ToString()</td>
+            <td>@subscription.TotalPrice @subscription.Currency.ToString()</td>
+            <td>
+                <a href="/subscriptions/@subscription.Id">
+                    edit
+                </a>
+            </td>
+        </RowTemplate>
+    </Table>
 
     <a href='/subscriptions/Add'>
         <span class="oi oi-plus" aria-hidden="true" style="vertical-align: text-bottom"></span> <span>add</span>
@@ -54,7 +32,8 @@
 </PageViewer>
 
 
-
+@page "/subscriptions"
+@using HistoryTracking.BL.Services.SubscriptionProducts.Models
 @inherits BasePageComponent<SubscriptionListPageModel>
 @code {
 
