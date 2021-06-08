@@ -8,6 +8,7 @@ using System.Web.Http;
 using System.Web.Http.Results;
 using HistoryTracking.BL.Services.Changes;
 using HistoryTracking.BL.Services.Changes.Models;
+using HistoryTracking.DAL;
 
 namespace HistoryTracking.Api.Controllers
 {
@@ -34,6 +35,8 @@ namespace HistoryTracking.Api.Controllers
         [HttpPost]
         public async Task<IHttpActionResult> GetEntityChanges([FromBody]GetChangesListModel model)
         {
+            model = model ?? new GetChangesListModel();
+            model.FilterByUserRole = UserManager.GetCurrentUserType();
             var result = await EntityChangeService.GetChanges(model);
             return Ok(result);
         }

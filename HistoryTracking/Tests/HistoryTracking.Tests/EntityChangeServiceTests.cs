@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using HistoryTracking.BL.Services.Changes;
 using HistoryTracking.BL.Services.Changes.Models;
+using HistoryTracking.DAL.Enums;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace HistoryTracking.Tests
@@ -27,7 +28,7 @@ namespace HistoryTracking.Tests
         {
             try
             {
-                var changes = await Service.GetChanges();
+                var changes = await Service.GetChanges(new GetChangesListModel{FilterByUserRole = UserType.SystemUser});
 
                 foreach (var change in changes)
                 {
@@ -36,7 +37,6 @@ namespace HistoryTracking.Tests
                     foreach (var propertyChange in change.PropertyChanges)
                     {
                         Assert.IsTrue(propertyChange.PropertyName.IsNullOrEmpty() == false);
-                        Assert.IsTrue(propertyChange.NewValue.IsNullOrEmpty() == false || propertyChange.OldValue.IsNullOrEmpty() == false);
                     }
                 }
             }
@@ -45,6 +45,18 @@ namespace HistoryTracking.Tests
                 Console.WriteLine(e);
                 throw;
             }
+        }
+
+        [TestMethod]
+        public async Task CheckUserRoleFiltration()
+        {
+            var allChanges = await Service.GetChanges(new GetChangesListModel{FilterByUserRole = UserType.SystemUser});
+            var allPropertyChanges = allChanges.SelectMany(x => x.PropertyChanges);
+
+            var notAllChanges = await Service.GetChanges(new GetChangesListModel{FilterByUserRole = UserType.Customer});
+            var notAllPropertyChanges = notAllChanges.SelectMany(x => x.PropertyChanges);
+
+            Assert.IsTrue(allPropertyChanges.Count() > notAllPropertyChanges.Count());
         }
     }
 }

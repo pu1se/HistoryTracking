@@ -12,26 +12,26 @@ namespace HistoryTracking.DAL.TrackEntityChangesLogic
     public static class GetPropertyChangesWay2
     {
         public static List<PropertyChangeDescription> For(DbEntityEntry dbEntry,
-            TrackingEntityInfo trackingEntityConfig)
+            TrackingEntityInfo config)
         {
             var propertyChanges = new List<PropertyChangeDescription>();
             switch (dbEntry.State)
             {
                 case EntityState.Added:
                 {
-                    propertyChanges = GetChangesFor(null, dbEntry.Entity, trackingEntityConfig);
+                    propertyChanges = GetChangesFor(null, dbEntry.Entity, config);
                     break;
                 }
                 case EntityState.Modified:
                 {
                     var originalEntity = GetOriginalEntity(dbEntry);
-                    propertyChanges = GetChangesFor(originalEntity, dbEntry.Entity, trackingEntityConfig);
+                    propertyChanges = GetChangesFor(originalEntity, dbEntry.Entity, config);
                     break;
                 }
                 case EntityState.Deleted:
                 {
                     var originalEntity = GetOriginalEntity(dbEntry);
-                    propertyChanges = GetChangesFor(originalEntity, null, trackingEntityConfig);
+                    propertyChanges = GetChangesFor(originalEntity, null, config);
                     break;
                 }
             }
@@ -66,8 +66,7 @@ namespace HistoryTracking.DAL.TrackEntityChangesLogic
             return originalEntity;
         }
 
-        //todo: calculate its executing time
-        private static List<PropertyChangeDescription> GetChangesFor<T>(T oldEntity, T newEntity, TrackingEntityInfo propertyConfig) where T: class
+        public static List<PropertyChangeDescription> GetChangesFor<T>(T oldEntity, T newEntity, TrackingEntityInfo propertyConfig) where T: class
         {
             var changeList = new List<PropertyChangeDescription>();
 
@@ -79,12 +78,19 @@ namespace HistoryTracking.DAL.TrackEntityChangesLogic
                     continue;
                 }
 
-                if (property.GetValue(oldEntity) == property.GetValue(newEntity))
+                object oldValue = null;
+                if (oldEntity != null)
                 {
-                    continue;
+                    oldValue = property.GetValue(oldEntity);
                 }
 
-                if (property.GetValue(oldEntity)?.ToString() == property.GetValue(newEntity)?.ToString())
+                object newValue = null;
+                if (newEntity != null)
+                {
+                    newValue = property.GetValue(newEntity);
+                }
+
+                if (oldValue?.ToString() == newValue?.ToString())
                 {
                     continue;
                 }
@@ -93,11 +99,9 @@ namespace HistoryTracking.DAL.TrackEntityChangesLogic
                 var change = new PropertyChangeDescription
                 {
                     PropertyName = property.Name,
-                    OldValue = property.GetValue(oldEntity)?.ToString(),
-                    NewValue = property.GetValue(newEntity)?.ToString(),
+                    OldValue = oldValue?.ToString(),
+                    NewValue = newValue?.ToString(),
                 };
-                change.OldValue = change.OldValue ?? string.Empty;
-                change.NewValue = change.NewValue ?? string.Empty;
                 changeList.Add(change);
             }
 

@@ -62,7 +62,6 @@
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="TrackEntityChangesLogic\Base\GetPropertyChangesWay1.cs" />
     <Compile Include="TrackEntityChangesLogic\Base\GetPropertyChangesWay2.cs" />
-    <Compile Include="TrackEntityChangesLogic\Base\GetEntityChangesWay3.cs" />
     <Compile Include="TrackEntityChangesLogic\TrackingEntitiesConfiguration.cs" />
     <Compile Include="TrackEntityChangesLogic\Base\Configuration\TrackingPropertiesConfig.cs" />
     <Compile Include="TrackEntityChangesLogic\Base\Configuration\TrackingEntityInfo.cs" />

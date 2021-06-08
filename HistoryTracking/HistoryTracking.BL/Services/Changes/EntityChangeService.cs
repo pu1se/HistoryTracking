@@ -31,7 +31,7 @@ namespace HistoryTracking.BL.Services.Changes
             }).ToList();
         }
 
-        public async Task<List<ChangeModel>> GetChanges(GetChangesListModel query = null)
+        public async Task<List<ChangeModel>> GetChanges(GetChangesListModel query)
         {
             query = query ?? new GetChangesListModel();
             var getEntityChangesDbQuery = Storage.TrackEntityChanges.AsQueryable();
@@ -95,53 +95,18 @@ namespace HistoryTracking.BL.Services.Changes
                         continue;
                     }
 
-                    property.PropertyNameForDisplaying = property.PropertyName.SplitByCaps();
                     property.IsVisibleForUserRoles = propertyConfig.IsVisibleForUserRoles;
+                    property.PropertyNameForDisplaying = property.PropertyName.SplitByCaps();
                     property.OldValueForDisplaying = propertyConfig.DisplayingPropertyFunction(property.OldValue);
                     property.NewValueForDisplaying = propertyConfig.DisplayingPropertyFunction(property.NewValue);
                 }
+
+                changeModel.PropertyChanges = changeModel.PropertyChanges
+                    .Where(x => x.IsVisibleForUserRoles.Contains(query.FilterByUserRole))
+                    .ToList();
             });
 
-            //todo: fill up ChangeModel with allowed user roles and filter by it.
-            entityChanges = FilterChangesByCurrentUserRole(entityChanges, UserManager.GetCurrentUserType());
-
             return entityChanges;
-        }
-
-        private List<ChangeModel> FilterChangesByCurrentUserRole(List<ChangeModel> entityChanges, UserType currentUserRole)
-        {
-            var result = new List<ChangeModel>();
-            foreach (var entityChange in entityChanges)
-            {
-                var configForEntity = TrackingEntitiesConfiguration.GetConfigFor(entityChange.EntityName);
-                if (configForEntity == null)
-                {
-                    continue;
-                }
-
-                var visibleProperties = new List<PropertyChangeDescription>();
-                foreach (var property in entityChange.PropertyChanges)
-                {
-                    var configForProperty = configForEntity.PropertyList.FirstOrDefault(x => x.Name == property.PropertyName);
-                    if (configForProperty == null)
-                    {
-                        continue;
-                    }
-
-                    if (configForProperty.IsVisibleForUserRoles.Contains(currentUserRole))
-                    {
-                        visibleProperties.Add(property);
-                    }
-                }
-
-                if (visibleProperties.Any())
-                {
-                    entityChange.PropertyChanges = visibleProperties;
-                    result.Add(entityChange);
-                }
-            }
-
-            return result;
         }
     }
 }

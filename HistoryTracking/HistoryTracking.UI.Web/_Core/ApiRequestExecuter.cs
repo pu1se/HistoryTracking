@@ -19,7 +19,6 @@ namespace HistoryTracking.UI.Web.ApiRequests
 
             if (data != null)
             {
-                //todo: check if http get request with variables works correct
                 request.AddJsonBody(data);
             }
 

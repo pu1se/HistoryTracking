@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using HistoryTracking.DAL.Enums;
 
 namespace HistoryTracking.BL.Services.Changes.Models
 {
@@ -12,5 +13,6 @@ namespace HistoryTracking.BL.Services.Changes.Models
         public List<Guid> UserIds { get; set; } = new List<Guid>();
         public int? TakeHistoryForLastNumberOfDays { get; set; }
         public Guid? EntityId { get; set; }
+        public UserType FilterByUserRole { get; set; }
     }
 }
