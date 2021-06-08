@@ -38,6 +38,12 @@
 
     protected override async Task OnInitializedAsync()
     {
+        var path = Navigation.Uri.Replace(Navigation.BaseUri, "");
+        if (path.IsNullOrEmpty())
+        {
+            Navigation.NavigateTo("users");
+        }
+
         var getUserListResult = await ApiCall.Users.GetUserListAsync();
         if (!getUserListResult.IsSuccess)
         {
