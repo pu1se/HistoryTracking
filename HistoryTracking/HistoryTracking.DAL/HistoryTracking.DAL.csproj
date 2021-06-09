@@ -55,9 +55,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Entities\UserAddressEntity.cs" />
+    <Compile Include="Entities\UserContactEntity.cs" />
     <Compile Include="Migrations\202106011622296_Init.cs" />
     <Compile Include="Migrations\202106011622296_Init.designer.cs">
       <DependentUpon>202106011622296_Init.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202106091511551_AddedComplexRelationships.cs" />
+    <Compile Include="Migrations\202106091511551_AddedComplexRelationships.designer.cs">
+      <DependentUpon>202106091511551_AddedComplexRelationships.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="TrackEntityChangesLogic\Base\GetPropertyChangesWay1.cs" />
@@ -95,6 +101,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\202106011622296_Init.resx">
       <DependentUpon>202106011622296_Init.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202106091511551_AddedComplexRelationships.resx">
+      <DependentUpon>202106091511551_AddedComplexRelationships.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

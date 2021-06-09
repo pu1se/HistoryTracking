@@ -23,5 +23,9 @@ namespace HistoryTracking.DAL.Entities
         public virtual ICollection<OrderEntity> Orders { get; set; }
 
         public virtual ICollection<TrackEntityChange> TrackEntityChanges { get; set; }
+
+        public virtual ICollection<UserAddressEntity> Addresses { get; set; }
+
+        public virtual ICollection<UserContactEntity> Contacts { get; set; }
     }
 }
