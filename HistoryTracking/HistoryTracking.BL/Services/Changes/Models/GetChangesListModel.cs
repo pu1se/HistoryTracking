@@ -13,6 +13,6 @@ namespace HistoryTracking.BL.Services.Changes.Models
         public List<Guid> UserIds { get; set; } = new List<Guid>();
         public int? TakeHistoryForLastNumberOfDays { get; set; }
         public Guid? EntityId { get; set; }
-        public UserType FilterByUserRole { get; set; }
+        public UserType? FilterByUserRole { get; set; }
     }
 }

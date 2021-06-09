@@ -22,5 +22,7 @@ namespace HistoryTracking.BL.Services.Changes.Models
         public string EntityNameForDisplaying { get; set; }
 
         public Guid Id { get; set; }
+
+        public Guid? EntityId { get; set; }
     }
 }

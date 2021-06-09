@@ -17,50 +17,34 @@ namespace HistoryTracking.Tests
         [TestMethod]
         public async Task CheckGetUserList()
         {
-            try
-            {
-                var users = await Service.GetList();
+            var users = await Service.GetList();
 
-                Assert.IsTrue(users != null);
-                Assert.IsTrue(users.Any());
-                Assert.IsTrue(users.First().Name.IsNullOrEmpty() == false);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                throw;
-            }
+            Assert.IsTrue(users != null);
+            Assert.IsTrue(users.Any());
+            Assert.IsTrue(users.First().Name.IsNullOrEmpty() == false);
         }
 
         [TestMethod]
         public async Task EditUser()
         {
-            try
-            {
-                var user = await Storage.Users.FirstAsync();
+            var user = await Storage.Users.FirstAsync();
 
-                var oldName = user.Name;
-                var newName = "new name " + Guid.NewGuid();
-                user.Name = newName;
-                Storage.Users.AddOrUpdate(user);
-                await Storage.SaveChangesAsync();
-                CleanStorageCache();
+            var oldName = user.Name;
+            var newName = "new name " + Guid.NewGuid();
+            user.Name = newName;
+            Storage.Users.AddOrUpdate(user);
+            await Storage.SaveChangesAsync();
+            CleanStorageCache();
 
-                user = await Storage.Users.FirstAsync();
-                Assert.IsTrue(user.Name == newName);
-                user.Name = oldName;
-                Storage.Users.AddOrUpdate(user);
-                await Storage.SaveChangesAsync();
-                user = await Storage.Users.FirstAsync();
-                Assert.IsTrue(user.Name == oldName);
-                Assert.IsTrue(user.UpdatedDateUtc >= DateTime.UtcNow.Date);
-                Assert.IsTrue(user.UpdatedByUserId == TestData.SystemUserId);
-            }
-            catch (Exception exception)
-            {
-                Console.WriteLine(exception);
-                throw;
-            }
+            user = await Storage.Users.FirstAsync();
+            Assert.IsTrue(user.Name == newName);
+            user.Name = oldName;
+            Storage.Users.AddOrUpdate(user);
+            await Storage.SaveChangesAsync();
+            user = await Storage.Users.FirstAsync();
+            Assert.IsTrue(user.Name == oldName);
+            Assert.IsTrue(user.UpdatedDateUtc >= DateTime.UtcNow.Date);
+            Assert.IsTrue(user.UpdatedByUserId == TestData.SystemUserId);
         }
     }
 }

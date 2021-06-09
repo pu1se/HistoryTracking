@@ -20,7 +20,7 @@ namespace HistoryTracking.BL.Services.Changes
         {
         }
 
-        public async Task<List<EntityNameModel>> GetTrackingTableNames()
+        public async Task<List<EntityNameModel>> GetTrackingTableNamesAsync()
         {
             var trackingEntityNames = TrackingEntitiesConfiguration.GetConfigList().Select(x => x.EntityName);
 
@@ -31,7 +31,7 @@ namespace HistoryTracking.BL.Services.Changes
             }).ToList();
         }
 
-        public async Task<List<ChangeModel>> GetChanges(GetChangesListModel query)
+        public async Task<List<ChangeModel>> GetChangesAsync(GetChangesListModel query)
         {
             query = query ?? new GetChangesListModel();
             var getEntityChangesDbQuery = Storage.TrackEntityChanges.AsQueryable();
@@ -64,6 +64,7 @@ namespace HistoryTracking.BL.Services.Changes
                     ChangeType = e.ChangeType,
                     PropertyChangesAsJson = e.PropertiesChangesWay1,
                     EntityName = e.EntityTable,
+                    EntityId = e.EntityId,
                     ChangedByUser = new UserModel
                     {
                         Name = e.ChangedByUser.Name,
@@ -101,9 +102,12 @@ namespace HistoryTracking.BL.Services.Changes
                     property.NewValueForDisplaying = propertyConfig.DisplayingPropertyFunction(property.NewValue);
                 }
 
-                changeModel.PropertyChanges = changeModel.PropertyChanges
-                    .Where(x => x.IsVisibleForUserRoles.Contains(query.FilterByUserRole))
-                    .ToList();
+                if (query.FilterByUserRole.HasValue)
+                {
+                    changeModel.PropertyChanges = changeModel.PropertyChanges
+                        .Where(x => x.IsVisibleForUserRoles.Contains(query.FilterByUserRole.Value))
+                        .ToList();
+                }
             });
 
             return entityChanges;

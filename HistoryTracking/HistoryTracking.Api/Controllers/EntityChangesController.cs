@@ -27,7 +27,7 @@ namespace HistoryTracking.Api.Controllers
         [HttpGet]
         public async Task<IHttpActionResult> GetTrackingEntityNames()
         {
-            var result = await EntityChangeService.GetTrackingTableNames();
+            var result = await EntityChangeService.GetTrackingTableNamesAsync();
             return Ok(result);
         }
 
@@ -37,7 +37,7 @@ namespace HistoryTracking.Api.Controllers
         {
             model = model ?? new GetChangesListModel();
             model.FilterByUserRole = UserManager.GetCurrentUserType();
-            var result = await EntityChangeService.GetChanges(model);
+            var result = await EntityChangeService.GetChangesAsync(model);
             return Ok(result);
         }
     }
