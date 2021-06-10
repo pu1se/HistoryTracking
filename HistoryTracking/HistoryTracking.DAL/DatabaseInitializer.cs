@@ -17,6 +17,7 @@ namespace HistoryTracking.DAL
         public static readonly Guid AnotherCustomerUserId = new Guid("66000000-0000-0000-0000-AAAAAAAAAAAA");
 
         public static readonly Guid SubscriptionProductId = new Guid("88000000-0000-0000-0000-AAAAAAAAAAAA");
+        public static readonly Guid ParentSubscriptionProductId = new Guid("88880000-0000-0000-0000-AAAAAAAAAAAA");
         public static readonly Guid OrderId = new Guid("99000000-0000-0000-0000-AAAAAAAAAAAA");
     }
 
@@ -39,7 +40,16 @@ namespace HistoryTracking.DAL
                 CreatedDateUtc = now,
                 UpdatedDateUtc = now,
                 CreatedByUserId = TestData.SystemUserId,
-                UpdatedByUserId = TestData.SystemUserId
+                UpdatedByUserId = TestData.SystemUserId,
+                Addresses = new List<UserAddressEntity>
+                {
+                    new UserAddressEntity{City = "Minsk", HouseAddress = "st Beletsky 26"}
+                },
+                Contacts = new List<UserContactEntity>
+                {
+                    new UserContactEntity{Email = "me@gmail.com", PhoneNumber = "+375295673039"},
+                    new UserContactEntity{Email = "accountman@gmail.com", PhoneNumber = "+375295148081"},
+                }
             });
             var distributor = storage.Users.Add(new UserEntity
             {
@@ -100,6 +110,22 @@ namespace HistoryTracking.DAL
                 UpdatedByUserId = TestData.SystemUserId,
                 OwnerUsers = new List<UserEntity>(new []{distributor, reseller}),
             });
+            storage.SubscriptionProducts.Add(new SubscriptionProductEntity
+            {
+                Id = TestData.ParentSubscriptionProductId,
+                Currency = CurrencyType.Euro,
+                Price = 55,
+                DistributorMarkupAsPercent = 3,
+                ResellerMarkupAsPercent = 12,
+                Title = "office 365",
+                CreatedDateUtc = now,
+                UpdatedDateUtc = now,
+                CreatedByUserId = TestData.SystemUserId,
+                UpdatedByUserId = TestData.SystemUserId,
+                OwnerUsers = new List<UserEntity>(new []{distributor, reseller}),
+                ChildrenSubscriptions = new List<SubscriptionProductEntity>{offer}
+            });
+
             storage.Orders.Add(new OrderEntity
             {
                 Id = TestData.OrderId,

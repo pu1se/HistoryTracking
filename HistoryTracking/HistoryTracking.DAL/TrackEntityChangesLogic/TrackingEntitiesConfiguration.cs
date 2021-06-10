@@ -27,6 +27,7 @@ namespace HistoryTracking.DAL.TrackEntityChangesLogic.PropertiesTrackingConfigur
                     .TrackProperty(x => x.Name, allUserRoles)
                     .TrackProperty(x => x.Email, allUserRoles)
                     .TrackProperty(x => x.UserType, allUserRoles, type => type?.ToString().SplitByCaps())
+                    .TrackProperty(x => x.Contacts, allUserRoles)
                     .BuildConfiguration(),
 
                 TrackEntityChangesFor<SubscriptionProductEntity>()
@@ -35,6 +36,7 @@ namespace HistoryTracking.DAL.TrackEntityChangesLogic.PropertiesTrackingConfigur
                     .TrackProperty(x => x.Currency, allUserRoles)
                     .TrackProperty(x => x.DistributorMarkupAsPercent, new [] {UserType.SystemUser, UserType.Distributor})
                     .TrackProperty(x => x.ResellerMarkupAsPercent, new [] {UserType.SystemUser, UserType.Distributor, UserType.Reseller})
+                    .TrackProperty(x => x.ChildrenSubscriptions, allUserRoles)
                     .BuildConfiguration(),
 
                 TrackEntityChangesFor<OrderEntity>()

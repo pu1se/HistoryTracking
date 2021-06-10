@@ -11,34 +11,6 @@ namespace HistoryTracking.DAL.TrackEntityChangesLogic
 {
     public static class GetPropertyChangesWay2
     {
-        public static List<PropertyChangeDescription> For(DbEntityEntry dbEntry,
-            TrackingEntityInfo config)
-        {
-            var propertyChanges = new List<PropertyChangeDescription>();
-            switch (dbEntry.State)
-            {
-                case EntityState.Added:
-                {
-                    propertyChanges = GetChangesFor(null, dbEntry.Entity, config);
-                    break;
-                }
-                case EntityState.Modified:
-                {
-                    var originalEntity = GetOriginalEntity(dbEntry);
-                    propertyChanges = GetChangesFor(originalEntity, dbEntry.Entity, config);
-                    break;
-                }
-                case EntityState.Deleted:
-                {
-                    var originalEntity = GetOriginalEntity(dbEntry);
-                    propertyChanges = GetChangesFor(originalEntity, null, config);
-                    break;
-                }
-            }
-
-            return propertyChanges;
-        }
-
         public static object GetOriginalEntity(DbEntityEntry dbEntry)
         {
             var entityType = dbEntry.Entity.GetType();

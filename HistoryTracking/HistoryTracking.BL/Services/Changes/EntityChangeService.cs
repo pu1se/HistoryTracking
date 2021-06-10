@@ -85,8 +85,8 @@ namespace HistoryTracking.BL.Services.Changes
                     return;
                 }
 
-                var entityBeforeChange = JsonConvert.DeserializeObject(changeModel.EntityBeforeChangeAsJson, config.EntityType);
-                var entityAfterChange = JsonConvert.DeserializeObject(changeModel.EntityAfterChangeAsJson, config.EntityType);
+                var entityBeforeChange = JsonConvert.DeserializeObject(changeModel.EntityBeforeChangeAsJson ?? string.Empty, config.EntityType);
+                var entityAfterChange = JsonConvert.DeserializeObject(changeModel.EntityAfterChangeAsJson ?? string.Empty, config.EntityType);
                 changeModel.PropertyChanges = GetPropertyChangesWay2.GetChangesFor(entityBeforeChange, entityAfterChange, config); 
                 changeModel.EntityNameForDisplaying = changeModel.EntityName.SplitByCaps();
 
