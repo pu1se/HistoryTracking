@@ -36,16 +36,8 @@ namespace HistoryTracking.DAL
             }
 
             var propertyChanges1 = new List<PropertyChangeDescription>();
-            var way1ExecutionTime = CalcExecutionTime.For(() =>
-            {
-                propertyChanges1 = GetPropertyChangesWay1.For(dbEntry, trackingEntityConfig);
-            });
-            
+
             var propertyChanges2 = new List<PropertyChangeDescription>();
-            var way2ExecutionTime = CalcExecutionTime.For(() =>
-            {
-                propertyChanges2 = GetPropertyChangesWay2.For(dbEntry, trackingEntityConfig);
-            });
 
             object oldEntity = null;
             var oldEntityGettingExecutionTime = CalcExecutionTime.For(() =>
@@ -65,9 +57,9 @@ namespace HistoryTracking.DAL
                 TimeOfGetOldEntity = oldEntityGettingExecutionTime.TotalMilliseconds,
                 EntityAfterChangeSnapshot = dbEntry.State != EntityState.Deleted ? dbEntry.Entity.ToJson() : null,
                 PropertiesChangesWay1 = propertyChanges1.ToJson(),
-                TimeOfWay1 = way1ExecutionTime.TotalMilliseconds,
+                TimeOfWay1 = 0,
                 PropertiesChangesWay2 = propertyChanges2.ToJson(),
-                TimeOfWay2 = way2ExecutionTime.TotalMilliseconds,
+                TimeOfWay2 = 0,
                 ChangedByUserId = UserManager.GetCurrentUserId(),
             };
             return trackEntityChange;

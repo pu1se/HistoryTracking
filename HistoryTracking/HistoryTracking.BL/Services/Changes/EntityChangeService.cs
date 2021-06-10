@@ -9,6 +9,7 @@ using HistoryTracking.BL.Services.Changes.Models;
 using HistoryTracking.BL.Services.User;
 using HistoryTracking.DAL;
 using HistoryTracking.DAL.Enums;
+using HistoryTracking.DAL.TrackEntityChangesLogic;
 using HistoryTracking.DAL.TrackEntityChangesLogic.PropertiesTrackingConfigurations;
 using Newtonsoft.Json;
 
@@ -62,7 +63,8 @@ namespace HistoryTracking.BL.Services.Changes
                     Id = e.Id,
                     ChangeDate = e.ChangeDateUtc,
                     ChangeType = e.ChangeType,
-                    PropertyChangesAsJson = e.PropertiesChangesWay1,
+                    EntityBeforeChangeAsJson = e.EntityBeforeChangeSnapshot,
+                    EntityAfterChangeAsJson = e.EntityAfterChangeSnapshot,
                     EntityName = e.EntityTable,
                     EntityId = e.EntityId,
                     ChangedByUser = new UserModel
@@ -83,8 +85,9 @@ namespace HistoryTracking.BL.Services.Changes
                     return;
                 }
 
-                changeModel.PropertyChanges = JsonConvert.DeserializeObject<List<PropertyChangeDescription>>(changeModel.PropertyChangesAsJson) 
-                                    ?? new List<PropertyChangeDescription>(); 
+                var entityBeforeChange = JsonConvert.DeserializeObject(changeModel.EntityBeforeChangeAsJson, config.EntityType);
+                var entityAfterChange = JsonConvert.DeserializeObject(changeModel.EntityAfterChangeAsJson, config.EntityType);
+                changeModel.PropertyChanges = GetPropertyChangesWay2.GetChangesFor(entityBeforeChange, entityAfterChange, config); 
                 changeModel.EntityNameForDisplaying = changeModel.EntityName.SplitByCaps();
 
                 
@@ -112,5 +115,6 @@ namespace HistoryTracking.BL.Services.Changes
 
             return entityChanges;
         }
+
     }
 }

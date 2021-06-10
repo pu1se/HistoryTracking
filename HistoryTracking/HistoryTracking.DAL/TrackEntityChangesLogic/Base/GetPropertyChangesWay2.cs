@@ -70,7 +70,7 @@ namespace HistoryTracking.DAL.TrackEntityChangesLogic
         {
             var changeList = new List<PropertyChangeDescription>();
 
-            var propertyList = typeof(T).GetProperties();
+            var propertyList = propertyConfig.EntityType.GetProperties();
             foreach (var property in propertyList)
             {
                 if (propertyConfig.PropertyList.Select(x => x.Name).Contains(property.Name) == false)
