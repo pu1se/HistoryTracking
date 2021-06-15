@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using HistoryTracking.BL.Services.User;
 using HistoryTracking.DAL;
 
@@ -21,7 +22,7 @@ namespace HistoryTracking.BL.Services.Changes.Models
 
         public Guid Id { get; set; }
 
-        public Guid? EntityId { get; set; }
+        public Guid EntityId { get; set; }
         public string EntityBeforeChangeAsJson { get; set; }
         public string EntityAfterChangeAsJson { get; set; }
     }

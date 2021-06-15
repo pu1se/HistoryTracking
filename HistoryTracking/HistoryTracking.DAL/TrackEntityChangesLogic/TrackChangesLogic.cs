@@ -42,9 +42,8 @@ namespace HistoryTracking.DAL
             object oldEntity = null;
             var oldEntityGettingExecutionTime = CalcExecutionTime.For(() =>
             {
-                oldEntity = dbEntry.State == EntityState.Added ? null : GetPropertyChangesWay2.GetOriginalEntity(dbEntry);
+                oldEntity = null;
             });
-
 
             var trackEntityChange = new TrackEntityChange
             {

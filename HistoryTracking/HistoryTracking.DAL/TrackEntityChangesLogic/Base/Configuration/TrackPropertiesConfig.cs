@@ -6,19 +6,20 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using HistoryTracking.DAL.Enums;
+using HistoryTracking.DAL.TrackEntityChangesLogic.Base.Configuration;
 
 namespace HistoryTracking.DAL.TrackEntityChangesLogic.PropertiesTrackingConfigurations
 {
-    public class TrackingPropertiesConfig<TEntity>
+    public class TrackPropertiesConfig<TEntity> where TEntity: class
     {
-        private TrackingEntityInfo EntityInfo { get; }
+        public TrackingEntityInfo EntityInfo { get; }
 
-        public TrackingPropertiesConfig()
+        public TrackPropertiesConfig()
         {
             EntityInfo = new TrackingEntityInfo(GetEntityTableName(), typeof(TEntity));
         }
 
-        public TrackingPropertiesConfig<TEntity> TrackProperty<TProperty>(
+        public TrackPropertiesConfig<TEntity> TrackProperty<TProperty>(
             Expression<Func<TEntity, TProperty>> func,
             UserType[] isVisibleForUserRoles, 
             Func<object, string> displayPropertyFunc = null)
@@ -41,6 +42,20 @@ namespace HistoryTracking.DAL.TrackEntityChangesLogic.PropertiesTrackingConfigur
             return this;
         }
 
+        public TrackingEntityInfo BuildConfiguration()
+        {
+            return EntityInfo;
+        }
+
+        public TrackComplexPropertiesConfig<TEntity, TProperty> TrackComplexProperty<TProperty>(
+            Expression<Func<TEntity, IEnumerable<TProperty>>> func) where TProperty : class
+        {
+            var expression = (MemberExpression)func.Body;
+            var propertyName = expression.Member.Name;
+
+            return new TrackComplexPropertiesConfig<TEntity, TProperty>(this, propertyName);
+        }
+
         private string GetEntityTableName()
         {
             var entityType = typeof(TEntity);
@@ -48,11 +63,6 @@ namespace HistoryTracking.DAL.TrackEntityChangesLogic.PropertiesTrackingConfigur
             var entityTableName = tableAttr != null ? tableAttr.Name : entityType.Name;
 
             return entityTableName;
-        }
-
-        public TrackingEntityInfo BuildConfiguration()
-        {
-            return EntityInfo;
         }
     }
 }

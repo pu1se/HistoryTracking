@@ -27,7 +27,7 @@ namespace HistoryTracking.Tests
             };
             var config = TrackingEntitiesConfiguration.GetConfigFor(userEntity.GetType());
 
-            var result = GetPropertyChangesWay2.GetChangesFor(userEntity, userEntity, config);
+            var result = GetPropertyChangesWay2.For(userEntity, userEntity, config);
             Assert.IsTrue(result.Count == 0);
         }
 
@@ -37,10 +37,10 @@ namespace HistoryTracking.Tests
             var userEntity = new UserEntity();
             var config = TrackingEntitiesConfiguration.GetConfigFor(userEntity.GetType());
 
-            var result = GetPropertyChangesWay2.GetChangesFor((UserEntity) null, null, config);
+            var result = GetPropertyChangesWay2.For((UserEntity) null, null, config);
             Assert.IsTrue(result.Count == 0);
             
-            result = GetPropertyChangesWay2.GetChangesFor(userEntity, userEntity, config);
+            result = GetPropertyChangesWay2.For(userEntity, userEntity, config);
             Assert.IsTrue(result.Count == 0);
         }
 
@@ -50,7 +50,7 @@ namespace HistoryTracking.Tests
             var userEntity = new UserEntity{Email = "tmp@tut.by"};
             var config = TrackingEntitiesConfiguration.GetConfigFor(userEntity.GetType());
 
-            var result = GetPropertyChangesWay2.GetChangesFor(null, userEntity, config);
+            var result = GetPropertyChangesWay2.For(null, userEntity, config);
             Assert.IsTrue(result.Count == 2);
 
             var userTypeChange = result.FirstOrDefault(x => x.PropertyName == nameof(UserEntity.UserType));
@@ -70,7 +70,7 @@ namespace HistoryTracking.Tests
             var userEntity = new UserEntity();
             var config = TrackingEntitiesConfiguration.GetConfigFor(userEntity.GetType());
 
-            var result = GetPropertyChangesWay2.GetChangesFor(userEntity, null, config);
+            var result = GetPropertyChangesWay2.For(userEntity, null, config);
             Assert.IsTrue(result.Count == 1);
             Assert.IsTrue(result.First().OldValue == default(UserType).ToString());
             Assert.IsTrue(result.First().NewValue == null);
@@ -90,7 +90,7 @@ namespace HistoryTracking.Tests
             var newUserEntity = oldUserEntity.DeepClone();
             newUserEntity.Name = "new name";
 
-            var result = GetPropertyChangesWay2.GetChangesFor(oldUserEntity, newUserEntity, config);
+            var result = GetPropertyChangesWay2.For(oldUserEntity, newUserEntity, config);
             Assert.IsTrue(result.Count == 1);
             Assert.IsTrue(result.First().OldValue == oldUserEntity.Name);
             Assert.IsTrue(result.First().NewValue == newUserEntity.Name);
@@ -104,7 +104,7 @@ namespace HistoryTracking.Tests
             var newUserEntity = oldUserEntity.DeepClone();
             newUserEntity.Name = "new name";
 
-            var result = GetPropertyChangesWay2.GetChangesFor(oldUserEntity, newUserEntity, config);
+            var result = GetPropertyChangesWay2.For(oldUserEntity, newUserEntity, config);
             Assert.IsTrue(result.Count == 1);
             Assert.IsTrue(result.First().OldValue ==  null);
             Assert.IsTrue(result.First().NewValue == (newUserEntity.Name ?? string.Empty));
@@ -126,13 +126,19 @@ namespace HistoryTracking.Tests
             newUserEntity.Email = "new@email.com";
             newUserEntity.UserType = UserType.Reseller;
 
-            var result = GetPropertyChangesWay2.GetChangesFor(oldUserEntity, newUserEntity, config);
+            var result = GetPropertyChangesWay2.For(oldUserEntity, newUserEntity, config);
             Assert.IsTrue(result.Count == 3);
             var userTypeChange = result.FirstOrDefault(x => x.PropertyName == "UserType");
             Assert.IsTrue(userTypeChange != null);
 
             Assert.IsTrue(userTypeChange.OldValue == oldUserEntity.UserType.ToString());
             Assert.IsTrue(userTypeChange.NewValue == newUserEntity.UserType.ToString());
+        }
+
+        [TestMethod]
+        public void GetComplexChanges()
+        {
+
         }
     }
 }

@@ -66,7 +66,7 @@ namespace HistoryTracking.BL.Services
             }
             else
             {
-                var editingUser = await Storage.Users.FirstOrDefaultAsync(x => x.Id == model.Id);
+                var editingUser = await Storage.Users.Include(x=>x.Addresses).Include(x=>x.Contacts).FirstOrDefaultAsync(x => x.Id == model.Id);
                 if (editingUser == null)
                 {
                     return;

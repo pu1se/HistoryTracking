@@ -27,7 +27,7 @@ namespace HistoryTracking.Tests
         [TestMethod]
         public async Task EditUser()
         {
-            var user = await Storage.Users.FirstAsync();
+            var user = await Storage.Users.Include(x=> x.Contacts).Include(x=>x.Addresses).FirstAsync();
 
             var oldName = user.Name;
             var newName = "new name " + Guid.NewGuid();
@@ -36,12 +36,12 @@ namespace HistoryTracking.Tests
             await Storage.SaveChangesAsync();
             CleanStorageCache();
 
-            user = await Storage.Users.FirstAsync();
+            user = await Storage.Users.Include(x=> x.Contacts).Include(x=>x.Addresses).FirstAsync();
             Assert.IsTrue(user.Name == newName);
             user.Name = oldName;
             Storage.Users.AddOrUpdate(user);
             await Storage.SaveChangesAsync();
-            user = await Storage.Users.FirstAsync();
+            user = await Storage.Users.Include(x=> x.Contacts).Include(x=>x.Addresses).FirstAsync();
             Assert.IsTrue(user.Name == oldName);
             Assert.IsTrue(user.UpdatedDateUtc >= DateTime.UtcNow.Date);
             Assert.IsTrue(user.UpdatedByUserId == TestData.SystemUserId);

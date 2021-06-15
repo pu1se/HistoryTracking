@@ -15,6 +15,7 @@ namespace HistoryTracking.DAL.Entities
         [Key]
         public Guid Id { get; set; }
 
+        // todo: use EntityState instead of string
         public string ChangeType { get; set; }
 
         [Index]
@@ -22,9 +23,11 @@ namespace HistoryTracking.DAL.Entities
 
         public string EntityTable { get; set; }
 
+        // todo: make it not nullable
         [Index]
         public Guid? EntityId { get; set; }
 
+        // todo: delete this one
         public string EntityBeforeChangeSnapshot { get; set; }
 
         public string EntityAfterChangeSnapshot { get; set; }

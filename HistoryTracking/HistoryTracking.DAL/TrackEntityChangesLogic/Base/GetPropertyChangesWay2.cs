@@ -11,34 +11,7 @@ namespace HistoryTracking.DAL.TrackEntityChangesLogic
 {
     public static class GetPropertyChangesWay2
     {
-        public static object GetOriginalEntity(DbEntityEntry dbEntry)
-        {
-            var entityType = dbEntry.Entity.GetType();
-            if (TrackingEntitiesConfiguration.GetConfigFor(entityType) == null)
-            {
-                entityType = entityType.BaseType;
-            }
-
-            var originalEntity = Activator.CreateInstance(entityType, true);
-            foreach (var propertyName in dbEntry.OriginalValues.PropertyNames)
-            {
-                var property = entityType.GetProperty(propertyName);
-                var value = dbEntry.OriginalValues[propertyName];
-                if (!(value is DbPropertyValues))
-                {
-                    property.SetValue(originalEntity, value);
-                }
-                /*else
-                {
-                    // nested entity
-                    property.SetValue(originalEntity, GetOriginalEntity(value as DbPropertyValues, property.PropertyType));
-                }*/
-            }
-
-            return originalEntity;
-        }
-
-        public static List<PropertyChangeDescription> GetChangesFor<T>(T oldEntity, T newEntity, TrackingEntityInfo propertyConfig) where T: class
+        public static List<PropertyChangeDescription> For<T>(T oldEntity, T newEntity, TrackingEntityInfo propertyConfig) where T: class
         {
             var changeList = new List<PropertyChangeDescription>();
 

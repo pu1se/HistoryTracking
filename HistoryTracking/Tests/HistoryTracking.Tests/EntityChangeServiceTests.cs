@@ -59,7 +59,7 @@ namespace HistoryTracking.Tests
         [TestMethod]
         public async Task ChangeTwoEntitiesAndTrackTheChanges()
         {
-            var user = await Storage.Users.FirstAsync();
+            var user = await Storage.Users.Include(x=> x.Contacts).Include(x=>x.Addresses).FirstAsync();
             var oldUserName = user.Name;
             var newUserName = "new name " + Guid.NewGuid();
             user.Name = newUserName;
@@ -86,7 +86,7 @@ namespace HistoryTracking.Tests
                 UserIds = new List<Guid>{TestData.SystemUserId}
             });
             var ids = new[] {user.Id, subscription.Id}.ToList();
-            changes = changes.Where(x => x.EntityId.HasValue && ids.Contains(x.EntityId.Value)).ToList();
+            changes = changes.Where(x => ids.Contains(x.EntityId)).ToList();
             Assert.IsTrue(changes.Any(change => change.PropertyChanges.Any(
                 property => 
                 property.PropertyName == nameof(user.Name) &&
@@ -110,7 +110,7 @@ namespace HistoryTracking.Tests
             user.Name = oldUserName;
             Storage.Users.AddOrUpdate(user);
             await Storage.SaveChangesAsync();
-            user = await Storage.Users.FirstAsync();
+            user = await Storage.Users.Include(x=> x.Contacts).Include(x=>x.Addresses).FirstAsync();
             Assert.IsTrue(user.Name == oldUserName);
             Assert.IsTrue(user.UpdatedDateUtc >= DateTime.UtcNow.Date);
             Assert.IsTrue(user.UpdatedByUserId == TestData.SystemUserId);

@@ -27,7 +27,14 @@ namespace HistoryTracking.DAL.TrackEntityChangesLogic.PropertiesTrackingConfigur
                     .TrackProperty(x => x.Name, allUserRoles)
                     .TrackProperty(x => x.Email, allUserRoles)
                     .TrackProperty(x => x.UserType, allUserRoles, type => type?.ToString().SplitByCaps())
-                    .TrackProperty(x => x.Contacts, allUserRoles)
+                    .TrackComplexProperty(x => x.Contacts)
+                            .TrackProperty(x => x.Email, allUserRoles)
+                            .TrackProperty(x => x.PhoneNumber, allUserRoles)
+                            .EndOfComplexProperty()
+                    .TrackComplexProperty(x => x.Addresses)
+                            .TrackProperty(x => x.City, allUserRoles)
+                            .TrackProperty(x => x.HouseAddress, allUserRoles)
+                            .EndOfComplexProperty()
                     .BuildConfiguration(),
 
                 TrackEntityChangesFor<SubscriptionProductEntity>()
@@ -36,7 +43,13 @@ namespace HistoryTracking.DAL.TrackEntityChangesLogic.PropertiesTrackingConfigur
                     .TrackProperty(x => x.Currency, allUserRoles)
                     .TrackProperty(x => x.DistributorMarkupAsPercent, new [] {UserType.SystemUser, UserType.Distributor})
                     .TrackProperty(x => x.ResellerMarkupAsPercent, new [] {UserType.SystemUser, UserType.Distributor, UserType.Reseller})
-                    .TrackProperty(x => x.ChildrenSubscriptions, allUserRoles)
+                    .TrackComplexProperty(x => x.ChildrenSubscriptions)
+                            .TrackProperty(x => x.Title, allUserRoles)
+                            .TrackProperty(x => x.Price, allUserRoles)
+                            .TrackProperty(x => x.Currency, allUserRoles)
+                            .TrackProperty(x => x.DistributorMarkupAsPercent, new [] {UserType.SystemUser, UserType.Distributor})
+                            .TrackProperty(x => x.ResellerMarkupAsPercent, new [] {UserType.SystemUser, UserType.Distributor, UserType.Reseller})
+                            .EndOfComplexProperty()
                     .BuildConfiguration(),
 
                 TrackEntityChangesFor<OrderEntity>()
@@ -48,9 +61,9 @@ namespace HistoryTracking.DAL.TrackEntityChangesLogic.PropertiesTrackingConfigur
             return ConfigList;
         }
 
-        public static TrackingPropertiesConfig<T> TrackEntityChangesFor<T>()
+        public static TrackPropertiesConfig<T> TrackEntityChangesFor<T>() where T : class
         {
-            return new TrackingPropertiesConfig<T>();
+            return new TrackPropertiesConfig<T>();
         }
         
         public static TrackingEntityInfo GetConfigFor(Type searchingEntityType)
