@@ -33,6 +33,11 @@ namespace HistoryTracking.DAL.TrackEntityChangesLogic.PropertiesTrackingConfigur
                 displayPropertyFunc = defaultDisplayingPropertyFunc;
             }
 
+            if (EntityInfo.PropertyList.Select(x => x.Name).Contains(propertyName))
+            {
+                throw new Exception($"The description for property {propertyName} is already exists in TrackPropertiesConfig");
+            }
+
             EntityInfo.PropertyList.Add(new TrackingPropertyInfo
             {
                 Name = propertyName, 

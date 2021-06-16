@@ -136,9 +136,108 @@ namespace HistoryTracking.Tests
         }
 
         [TestMethod]
-        public void GetComplexChanges()
+        public void GetOneModifiedComplexPropertyChanges()
         {
+            var oldUserEntity = new UserEntity
+            {
+                Addresses = new List<UserAddressEntity>
+                {
+                    new UserAddressEntity{City = "city 1", HouseAddress = "address 1"}
+                }
+            };
+            var config = TrackingEntitiesConfiguration.GetConfigFor(oldUserEntity.GetType());
+            var newUserEntity = oldUserEntity.DeepClone();
+            newUserEntity.Addresses.First().City = "another city 2";
+            newUserEntity.Addresses.First().HouseAddress = "another address 2";
 
+            var result = GetPropertyChangesWay2.For(oldUserEntity, newUserEntity, config);
+            Assert.IsTrue(result.Count == 2);
+
+            Assert.IsTrue(result.First().OldValue == oldUserEntity.Addresses.First().City);
+            Assert.IsTrue(result.First().NewValue == newUserEntity.Addresses.First().City);
+
+            Assert.IsTrue(result.Last().OldValue == oldUserEntity.Addresses.First().HouseAddress);
+            Assert.IsTrue(result.Last().NewValue == newUserEntity.Addresses.First().HouseAddress);
+        }
+
+        [TestMethod]
+        public void GetOneAddedComplexPropertyChanges()
+        {
+            var oldUserEntity = new UserEntity
+            {
+            };
+            var config = TrackingEntitiesConfiguration.GetConfigFor(oldUserEntity.GetType());
+            var newUserEntity = oldUserEntity.DeepClone();
+            newUserEntity.Addresses = new List<UserAddressEntity>
+            {
+                new UserAddressEntity {City = "City 2", HouseAddress = "Address 2"}
+            };
+
+            var result = GetPropertyChangesWay2.For(oldUserEntity, newUserEntity, config);
+            Assert.IsTrue(result.Count == 2);
+
+            Assert.IsTrue(result.First().OldValue == null);
+            Assert.IsTrue(result.First().NewValue == newUserEntity.Addresses.First().City);
+
+            Assert.IsTrue(result.Last().OldValue == null);
+            Assert.IsTrue(result.Last().NewValue == newUserEntity.Addresses.First().HouseAddress);
+        }
+
+        [TestMethod]
+        public void GetOneDeletedComplexPropertyChanges()
+        {
+            var oldUserEntity = new UserEntity
+            {
+                Addresses = new List<UserAddressEntity>
+                {
+                    new UserAddressEntity{City = "city 1", HouseAddress = "address 1"}
+                }
+            };
+            var config = TrackingEntitiesConfiguration.GetConfigFor(oldUserEntity.GetType());
+            var newUserEntity = oldUserEntity.DeepClone();
+            newUserEntity.Addresses = null;
+
+            var result = GetPropertyChangesWay2.For(oldUserEntity, newUserEntity, config);
+            Assert.IsTrue(result.Count == 2);
+
+            Assert.IsTrue(result.First().OldValue == oldUserEntity.Addresses.First().City);
+            Assert.IsTrue(result.First().NewValue == newUserEntity.Addresses.First().City);
+
+            Assert.IsTrue(result.Last().OldValue == oldUserEntity.Addresses.First().HouseAddress);
+            Assert.IsTrue(result.Last().NewValue == newUserEntity.Addresses.First().HouseAddress);
+        }
+
+        [TestMethod]
+        public void GetTwoComplexPropertyChanges()
+        {
+            var oldUserEntity = new UserEntity
+            {
+                Addresses = new List<UserAddressEntity>
+                {
+                    new UserAddressEntity{City = "city 1", HouseAddress = "address 1"}
+                },
+                Contacts = new List<UserContactEntity>
+                {
+                    new UserContactEntity{PhoneNumber = "one number"}
+                }
+            };
+            var config = TrackingEntitiesConfiguration.GetConfigFor(oldUserEntity.GetType());
+            var newUserEntity = oldUserEntity.DeepClone();
+            newUserEntity.Addresses.First().City = "another city 2";
+            newUserEntity.Addresses.First().HouseAddress = "another address 2";
+            newUserEntity.Contacts.First().PhoneNumber = "another number";
+
+            var result = GetPropertyChangesWay2.For(oldUserEntity, newUserEntity, config);
+            Assert.IsTrue(result.Count == 3);
+
+            Assert.IsTrue(result[0].OldValue == oldUserEntity.Addresses.First().City);
+            Assert.IsTrue(result[0].NewValue == newUserEntity.Addresses.First().City);
+
+            Assert.IsTrue(result[1].OldValue == oldUserEntity.Addresses.First().HouseAddress);
+            Assert.IsTrue(result[1].NewValue == newUserEntity.Addresses.First().HouseAddress);
+
+            Assert.IsTrue(result[2].OldValue == oldUserEntity.Contacts.First().PhoneNumber);
+            Assert.IsTrue(result[2].NewValue == newUserEntity.Contacts.First().PhoneNumber);
         }
     }
 }
