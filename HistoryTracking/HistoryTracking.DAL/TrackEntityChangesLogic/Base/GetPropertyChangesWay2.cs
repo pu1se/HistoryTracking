@@ -31,22 +31,26 @@ namespace HistoryTracking.DAL.TrackEntityChangesLogic
 
                 if (propertyConfig.IsComplex)
                 {
-                    HandelComplexProperties(propertyConfig, oldEntity, newEntity, propertyOfEntity, changeList);
+                    var complexChanges = HandelComplexProperties(propertyConfig, oldEntity, newEntity, propertyOfEntity);
+                    changeList.AddRange(complexChanges);
                 }
                 else
                 {
-                    HandelSimpleProperties(oldEntity, newEntity, propertyOfEntity, changeList);
+                    var change = HandelSimpleProperties(oldEntity, newEntity, propertyOfEntity);
+                    if (change != null)
+                    {
+                        changeList.Add(change);
+                    }
                 }
             }
 
             return changeList;
         }
 
-        private static void HandelSimpleProperties<T>(
+        private static PropertyChangeDescription HandelSimpleProperties<T>(
             T oldEntity, 
             T newEntity, 
-            PropertyInfo propertyOfEntity, 
-            List<PropertyChangeDescription> changeList) where T : class
+            PropertyInfo propertyOfEntity) where T : class
         {
             object oldValue = null;
             if (oldEntity != null)
@@ -62,26 +66,25 @@ namespace HistoryTracking.DAL.TrackEntityChangesLogic
 
             if (oldValue?.ToString() == newValue?.ToString())
             {
-                return;
+                return null;
             }
 
             // todo: move displaying of value here
-            var change = new PropertyChangeDescription
+            return new PropertyChangeDescription
             {
                 PropertyName = propertyOfEntity.Name,
                 OldValue = oldValue?.ToString(),
                 NewValue = newValue?.ToString(),
             };
-            changeList.Add(change);
         }
 
-        private static void HandelComplexProperties<T>(
+        private static List<PropertyChangeDescription> HandelComplexProperties<T>(
             TrackingPropertyInfo complexPropertyConfig, 
             T oldParentEntityList,
             T newParentEntityList,
-            PropertyInfo propertyOfParentEntityList,
-            List<PropertyChangeDescription> changeList) where T : class
+            PropertyInfo propertyOfParentEntityList) where T : class
         {
+            var changeList = new List<PropertyChangeDescription>();
             IEnumerable<BaseEntity> oldChildEntityList = new List<BaseEntity>();
             if (oldParentEntityList != null)
             {
@@ -110,10 +113,15 @@ namespace HistoryTracking.DAL.TrackEntityChangesLogic
                         continue;
                     }
 
-                    HandelSimpleProperties(oldChildEntity, newChildEntity, childProperty, changeList);
+                    var change = HandelSimpleProperties(oldChildEntity, newChildEntity, childProperty);
+                    if (change != null)
+                    {
+                        changeList.Add(change);
+                    }
                 }
             }
 
+            return changeList;
         }
     }
 }

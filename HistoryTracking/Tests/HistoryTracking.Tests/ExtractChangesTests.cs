@@ -184,30 +184,6 @@ namespace HistoryTracking.Tests
         }
 
         [TestMethod]
-        public void GetOneDeletedComplexPropertyChanges()
-        {
-            var oldUserEntity = new UserEntity
-            {
-                Addresses = new List<UserAddressEntity>
-                {
-                    new UserAddressEntity{City = "city 1", HouseAddress = "address 1"}
-                }
-            };
-            var config = TrackingEntitiesConfiguration.GetConfigFor(oldUserEntity.GetType());
-            var newUserEntity = oldUserEntity.DeepClone();
-            newUserEntity.Addresses = null;
-
-            var result = GetPropertyChangesWay2.For(oldUserEntity, newUserEntity, config);
-            Assert.IsTrue(result.Count == 2);
-
-            Assert.IsTrue(result.First().OldValue == oldUserEntity.Addresses.First().City);
-            Assert.IsTrue(result.First().NewValue == newUserEntity.Addresses.First().City);
-
-            Assert.IsTrue(result.Last().OldValue == oldUserEntity.Addresses.First().HouseAddress);
-            Assert.IsTrue(result.Last().NewValue == newUserEntity.Addresses.First().HouseAddress);
-        }
-
-        [TestMethod]
         public void GetTwoComplexPropertyChanges()
         {
             var oldUserEntity = new UserEntity
@@ -239,5 +215,32 @@ namespace HistoryTracking.Tests
             Assert.IsTrue(result[2].OldValue == oldUserEntity.Contacts.First().PhoneNumber);
             Assert.IsTrue(result[2].NewValue == newUserEntity.Contacts.First().PhoneNumber);
         }
+
+
+
+        [TestMethod]
+        public void GetOneModifiedChildPropertyChanges()
+        {
+            var oldSubscriptionEntity = new SubscriptionProductEntity()
+            {
+                ChildrenSubscriptions = new List<SubscriptionProductEntity>
+                {
+                    new SubscriptionProductEntity
+                    {
+                        Price = 10,
+                        Currency = CurrencyType.Euro
+                    }
+                }
+            };
+            var config = TrackingEntitiesConfiguration.GetConfigFor(oldSubscriptionEntity.GetType());
+            var newSubscriptionEntity = oldSubscriptionEntity.DeepClone();
+            newSubscriptionEntity.ChildrenSubscriptions.First().Price = 20;
+            newSubscriptionEntity.ChildrenSubscriptions.First().Currency = CurrencyType.Nok;
+
+            var result = GetPropertyChangesWay2.For(oldSubscriptionEntity, newSubscriptionEntity, config);
+            Assert.IsTrue(result.Count > 0);
+        }
+
+        
     }
 }
