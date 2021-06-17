@@ -35,16 +35,6 @@ namespace HistoryTracking.DAL
                 changedDateUtc = baseEntity.UpdatedDateUtc;
             }
 
-            var propertyChanges1 = new List<PropertyChangeDescription>();
-
-            var propertyChanges2 = new List<PropertyChangeDescription>();
-
-            object oldEntity = null;
-            var oldEntityGettingExecutionTime = CalcExecutionTime.For(() =>
-            {
-                oldEntity = null;
-            });
-
             var trackEntityChange = new TrackEntityChange
             {
                 Id = Guid.NewGuid(),
@@ -52,19 +42,13 @@ namespace HistoryTracking.DAL
                 EntityId = GetPrimaryKeyId(dataContext, dbEntry),
                 ChangeType = dbEntry.State.ToString(),
                 ChangeDateUtc = changedDateUtc,
-                EntityBeforeChangeSnapshot = oldEntity?.ToJson(),
-                TimeOfGetOldEntity = oldEntityGettingExecutionTime.TotalMilliseconds,
                 EntityAfterChangeSnapshot = dbEntry.State != EntityState.Deleted ? dbEntry.Entity.ToJson() : null,
-                PropertiesChangesWay1 = propertyChanges1.ToJson(),
-                TimeOfWay1 = 0,
-                PropertiesChangesWay2 = propertyChanges2.ToJson(),
-                TimeOfWay2 = 0,
                 ChangedByUserId = UserManager.GetCurrentUserId(),
             };
             return trackEntityChange;
         }
 
-        private static Guid? GetPrimaryKeyId(DataContext dataContext, DbEntityEntry dbEntry)
+        private static Guid GetPrimaryKeyId(DataContext dataContext, DbEntityEntry dbEntry)
         {
             try
             {
@@ -80,12 +64,12 @@ namespace HistoryTracking.DAL
                     return new Guid(entityId);    
                 }
                 
-                return null;
+                return Guid.Empty;
             }
             catch (Exception e)
             {
                 Console.Write(e.ToJson());
-                return null;
+                return Guid.Empty;
             }
         }
     }

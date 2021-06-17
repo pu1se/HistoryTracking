@@ -71,7 +71,7 @@ namespace HistoryTracking.BL.Services.Changes
                     .ToList();
 
                 allPossibleChangesWithEntities = await Storage.TrackEntityChanges
-                    .Where(e => e.EntityId.HasValue && allEntityIds.Contains(e.EntityId.Value))
+                    .Where(e => allEntityIds.Contains(e.EntityId))
                     .MapToChangeModel()
                     .OrderBy(x => x.EntityId)
                     .ThenByDescending(x => x.ChangeDate)
@@ -226,7 +226,7 @@ namespace HistoryTracking.BL.Services.Changes
                 ChangeType = e.ChangeType,
                 EntityAfterChangeAsJson = e.EntityAfterChangeSnapshot,
                 EntityName = e.EntityTable,
-                EntityId = e.EntityId ?? Guid.Empty,
+                EntityId = e.EntityId,
                 ChangedByUser = new UserModel
                 {
                     Name = e.ChangedByUser.Name,
