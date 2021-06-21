@@ -32,6 +32,6 @@ namespace HistoryTracking.DAL.Entities
         [ForeignKey("ParentId")]
         public SubscriptionProductEntity ParentSubscription { get; set; }
 
-        public virtual ICollection<SubscriptionProductEntity> ChildrenSubscriptions { get; set; }
+        public virtual ICollection<SubscriptionProductEntity> ChildrenSubscriptions { get; set; } = new List<SubscriptionProductEntity>();
     }
 }

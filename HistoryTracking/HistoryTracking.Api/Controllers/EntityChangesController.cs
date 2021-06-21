@@ -15,11 +15,11 @@ namespace HistoryTracking.Api.Controllers
     [RoutePrefix("entity-changes")]
     public class EntityChangesController : BaseController
     {
-        private EntityChangeService EntityChangeService { get; }
+        private EntityChangesService EntityChangesService { get; }
 
-        public EntityChangesController(EntityChangeService entityChangeService)
+        public EntityChangesController(EntityChangesService entityChangesService)
         {
-            EntityChangeService = entityChangeService;
+            EntityChangesService = entityChangesService;
         }
 
 
@@ -27,7 +27,7 @@ namespace HistoryTracking.Api.Controllers
         [HttpGet]
         public async Task<IHttpActionResult> GetTrackingEntityNames()
         {
-            var result = await EntityChangeService.GetTrackingTableNamesAsync();
+            var result = await EntityChangesService.GetTrackingTableNamesAsync();
             return Ok(result);
         }
 
@@ -37,7 +37,7 @@ namespace HistoryTracking.Api.Controllers
         {
             model = model ?? new GetChangesListModel();
             model.FilterByUserRole = UserManager.GetCurrentUserType();
-            var result = await EntityChangeService.GetChangesAsync(model);
+            var result = await EntityChangesService.GetChangesAsync(model);
             return Ok(result);
         }
     }

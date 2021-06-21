@@ -96,7 +96,7 @@ namespace HistoryTracking.DAL
                 UpdatedByUserId = TestData.SystemUserId
             });
 
-            var offer = storage.SubscriptionProducts.Add(new SubscriptionProductEntity
+            var subscription = storage.SubscriptionProducts.Add(new SubscriptionProductEntity
             {
                 Id = TestData.SubscriptionProductId,
                 Currency = CurrencyType.Euro,
@@ -123,7 +123,7 @@ namespace HistoryTracking.DAL
                 CreatedByUserId = TestData.SystemUserId,
                 UpdatedByUserId = TestData.SystemUserId,
                 OwnerUsers = new List<UserEntity>(new []{distributor, reseller}),
-                ChildrenSubscriptions = new List<SubscriptionProductEntity>{offer}
+                ChildrenSubscriptions = new List<SubscriptionProductEntity>{subscription}
             });
 
             storage.Orders.Add(new OrderEntity
@@ -132,7 +132,7 @@ namespace HistoryTracking.DAL
                 Comments = "Call me before delivering",
                 OrderStatus = OrderStatusType.Draft,
                 PaymentStatus = PaymentStatusType.NotPaid,
-                SubscriptionProducts = new List<SubscriptionProductEntity>(new []{offer}),
+                SubscriptionProducts = new List<SubscriptionProductEntity>(new []{subscription}),
                 CreatedDateUtc = now,
                 UpdatedDateUtc = now,
                 CreatedByUserId = TestData.SystemUserId,

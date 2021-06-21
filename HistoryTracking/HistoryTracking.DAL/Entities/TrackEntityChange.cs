@@ -15,17 +15,27 @@ namespace HistoryTracking.DAL.Entities
         [Key]
         public Guid Id { get; set; }
 
-        public string ChangeType { get; set; }
-
-        [Index]
-        public DateTime ChangeDateUtc { get; set; }
-
         public string EntityTable { get; set; }
+
+        public string ChangeType { get; set; }
 
         [Index]
         public Guid EntityId { get; set; }
 
+        
+
         public string EntityAfterChangeSnapshot { get; set; }
+
+        
+
+        [Index]
+        public DateTime ChangeDateUtc { get; set; }
+
+        
+
+        
+
+        
 
 
         public Guid ChangedByUserId { get; set; }

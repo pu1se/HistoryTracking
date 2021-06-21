@@ -14,7 +14,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace HistoryTracking.Tests
 {
     [TestClass]
-    public class EntityChangeServiceTests : BaseServiceTests<EntityChangeService>
+    public class EntityChangeServiceTests : BaseServiceTests<EntityChangesService>
     {
         [TestMethod]
         public async Task CheckGetTableNamesTest()
