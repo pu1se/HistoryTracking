@@ -11,20 +11,18 @@ using HistoryTracking.DAL.TrackEntityChangesLogic.PropertiesTrackingConfiguratio
 
 namespace HistoryTracking.DAL.TrackEntityChangesLogic
 {
-    public static class GetPropertyChangesWay2
+    public static class GetPropertyChanges
     {
         public static List<PropertyChangeDescription> For<T>(T oldEntity, T newEntity, TrackingEntityInfo propertyConfigs) where T: class
         {
             var changeList = new List<PropertyChangeDescription>();
 
             var allEntityProperties = propertyConfigs.EntityType.GetProperties();
-            var simplePropertyNames = propertyConfigs.PropertyList.Where(x => !x.IsComplex).Select(x => x.Name).ToList();
-            var complexPropertyNames = propertyConfigs.PropertyList.Where(x => x.IsComplex).Select(x => x.Name).ToList();
 
             foreach (var propertyOfEntity in allEntityProperties)
             {
                 var propertyConfig = propertyConfigs.PropertyList.FirstOrDefault(x => x.Name == propertyOfEntity.Name);
-                if (propertyConfig == null)
+                if (propertyConfig == null || propertyConfig.IsParentEntityId)
                 {
                     continue;
                 }

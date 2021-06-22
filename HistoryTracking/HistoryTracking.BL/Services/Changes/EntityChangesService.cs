@@ -55,7 +55,11 @@ namespace HistoryTracking.BL.Services.Changes
 
             if (query.EntityId.HasValue)
             {
-                getEntityChangesDbQuery = getEntityChangesDbQuery.Where(e => e.EntityId == query.EntityId.Value);
+                getEntityChangesDbQuery = getEntityChangesDbQuery
+                    .Where(
+                        e => 
+                        e.EntityId == query.EntityId.Value || 
+                        e.ParentEntityId == query.EntityId.Value);
             }
 
             var entityChanges = await getEntityChangesDbQuery
@@ -78,6 +82,7 @@ namespace HistoryTracking.BL.Services.Changes
                     .ToListAsync();
             }
 
+            // todo: setup this part after UI change.
             entityChanges = FillUpBeforeChange(entityChanges, allPossibleChangesWithEntities);
 
             entityChanges.ForEach(changeModel =>
@@ -176,7 +181,7 @@ namespace HistoryTracking.BL.Services.Changes
         {
             var entityBeforeChange = JsonConvert.DeserializeObject(changeModel.EntityBeforeChangeAsJson ?? string.Empty, config.EntityType);
             var entityAfterChange = JsonConvert.DeserializeObject(changeModel.EntityAfterChangeAsJson ?? string.Empty, config.EntityType);
-            changeModel.PropertyChanges = GetPropertyChangesWay2.For(entityBeforeChange, entityAfterChange, config);
+            changeModel.PropertyChanges = GetPropertyChanges.For(entityBeforeChange, entityAfterChange, config);
         }
 
         private static void FillUpDisplayingProperties(ChangeModel changeModel, TrackingEntityInfo config)
@@ -227,6 +232,7 @@ namespace HistoryTracking.BL.Services.Changes
                 EntityAfterChangeAsJson = e.EntityAfterChangeSnapshot,
                 EntityName = e.EntityTable,
                 EntityId = e.EntityId,
+                ParentEntityId = e.ParentEntityId,
                 ChangedByUser = new UserModel
                 {
                     Name = e.ChangedByUser.Name,

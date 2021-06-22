@@ -69,15 +69,18 @@
     <Compile Include="Migrations\202106170835081_finilizeTrackEntityChangesTable.designer.cs">
       <DependentUpon>202106170835081_finilizeTrackEntityChangesTable.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202106210911006_AddedParentEntityId.cs" />
+    <Compile Include="Migrations\202106210911006_AddedParentEntityId.designer.cs">
+      <DependentUpon>202106210911006_AddedParentEntityId.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="TrackEntityChangesLogic\Base\Configuration\TrackComplexPropertiesConfig.cs" />
-    <Compile Include="TrackEntityChangesLogic\Base\GetPropertyChangesWay1.cs" />
-    <Compile Include="TrackEntityChangesLogic\Base\GetPropertyChangesWay2.cs" />
+    <Compile Include="TrackEntityChangesLogic\GetPropertyChanges.cs" />
     <Compile Include="TrackEntityChangesLogic\TrackingEntitiesConfiguration.cs" />
     <Compile Include="TrackEntityChangesLogic\Base\Configuration\TrackPropertiesConfig.cs" />
     <Compile Include="TrackEntityChangesLogic\Base\Configuration\TrackingEntityInfo.cs" />
     <Compile Include="TrackEntityChangesLogic\Base\Configuration\TrackingPropertyInfo.cs" />
-    <Compile Include="TrackEntityChangesLogic\TrackChangesLogic.cs" />
+    <Compile Include="TrackEntityChangesLogic\TrackSavedEntityFrameworkChangesLogic.cs" />
     <Compile Include="DatabaseInitializer.cs" />
     <Compile Include="DataContext.cs" />
     <Compile Include="Entities\BaseEntity.cs" />
@@ -112,6 +115,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202106170835081_finilizeTrackEntityChangesTable.resx">
       <DependentUpon>202106170835081_finilizeTrackEntityChangesTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202106210911006_AddedParentEntityId.resx">
+      <DependentUpon>202106210911006_AddedParentEntityId.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -16,7 +16,7 @@ using HistoryTracking.DAL.TrackEntityChangesLogic.PropertiesTrackingConfiguratio
 
 namespace HistoryTracking.DAL
 {
-    public static class TrackChangesLogic
+    public static class TrackSavedEntityFrameworkChangesLogic
     {
         public static TrackEntityChange GetTrackEntityChangeRecord(
             DataContext dataContext, 
@@ -35,11 +35,20 @@ namespace HistoryTracking.DAL
                 changedDateUtc = baseEntity.UpdatedDateUtc;
             }
 
+            Guid? parentId = null;
+            if (trackingEntityConfig.PropertyList.Any(x => x.IsParentEntityId))
+            {
+                var trackParentEntityIdConfig = trackingEntityConfig.PropertyList.First(x => x.IsParentEntityId);
+                var parentIdProperty = dbEntry.Entity.GetType().GetProperties().FirstOrDefault(x => x.Name == trackParentEntityIdConfig.Name);
+                parentId = parentIdProperty.GetValue(dbEntry.Entity) as Guid?;
+            }
+
             var trackEntityChange = new TrackEntityChange
             {
                 Id = Guid.NewGuid(),
                 EntityTable = trackingEntityConfig.EntityName,
                 EntityId = GetPrimaryKeyId(dataContext, dbEntry),
+                ParentEntityId = parentId,
                 ChangeType = dbEntry.State.ToString(),
                 ChangeDateUtc = changedDateUtc,
                 EntityAfterChangeSnapshot = dbEntry.State != EntityState.Deleted ? dbEntry.Entity.ToJson() : null,

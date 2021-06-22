@@ -35,7 +35,7 @@ namespace HistoryTracking.DAL.TrackEntityChangesLogic.PropertiesTrackingConfigur
 
             if (EntityInfo.PropertyList.Select(x => x.Name).Contains(propertyName))
             {
-                throw new Exception($"The description for property {propertyName} is already exists in TrackPropertiesConfig");
+                throw new Exception($"The description for property {propertyName} is already exists in Track Properties Configuration.");
             }
 
             EntityInfo.PropertyList.Add(new TrackingPropertyInfo
@@ -68,6 +68,25 @@ namespace HistoryTracking.DAL.TrackEntityChangesLogic.PropertiesTrackingConfigur
             var entityTableName = tableAttr != null ? tableAttr.Name : entityType.Name;
 
             return entityTableName;
+        }
+
+        public TrackPropertiesConfig<TEntity> AlsoDisplayChangesInParentEntityWithId<TProperty>(Expression<Func<TEntity, TProperty>> func)
+        {
+            var expression = (MemberExpression)func.Body;
+            var propertyName = expression.Member.Name;
+
+            if (EntityInfo.PropertyList.Select(x => x.Name).Contains(propertyName))
+            {
+                throw new Exception($"The description for property {propertyName} is already exists in Track Properties Configuration.");
+            }
+
+            EntityInfo.PropertyList.Add(new TrackingPropertyInfo
+            {
+                Name = propertyName, 
+                IsParentEntityId = true
+            });
+
+            return this;
         }
     }
 }

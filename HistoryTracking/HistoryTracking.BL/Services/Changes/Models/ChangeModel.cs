@@ -25,5 +25,6 @@ namespace HistoryTracking.BL.Services.Changes.Models
         public Guid EntityId { get; set; }
         public string EntityBeforeChangeAsJson { get; set; }
         public string EntityAfterChangeAsJson { get; set; }
+        public Guid? ParentEntityId { get; set; }
     }
 }

@@ -130,7 +130,7 @@ namespace HistoryTracking.DAL
                 var currentTrackingEntityConfig = TrackingEntitiesConfiguration.GetConfigFor(x => x.EntityType == entity.GetType() || x.EntityType == entity.GetType().BaseType);
                 if (currentTrackingEntityConfig != null)
                 {
-                    var trackEntityChange = TrackChangesLogic.GetTrackEntityChangeRecord(this, dbEntry, currentTrackingEntityConfig);
+                    var trackEntityChange = TrackSavedEntityFrameworkChangesLogic.GetTrackEntityChangeRecord(this, dbEntry, currentTrackingEntityConfig);
                     if (trackEntityChange != null)
                     {
                         TrackEntityChanges.Add(trackEntityChange);

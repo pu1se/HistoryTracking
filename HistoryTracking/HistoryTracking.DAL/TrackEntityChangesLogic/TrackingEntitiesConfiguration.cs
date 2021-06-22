@@ -43,14 +43,7 @@ namespace HistoryTracking.DAL.TrackEntityChangesLogic.PropertiesTrackingConfigur
                     .TrackProperty(x => x.Currency, allUserRoles)
                     .TrackProperty(x => x.DistributorMarkupAsPercent, new [] {UserType.SystemUser, UserType.Distributor})
                     .TrackProperty(x => x.ResellerMarkupAsPercent, new [] {UserType.SystemUser, UserType.Distributor, UserType.Reseller})
-                    // todo: DisplayInParentEntity()
-                    .TrackComplexProperty(x => x.ChildrenSubscriptions)
-                            .TrackProperty(x => x.Title, allUserRoles)
-                            .TrackProperty(x => x.Price, allUserRoles)
-                            .TrackProperty(x => x.Currency, allUserRoles)
-                            .TrackProperty(x => x.DistributorMarkupAsPercent, new [] {UserType.SystemUser, UserType.Distributor})
-                            .TrackProperty(x => x.ResellerMarkupAsPercent, new [] {UserType.SystemUser, UserType.Distributor, UserType.Reseller})
-                            .EndOfComplexProperty()
+                    .AlsoDisplayChangesInParentEntityWithId(x => x.ParentId)
                     .BuildConfiguration(),
 
                 TrackEntityChangesFor<OrderEntity>()

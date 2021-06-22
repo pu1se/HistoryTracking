@@ -27,7 +27,7 @@ namespace HistoryTracking.Tests
         [TestMethod]
         public async Task EditChildSubscriptionToSubscription()
         {
-            var parentSubscription = await Storage.SubscriptionProducts.Include(x => x.ChildrenSubscriptions)
+            /*var parentSubscription = await Storage.SubscriptionProducts.Include(x => x.ChildrenSubscriptions)
                 .FirstOrDefaultAsync(x => x.Id == TestData.ParentSubscriptionProductId);
 
             if (!parentSubscription.ChildrenSubscriptions.Any())
@@ -36,7 +36,7 @@ namespace HistoryTracking.Tests
             }
 
 
-            /*var childSubscription = parentSubscription.ChildrenSubscriptions.First();
+            var childSubscription = parentSubscription.ChildrenSubscriptions.First();
             var oldTitle = childSubscription.Title;
             childSubscription.Title = "new title" + Guid.NewGuid();
             await Storage.SaveChangesAsync();
@@ -46,7 +46,7 @@ namespace HistoryTracking.Tests
 
             var changes = await Service.GetChangesAsync(new GetChangesListModel
             {
-                EntityId = TestData.SubscriptionProductId
+                EntityId = TestData.ParentSubscriptionProductId
             });
 
 
