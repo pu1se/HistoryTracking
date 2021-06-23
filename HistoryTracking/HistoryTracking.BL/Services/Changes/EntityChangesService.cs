@@ -25,7 +25,7 @@ namespace HistoryTracking.BL.Services.Changes
 
         public async Task<List<EntityNameModel>> GetTrackingTableNamesAsync()
         {
-            var trackingEntityNames = TrackingEntitiesConfiguration.GetConfigList().Select(x => x.EntityName);
+            var trackingEntityNames = ConfigurationOfTrackedEntities.GetConfigList().Select(x => x.EntityName);
 
             return trackingEntityNames.Select(x => new EntityNameModel
             {
@@ -59,7 +59,7 @@ namespace HistoryTracking.BL.Services.Changes
                     .Where(
                         e => 
                         e.EntityId == query.EntityId.Value || 
-                        e.ParentEntityId == query.EntityId.Value);
+                        e.ParentId == query.EntityId.Value);
             }
 
             var entityChanges = await getEntityChangesDbQuery
@@ -87,16 +87,13 @@ namespace HistoryTracking.BL.Services.Changes
 
             entityChanges.ForEach(changeModel =>
             {
-                var config = TrackingEntitiesConfiguration.GetConfigFor(changeModel.EntityName);
+                var config = ConfigurationOfTrackedEntities.GetConfigFor(changeModel.EntityName);
                 if (config == null)
                 {
                     return;
                 }
 
                 FillUpPropertyChanges(changeModel, config);
-
-                FillUpDisplayingProperties(changeModel, config);
-
                 FilterByUserRole(query, changeModel);
             });
 
@@ -177,36 +174,12 @@ namespace HistoryTracking.BL.Services.Changes
             return entityChanges;
         }
 
-        private static void FillUpPropertyChanges(ChangeModel changeModel, TrackingEntityInfo config)
+        private static void FillUpPropertyChanges(ChangeModel changeModel, TrackedEntityConfig config)
         {
             var entityBeforeChange = JsonConvert.DeserializeObject(changeModel.EntityBeforeChangeAsJson ?? string.Empty, config.EntityType);
             var entityAfterChange = JsonConvert.DeserializeObject(changeModel.EntityAfterChangeAsJson ?? string.Empty, config.EntityType);
-            changeModel.PropertyChanges = GetPropertyChanges.For(entityBeforeChange, entityAfterChange, config);
-        }
-
-        private static void FillUpDisplayingProperties(ChangeModel changeModel, TrackingEntityInfo config)
-        {
+            changeModel.PropertyChanges = CompareAndGetChanges.For(entityBeforeChange, entityAfterChange, config);
             changeModel.EntityNameForDisplaying = changeModel.EntityName.SplitByCaps();
-
-
-            foreach (var property in changeModel.PropertyChanges)
-            {
-                var propertyConfig = config.PropertyList.FirstOrDefault(x => x.Name == property.PropertyName);
-                if (propertyConfig == null)
-                {
-                    continue;
-                }
-
-                if (propertyConfig.IsComplex)
-                {
-                    continue;
-                }
-
-                property.IsVisibleForUserRoles = propertyConfig.IsVisibleForUserRoles;
-                property.PropertyNameForDisplaying = property.PropertyName.SplitByCaps();
-                property.OldValueForDisplaying = propertyConfig.DisplayingPropertyFunction(property.OldValue);
-                property.NewValueForDisplaying = propertyConfig.DisplayingPropertyFunction(property.NewValue);
-            }
         }
 
         private static void FilterByUserRole(GetChangesListModel query, ChangeModel changeModel)
@@ -222,7 +195,7 @@ namespace HistoryTracking.BL.Services.Changes
 
     public static class Extensions
     {
-        public static IQueryable<ChangeModel> MapToChangeModel(this IQueryable<TrackEntityChange> changeEntities)
+        public static IQueryable<ChangeModel> MapToChangeModel(this IQueryable<TrackedEntityChange> changeEntities)
         {
             return changeEntities.Select(e => new ChangeModel
             {
@@ -232,7 +205,7 @@ namespace HistoryTracking.BL.Services.Changes
                 EntityAfterChangeAsJson = e.EntityAfterChangeSnapshot,
                 EntityName = e.EntityTable,
                 EntityId = e.EntityId,
-                ParentEntityId = e.ParentEntityId,
+                ParentEntityId = e.ParentId,
                 ChangedByUser = new UserModel
                 {
                     Name = e.ChangedByUser.Name,

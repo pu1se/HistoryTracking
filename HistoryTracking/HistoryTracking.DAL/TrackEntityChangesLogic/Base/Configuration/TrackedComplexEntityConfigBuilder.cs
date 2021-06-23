@@ -10,23 +10,21 @@ using HistoryTracking.DAL.TrackEntityChangesLogic.PropertiesTrackingConfiguratio
 
 namespace HistoryTracking.DAL.TrackEntityChangesLogic.Base.Configuration
 {
-    public class TrackComplexPropertiesConfig<TMainEntity, TComplexProperty> 
+    public class TrackedComplexEntityConfigBuilder<TMainEntity, TComplexProperty> 
         where TComplexProperty: class 
         where TMainEntity : class
     {
-        private TrackPropertiesConfig<TMainEntity> MainContext { get; }
-        private Type ComplexPropertyType { get; }
+        private TrackedEntityConfigBuilder<TMainEntity> MainContext { get; }
         private string ComplexPropertyName { get; }
-        private List<TrackingPropertyInfo> SubPropertyList { get; } = new List<TrackingPropertyInfo>();
+        private List<TrackedPropertyConfig> SubPropertyList { get; } = new List<TrackedPropertyConfig>();
 
-        public TrackComplexPropertiesConfig(TrackPropertiesConfig<TMainEntity> mainContext, string complexPropertyName)
+        public TrackedComplexEntityConfigBuilder(TrackedEntityConfigBuilder<TMainEntity> mainContext, string complexPropertyName)
         {
             MainContext = mainContext;
-            ComplexPropertyType = typeof(TComplexProperty);
             ComplexPropertyName = complexPropertyName;
         }
 
-        public TrackComplexPropertiesConfig<TMainEntity, TComplexProperty> TrackProperty<TProperty>(
+        public TrackedComplexEntityConfigBuilder<TMainEntity, TComplexProperty> TrackProperty<TProperty>(
             Expression<Func<TComplexProperty, TProperty>> func,
             UserType[] isVisibleForUserRoles, 
             Func<object, string> displayPropertyFunc = null)
@@ -40,7 +38,7 @@ namespace HistoryTracking.DAL.TrackEntityChangesLogic.Base.Configuration
                 displayPropertyFunc = defaultDisplayingPropertyFunc;
             }
 
-            SubPropertyList.Add(new TrackingPropertyInfo
+            SubPropertyList.Add(new TrackedPropertyConfig
             {
                 Name = propertyName,
                 IsVisibleForUserRoles = isVisibleForUserRoles.ToList(),
@@ -49,9 +47,9 @@ namespace HistoryTracking.DAL.TrackEntityChangesLogic.Base.Configuration
             return this;
         }
 
-        public TrackPropertiesConfig<TMainEntity> EndOfComplexProperty()
+        public TrackedEntityConfigBuilder<TMainEntity> EndOfComplexProperty()
         {
-            MainContext.EntityInfo.PropertyList.Add(new TrackingPropertyInfo
+            MainContext.EntityConfig.PropertyList.Add(new TrackedPropertyConfig
             {
                 Name = ComplexPropertyName,
                 SubProperties = SubPropertyList

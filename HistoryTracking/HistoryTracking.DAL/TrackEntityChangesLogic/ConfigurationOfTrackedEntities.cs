@@ -9,11 +9,11 @@ using HistoryTracking.DAL.Enums;
 
 namespace HistoryTracking.DAL.TrackEntityChangesLogic.PropertiesTrackingConfigurations
 {
-    public static class TrackingEntitiesConfiguration
+    public static class ConfigurationOfTrackedEntities
     {
-        private static List<TrackingEntityInfo> ConfigList { get; set; }
+        private static List<TrackedEntityConfig> ConfigList { get; set; }
 
-        public static List<TrackingEntityInfo> GetConfigList()
+        public static List<TrackedEntityConfig> GetConfigList()
         {
             if (ConfigList != null)
             {
@@ -21,7 +21,7 @@ namespace HistoryTracking.DAL.TrackEntityChangesLogic.PropertiesTrackingConfigur
             }
 
             var allUserRoles = EnumHelper.ToArray<UserType>();
-            ConfigList = new List<TrackingEntityInfo>
+            ConfigList = new List<TrackedEntityConfig>
             {
                 TrackEntityChangesFor<UserEntity>()
                     .TrackProperty(x => x.Name, allUserRoles)
@@ -55,22 +55,22 @@ namespace HistoryTracking.DAL.TrackEntityChangesLogic.PropertiesTrackingConfigur
             return ConfigList;
         }
 
-        public static TrackPropertiesConfig<T> TrackEntityChangesFor<T>() where T : class
+        public static TrackedEntityConfigBuilder<T> TrackEntityChangesFor<T>() where T : class
         {
-            return new TrackPropertiesConfig<T>();
+            return new TrackedEntityConfigBuilder<T>();
         }
         
-        public static TrackingEntityInfo GetConfigFor(Type searchingEntityType)
+        public static TrackedEntityConfig GetConfigFor(Type searchingEntityType)
         {
             return GetConfigList().FirstOrDefault(x => x.EntityType == searchingEntityType);
         }
 
-        public static TrackingEntityInfo GetConfigFor(Func<TrackingEntityInfo, bool> searchingEntityTypePredicate)
+        public static TrackedEntityConfig GetConfigFor(Func<TrackedEntityConfig, bool> searchingEntityTypePredicate)
         {
             return GetConfigList().FirstOrDefault(searchingEntityTypePredicate);
         }
 
-        public static TrackingEntityInfo GetConfigFor(string searchingEntityTypeName)
+        public static TrackedEntityConfig GetConfigFor(string searchingEntityTypeName)
         {
             return GetConfigList().FirstOrDefault(x => x.EntityName == searchingEntityTypeName);
         }

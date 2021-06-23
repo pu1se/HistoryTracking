@@ -10,16 +10,16 @@ using HistoryTracking.DAL.TrackEntityChangesLogic.Base.Configuration;
 
 namespace HistoryTracking.DAL.TrackEntityChangesLogic.PropertiesTrackingConfigurations
 {
-    public class TrackPropertiesConfig<TEntity> where TEntity: class
+    public class TrackedEntityConfigBuilder<TEntity> where TEntity: class
     {
-        public TrackingEntityInfo EntityInfo { get; }
+        public TrackedEntityConfig EntityConfig { get; }
 
-        public TrackPropertiesConfig()
+        public TrackedEntityConfigBuilder()
         {
-            EntityInfo = new TrackingEntityInfo(GetEntityTableName(), typeof(TEntity));
+            EntityConfig = new TrackedEntityConfig(GetEntityTableName(), typeof(TEntity));
         }
 
-        public TrackPropertiesConfig<TEntity> TrackProperty<TProperty>(
+        public TrackedEntityConfigBuilder<TEntity> TrackProperty<TProperty>(
             Expression<Func<TEntity, TProperty>> func,
             UserType[] isVisibleForUserRoles, 
             Func<object, string> displayPropertyFunc = null)
@@ -33,12 +33,12 @@ namespace HistoryTracking.DAL.TrackEntityChangesLogic.PropertiesTrackingConfigur
                 displayPropertyFunc = defaultDisplayingPropertyFunc;
             }
 
-            if (EntityInfo.PropertyList.Select(x => x.Name).Contains(propertyName))
+            if (EntityConfig.PropertyList.Select(x => x.Name).Contains(propertyName))
             {
                 throw new Exception($"The description for property {propertyName} is already exists in Track Properties Configuration.");
             }
 
-            EntityInfo.PropertyList.Add(new TrackingPropertyInfo
+            EntityConfig.PropertyList.Add(new TrackedPropertyConfig
             {
                 Name = propertyName, 
                 IsVisibleForUserRoles = isVisibleForUserRoles.ToList(),
@@ -47,18 +47,18 @@ namespace HistoryTracking.DAL.TrackEntityChangesLogic.PropertiesTrackingConfigur
             return this;
         }
 
-        public TrackingEntityInfo BuildConfiguration()
+        public TrackedEntityConfig BuildConfiguration()
         {
-            return EntityInfo;
+            return EntityConfig;
         }
 
-        public TrackComplexPropertiesConfig<TEntity, TProperty> TrackComplexProperty<TProperty>(
+        public TrackedComplexEntityConfigBuilder<TEntity, TProperty> TrackComplexProperty<TProperty>(
             Expression<Func<TEntity, IEnumerable<TProperty>>> func) where TProperty : class
         {
             var expression = (MemberExpression)func.Body;
             var propertyName = expression.Member.Name;
 
-            return new TrackComplexPropertiesConfig<TEntity, TProperty>(this, propertyName);
+            return new TrackedComplexEntityConfigBuilder<TEntity, TProperty>(this, propertyName);
         }
 
         private string GetEntityTableName()
@@ -70,17 +70,17 @@ namespace HistoryTracking.DAL.TrackEntityChangesLogic.PropertiesTrackingConfigur
             return entityTableName;
         }
 
-        public TrackPropertiesConfig<TEntity> AlsoDisplayChangesInParentEntityWithId<TProperty>(Expression<Func<TEntity, TProperty>> func)
+        public TrackedEntityConfigBuilder<TEntity> AlsoDisplayChangesInParentEntityWithId<TProperty>(Expression<Func<TEntity, TProperty>> func)
         {
             var expression = (MemberExpression)func.Body;
             var propertyName = expression.Member.Name;
 
-            if (EntityInfo.PropertyList.Select(x => x.Name).Contains(propertyName))
+            if (EntityConfig.PropertyList.Select(x => x.Name).Contains(propertyName))
             {
                 throw new Exception($"The description for property {propertyName} is already exists in Track Properties Configuration.");
             }
 
-            EntityInfo.PropertyList.Add(new TrackingPropertyInfo
+            EntityConfig.PropertyList.Add(new TrackedPropertyConfig
             {
                 Name = propertyName, 
                 IsParentEntityId = true

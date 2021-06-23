@@ -26,7 +26,7 @@ namespace HistoryTracking.DAL
         public DbSet<UserEntity> Users { get; set; }
         public DbSet<SubscriptionProductEntity> SubscriptionProducts { get; set; }
         public DbSet<OrderEntity> Orders { get; set; }
-        public DbSet<TrackEntityChange> TrackEntityChanges { get; set; }
+        public DbSet<TrackedEntityChange> TrackEntityChanges { get; set; }
 
 
         public DataContext() : base(DefaultConnectionStringName)
@@ -127,10 +127,10 @@ namespace HistoryTracking.DAL
                 }
 
 
-                var currentTrackingEntityConfig = TrackingEntitiesConfiguration.GetConfigFor(x => x.EntityType == entity.GetType() || x.EntityType == entity.GetType().BaseType);
-                if (currentTrackingEntityConfig != null)
+                var trackedEntityConfig = ConfigurationOfTrackedEntities.GetConfigFor(x => x.EntityType == entity.GetType() || x.EntityType == entity.GetType().BaseType);
+                if (trackedEntityConfig != null)
                 {
-                    var trackEntityChange = TrackSavedEntityFrameworkChangesLogic.GetTrackEntityChangeRecord(this, dbEntry, currentTrackingEntityConfig);
+                    var trackEntityChange = this.GetTrackedEntityChangeRecordFor(dbEntry, trackedEntityConfig);
                     if (trackEntityChange != null)
                     {
                         TrackEntityChanges.Add(trackEntityChange);

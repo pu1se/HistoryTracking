@@ -3,7 +3,7 @@ using HistoryTracking.DAL.Enums;
 
 namespace HistoryTracking.DAL
 {
-    public class PropertyChangeDescription
+    public class PropertyChange
     {
         public string PropertyName { get; set; }
         public string PropertyNameForDisplaying { get; set; }

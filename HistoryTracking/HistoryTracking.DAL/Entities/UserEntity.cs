@@ -22,7 +22,7 @@ namespace HistoryTracking.DAL.Entities
 
         public virtual ICollection<OrderEntity> Orders { get; set; }
 
-        public virtual ICollection<TrackEntityChange> TrackEntityChanges { get; set; }
+        public virtual ICollection<TrackedEntityChange> TrackEntityChanges { get; set; }
 
         public virtual ICollection<UserAddressEntity> Addresses { get; set; }
 

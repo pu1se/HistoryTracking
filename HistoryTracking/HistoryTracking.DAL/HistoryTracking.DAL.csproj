@@ -73,19 +73,23 @@
     <Compile Include="Migrations\202106210911006_AddedParentEntityId.designer.cs">
       <DependentUpon>202106210911006_AddedParentEntityId.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202106231517525_Renaming.cs" />
+    <Compile Include="Migrations\202106231517525_Renaming.designer.cs">
+      <DependentUpon>202106231517525_Renaming.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
-    <Compile Include="TrackEntityChangesLogic\Base\Configuration\TrackComplexPropertiesConfig.cs" />
-    <Compile Include="TrackEntityChangesLogic\GetPropertyChanges.cs" />
-    <Compile Include="TrackEntityChangesLogic\TrackingEntitiesConfiguration.cs" />
-    <Compile Include="TrackEntityChangesLogic\Base\Configuration\TrackPropertiesConfig.cs" />
-    <Compile Include="TrackEntityChangesLogic\Base\Configuration\TrackingEntityInfo.cs" />
-    <Compile Include="TrackEntityChangesLogic\Base\Configuration\TrackingPropertyInfo.cs" />
-    <Compile Include="TrackEntityChangesLogic\TrackSavedEntityFrameworkChangesLogic.cs" />
+    <Compile Include="TrackEntityChangesLogic\Base\Configuration\TrackedComplexEntityConfigBuilder.cs" />
+    <Compile Include="TrackEntityChangesLogic\CompareAndGetChanges.cs" />
+    <Compile Include="TrackEntityChangesLogic\ConfigurationOfTrackedEntities.cs" />
+    <Compile Include="TrackEntityChangesLogic\Base\Configuration\TrackedEntityConfigBuilder.cs" />
+    <Compile Include="TrackEntityChangesLogic\Base\Configuration\TrackedEntityConfig.cs" />
+    <Compile Include="TrackEntityChangesLogic\Base\Configuration\TrackedPropertyConfig.cs" />
+    <Compile Include="TrackEntityChangesLogic\TrackingLogicOfSavedByEntityFrameworkChanges.cs" />
     <Compile Include="DatabaseInitializer.cs" />
     <Compile Include="DataContext.cs" />
     <Compile Include="Entities\BaseEntity.cs" />
-    <Compile Include="TrackEntityChangesLogic\Base\PropertyChangeDescription.cs" />
-    <Compile Include="Entities\TrackEntityChange.cs" />
+    <Compile Include="TrackEntityChangesLogic\Base\PropertyChange.cs" />
+    <Compile Include="Entities\TrackedEntityChange.cs" />
     <Compile Include="Entities\SubscriptionProductEntity.cs" />
     <Compile Include="Entities\OrderEntity.cs" />
     <Compile Include="Entities\UserEntity.cs" />
@@ -118,6 +122,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202106210911006_AddedParentEntityId.resx">
       <DependentUpon>202106210911006_AddedParentEntityId.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202106231517525_Renaming.resx">
+      <DependentUpon>202106231517525_Renaming.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -10,7 +10,7 @@ using HistoryTracking.DAL.Enums;
 namespace HistoryTracking.DAL.Entities
 {
     [Table("TrackEntityChanges")]
-    public class TrackEntityChange
+    public class TrackedEntityChange
     {
         [Key]
         public Guid Id { get; set; }
@@ -23,7 +23,7 @@ namespace HistoryTracking.DAL.Entities
         public Guid EntityId { get; set; }
 
         [Index]
-        public Guid? ParentEntityId { get; set; }
+        public Guid? ParentId { get; set; }
 
         public string EntityAfterChangeSnapshot { get; set; }
 

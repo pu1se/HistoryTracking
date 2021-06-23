@@ -16,12 +16,12 @@ using HistoryTracking.DAL.TrackEntityChangesLogic.PropertiesTrackingConfiguratio
 
 namespace HistoryTracking.DAL
 {
-    public static class TrackSavedEntityFrameworkChangesLogic
+    public static class TrackingLogicOfSavedByEntityFrameworkChanges
     {
-        public static TrackEntityChange GetTrackEntityChangeRecord(
-            DataContext dataContext, 
+        public static TrackedEntityChange GetTrackedEntityChangeRecordFor(
+            this DataContext dataContext, 
             DbEntityEntry dbEntry,
-            TrackingEntityInfo trackingEntityConfig)
+            TrackedEntityConfig trackedEntityConfig)
         {
             var supportedEntryState = new List<EntityState> { EntityState.Modified, EntityState.Added, EntityState.Deleted };
             if (!supportedEntryState.Contains(dbEntry.State))
@@ -36,19 +36,19 @@ namespace HistoryTracking.DAL
             }
 
             Guid? parentId = null;
-            if (trackingEntityConfig.PropertyList.Any(x => x.IsParentEntityId))
+            if (trackedEntityConfig.PropertyList.Any(x => x.IsParentEntityId))
             {
-                var trackParentEntityIdConfig = trackingEntityConfig.PropertyList.First(x => x.IsParentEntityId);
+                var trackParentEntityIdConfig = trackedEntityConfig.PropertyList.First(x => x.IsParentEntityId);
                 var parentIdProperty = dbEntry.Entity.GetType().GetProperties().FirstOrDefault(x => x.Name == trackParentEntityIdConfig.Name);
                 parentId = parentIdProperty.GetValue(dbEntry.Entity) as Guid?;
             }
 
-            var trackEntityChange = new TrackEntityChange
+            var trackEntityChange = new TrackedEntityChange
             {
                 Id = Guid.NewGuid(),
-                EntityTable = trackingEntityConfig.EntityName,
+                EntityTable = trackedEntityConfig.EntityName,
                 EntityId = GetPrimaryKeyId(dataContext, dbEntry),
-                ParentEntityId = parentId,
+                ParentId = parentId,
                 ChangeType = dbEntry.State.ToString(),
                 ChangeDateUtc = changedDateUtc,
                 EntityAfterChangeSnapshot = dbEntry.State != EntityState.Deleted ? dbEntry.Entity.ToJson() : null,

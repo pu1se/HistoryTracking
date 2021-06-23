@@ -25,9 +25,9 @@ namespace HistoryTracking.Tests
                 Name = "some name",
                 UserType = UserType.Customer
             };
-            var config = TrackingEntitiesConfiguration.GetConfigFor(userEntity.GetType());
+            var config = ConfigurationOfTrackedEntities.GetConfigFor(userEntity.GetType());
 
-            var result = GetPropertyChanges.For(userEntity, userEntity, config);
+            var result = CompareAndGetChanges.For(userEntity, userEntity, config);
             Assert.IsTrue(result.Count == 0);
         }
 
@@ -35,12 +35,12 @@ namespace HistoryTracking.Tests
         public void TrackNoChangesForNull()
         {
             var userEntity = new UserEntity();
-            var config = TrackingEntitiesConfiguration.GetConfigFor(userEntity.GetType());
+            var config = ConfigurationOfTrackedEntities.GetConfigFor(userEntity.GetType());
 
-            var result = GetPropertyChanges.For((UserEntity) null, null, config);
+            var result = CompareAndGetChanges.For((UserEntity) null, null, config);
             Assert.IsTrue(result.Count == 0);
             
-            result = GetPropertyChanges.For(userEntity, userEntity, config);
+            result = CompareAndGetChanges.For(userEntity, userEntity, config);
             Assert.IsTrue(result.Count == 0);
         }
 
@@ -48,9 +48,9 @@ namespace HistoryTracking.Tests
         public void TrackNoChangesForNewEntity()
         {
             var userEntity = new UserEntity{Email = "tmp@tut.by"};
-            var config = TrackingEntitiesConfiguration.GetConfigFor(userEntity.GetType());
+            var config = ConfigurationOfTrackedEntities.GetConfigFor(userEntity.GetType());
 
-            var result = GetPropertyChanges.For(null, userEntity, config);
+            var result = CompareAndGetChanges.For(null, userEntity, config);
             Assert.IsTrue(result.Count == 2);
 
             var userTypeChange = result.FirstOrDefault(x => x.PropertyName == nameof(UserEntity.UserType));
@@ -68,9 +68,9 @@ namespace HistoryTracking.Tests
         public void TrackNoChangesForDeletedEntity()
         {
             var userEntity = new UserEntity();
-            var config = TrackingEntitiesConfiguration.GetConfigFor(userEntity.GetType());
+            var config = ConfigurationOfTrackedEntities.GetConfigFor(userEntity.GetType());
 
-            var result = GetPropertyChanges.For(userEntity, null, config);
+            var result = CompareAndGetChanges.For(userEntity, null, config);
             Assert.IsTrue(result.Count == 1);
             Assert.IsTrue(result.First().OldValue == default(UserType).ToString());
             Assert.IsTrue(result.First().NewValue == null);
@@ -86,11 +86,11 @@ namespace HistoryTracking.Tests
                 Name = "some name",
                 UserType = UserType.Customer
             };
-            var config = TrackingEntitiesConfiguration.GetConfigFor(oldUserEntity.GetType());
+            var config = ConfigurationOfTrackedEntities.GetConfigFor(oldUserEntity.GetType());
             var newUserEntity = oldUserEntity.DeepClone();
             newUserEntity.Name = "new name";
 
-            var result = GetPropertyChanges.For(oldUserEntity, newUserEntity, config);
+            var result = CompareAndGetChanges.For(oldUserEntity, newUserEntity, config);
             Assert.IsTrue(result.Count == 1);
             Assert.IsTrue(result.First().OldValue == oldUserEntity.Name);
             Assert.IsTrue(result.First().NewValue == newUserEntity.Name);
@@ -100,11 +100,11 @@ namespace HistoryTracking.Tests
         public void TrackFirstOneChangeForTheUserEntity()
         {
             var oldUserEntity = new UserEntity();
-            var config = TrackingEntitiesConfiguration.GetConfigFor(oldUserEntity.GetType());
+            var config = ConfigurationOfTrackedEntities.GetConfigFor(oldUserEntity.GetType());
             var newUserEntity = oldUserEntity.DeepClone();
             newUserEntity.Name = "new name";
 
-            var result = GetPropertyChanges.For(oldUserEntity, newUserEntity, config);
+            var result = CompareAndGetChanges.For(oldUserEntity, newUserEntity, config);
             Assert.IsTrue(result.Count == 1);
             Assert.IsTrue(result.First().OldValue ==  null);
             Assert.IsTrue(result.First().NewValue == (newUserEntity.Name ?? string.Empty));
@@ -120,13 +120,13 @@ namespace HistoryTracking.Tests
                 Name = "some name",
                 UserType = UserType.Customer
             };
-            var config = TrackingEntitiesConfiguration.GetConfigFor(oldUserEntity.GetType());
+            var config = ConfigurationOfTrackedEntities.GetConfigFor(oldUserEntity.GetType());
             var newUserEntity = oldUserEntity.DeepClone();
             newUserEntity.Name = "new name";
             newUserEntity.Email = "new@email.com";
             newUserEntity.UserType = UserType.Reseller;
 
-            var result = GetPropertyChanges.For(oldUserEntity, newUserEntity, config);
+            var result = CompareAndGetChanges.For(oldUserEntity, newUserEntity, config);
             Assert.IsTrue(result.Count == 3);
             var userTypeChange = result.FirstOrDefault(x => x.PropertyName == "UserType");
             Assert.IsTrue(userTypeChange != null);
@@ -145,12 +145,12 @@ namespace HistoryTracking.Tests
                     new UserAddressEntity{City = "city 1", HouseAddress = "address 1"}
                 }
             };
-            var config = TrackingEntitiesConfiguration.GetConfigFor(oldUserEntity.GetType());
+            var config = ConfigurationOfTrackedEntities.GetConfigFor(oldUserEntity.GetType());
             var newUserEntity = oldUserEntity.DeepClone();
             newUserEntity.Addresses.First().City = "another city 2";
             newUserEntity.Addresses.First().HouseAddress = "another address 2";
 
-            var result = GetPropertyChanges.For(oldUserEntity, newUserEntity, config);
+            var result = CompareAndGetChanges.For(oldUserEntity, newUserEntity, config);
             Assert.IsTrue(result.Count == 2);
 
             Assert.IsTrue(result.First().OldValue == oldUserEntity.Addresses.First().City);
@@ -166,14 +166,14 @@ namespace HistoryTracking.Tests
             var oldUserEntity = new UserEntity
             {
             };
-            var config = TrackingEntitiesConfiguration.GetConfigFor(oldUserEntity.GetType());
+            var config = ConfigurationOfTrackedEntities.GetConfigFor(oldUserEntity.GetType());
             var newUserEntity = oldUserEntity.DeepClone();
             newUserEntity.Addresses = new List<UserAddressEntity>
             {
                 new UserAddressEntity {City = "City 2", HouseAddress = "Address 2"}
             };
 
-            var result = GetPropertyChanges.For(oldUserEntity, newUserEntity, config);
+            var result = CompareAndGetChanges.For(oldUserEntity, newUserEntity, config);
             Assert.IsTrue(result.Count == 2);
 
             Assert.IsTrue(result.First().OldValue == null);
@@ -197,13 +197,13 @@ namespace HistoryTracking.Tests
                     new UserContactEntity{PhoneNumber = "one number"}
                 }
             };
-            var config = TrackingEntitiesConfiguration.GetConfigFor(oldUserEntity.GetType());
+            var config = ConfigurationOfTrackedEntities.GetConfigFor(oldUserEntity.GetType());
             var newUserEntity = oldUserEntity.DeepClone();
             newUserEntity.Addresses.First().City = "another city 2";
             newUserEntity.Addresses.First().HouseAddress = "another address 2";
             newUserEntity.Contacts.First().PhoneNumber = "another number";
 
-            var result = GetPropertyChanges.For(oldUserEntity, newUserEntity, config);
+            var result = CompareAndGetChanges.For(oldUserEntity, newUserEntity, config);
             Assert.IsTrue(result.Count == 3);
 
             Assert.IsTrue(result[0].OldValue == oldUserEntity.Addresses.First().City);
@@ -232,12 +232,12 @@ namespace HistoryTracking.Tests
                     }
                 }
             };
-            var config = TrackingEntitiesConfiguration.GetConfigFor(oldSubscriptionEntity.GetType());
+            var config = ConfigurationOfTrackedEntities.GetConfigFor(oldSubscriptionEntity.GetType());
             var newSubscriptionEntity = oldSubscriptionEntity.DeepClone();
             newSubscriptionEntity.ChildrenSubscriptions.First().Price = 20;
             newSubscriptionEntity.ChildrenSubscriptions.First().Currency = CurrencyType.Nok;
 
-            var result = GetPropertyChanges.For(oldSubscriptionEntity, newSubscriptionEntity, config);
+            var result = CompareAndGetChanges.For(oldSubscriptionEntity, newSubscriptionEntity, config);
             Assert.IsTrue(result.Count > 0);
         }
 

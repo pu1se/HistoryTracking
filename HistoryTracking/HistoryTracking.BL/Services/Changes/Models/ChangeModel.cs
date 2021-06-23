@@ -14,7 +14,7 @@ namespace HistoryTracking.BL.Services.Changes.Models
 
         public UserModel ChangedByUser { get; set; }
 
-        public List<PropertyChangeDescription> PropertyChanges { get; set; } = new List<PropertyChangeDescription>();
+        public List<PropertyChange> PropertyChanges { get; set; } = new List<PropertyChange>();
 
         public string EntityName { get; set; }
 

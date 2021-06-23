@@ -6,15 +6,15 @@ using System.Threading.Tasks;
 
 namespace HistoryTracking.DAL.TrackEntityChangesLogic.PropertiesTrackingConfigurations
 {
-    public class TrackingEntityInfo
+    public class TrackedEntityConfig
     {
         public Type EntityType { get; }
 
         public string EntityName { get; }
 
-        public List<TrackingPropertyInfo> PropertyList { get; } = new List<TrackingPropertyInfo>();
+        public List<TrackedPropertyConfig> PropertyList { get; } = new List<TrackedPropertyConfig>();
 
-        public TrackingEntityInfo(string entityName, Type entityType)
+        public TrackedEntityConfig(string entityName, Type entityType)
         {
             EntityName = entityName;
             EntityType = entityType;
