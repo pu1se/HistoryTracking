@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace HistoryTracking.BL.Services.Changes.Models
 {
-    public class EntityNameModel
+    public class TrackedEntityNameModel
     {
         public string EntityName { get; set; }
         public string EntityNameForDisplaying { get; set; }

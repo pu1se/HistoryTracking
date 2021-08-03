@@ -12,7 +12,7 @@ namespace HistoryTracking.DAL.TrackEntityChangesLogic.PropertiesTrackingConfigur
 {
     public class TrackedEntityConfigBuilder<TEntity> where TEntity: class
     {
-        public TrackedEntityConfig EntityConfig { get; }
+        private TrackedEntityConfig EntityConfig { get; }
 
         public TrackedEntityConfigBuilder()
         {

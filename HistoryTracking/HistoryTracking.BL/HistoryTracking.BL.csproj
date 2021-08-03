@@ -67,7 +67,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\Changes\EntityChangesService.cs" />
     <Compile Include="Services\Changes\Models\ChangeModel.cs" />
-    <Compile Include="Services\Changes\Models\EntityNameModel.cs" />
+    <Compile Include="Services\Changes\Models\TrackedEntityNameModel.cs" />
     <Compile Include="Services\Changes\Models\GetChangesListModel.cs" />
     <Compile Include="Services\Orders\Models\AddEditOrderModel.cs" />
     <Compile Include="Services\Orders\Models\OrderModel.cs" />

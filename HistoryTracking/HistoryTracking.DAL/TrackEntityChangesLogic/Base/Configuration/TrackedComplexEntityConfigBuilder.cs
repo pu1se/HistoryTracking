@@ -49,7 +49,7 @@ namespace HistoryTracking.DAL.TrackEntityChangesLogic.Base.Configuration
 
         public TrackedEntityConfigBuilder<TMainEntity> EndOfComplexProperty()
         {
-            MainContext.EntityConfig.PropertyList.Add(new TrackedPropertyConfig
+            MainContext.BuildConfiguration().PropertyList.Add(new TrackedPropertyConfig
             {
                 Name = ComplexPropertyName,
                 SubProperties = SubPropertyList

@@ -23,11 +23,11 @@ namespace HistoryTracking.BL.Services.Changes
         {
         }
 
-        public async Task<List<EntityNameModel>> GetTrackingTableNamesAsync()
+        public async Task<List<TrackedEntityNameModel>> GetTrackingTableNamesAsync()
         {
             var trackingEntityNames = ConfigurationOfTrackedEntities.GetConfigList().Select(x => x.EntityName);
 
-            return trackingEntityNames.Select(x => new EntityNameModel
+            return trackingEntityNames.Select(x => new TrackedEntityNameModel
             {
                 EntityName = x,
                 EntityNameForDisplaying = x.SplitByCaps()
