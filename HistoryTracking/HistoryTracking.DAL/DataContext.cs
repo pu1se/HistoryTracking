@@ -24,6 +24,7 @@ namespace HistoryTracking.DAL
     {
         private const String DefaultConnectionStringName = "DefaultConnection";
         public DbSet<UserEntity> Users { get; set; }
+        public DbSet<UserAddressEntity> UserAddresses { get; set; }
         public DbSet<SubscriptionProductEntity> SubscriptionProducts { get; set; }
         public DbSet<OrderEntity> Orders { get; set; }
         public DbSet<TrackedEntityChange> TrackEntityChanges { get; set; }

@@ -49,5 +49,34 @@ namespace HistoryTracking.Tests
             Assert.IsTrue(user.UpdatedDateUtc >= DateTime.UtcNow.Date);
             Assert.IsTrue(user.UpdatedByUserId == TestData.SystemUserId);
         }
+
+        [TestMethod]
+        public async Task EditUserAddress()
+        {
+            var address = await Storage.UserAddresses.FirstAsync();
+
+            var oldHouseAddress = address.HouseAddress;
+            var oldCity = address.City;
+            var newHouseAddress = "new address " + Guid.NewGuid();
+            address.HouseAddress = newHouseAddress;
+            var newCity = "new city " + Guid.NewGuid();
+            address.City = newCity;
+            Storage.UserAddresses.AddOrUpdate(address);
+            await Storage.SaveChangesAsync();
+            CleanStorageCache();
+
+            address = await Storage.UserAddresses.FirstAsync();
+            var newAddress = address.DeepClone();
+
+            address.HouseAddress = oldHouseAddress;
+            address.City = oldCity;
+            Storage.UserAddresses.AddOrUpdate(address);
+            await Storage.SaveChangesAsync();
+
+            Assert.IsTrue(newAddress.HouseAddress == newHouseAddress);
+            Assert.IsTrue(newAddress.City == newCity);
+            Assert.IsTrue(newAddress.UpdatedDateUtc >= DateTime.UtcNow.Date);
+            Assert.IsTrue(newAddress.UpdatedByUserId == TestData.SystemUserId);
+        }
     }
 }

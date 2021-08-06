@@ -100,11 +100,11 @@ namespace HistoryTracking.BL.Services.Changes
                 }
 
                 FillUpPropertyChanges(change, config);
-                FillUpRelatedPropertyChanges(change, config, relatedEntityChanges);
+                MergeRelatedPropertyChangesIntoChangeWhichWereDoneAtTheSameTime(change, config, relatedEntityChanges);
                 FilterByUserRole(query, change);
             });
 
-            return entityChanges;
+            return entityChanges.Where(x => x.PropertyChanges.Any()).ToList();
         }
 
         private static List<ChangeModel> FillUpBeforeChange(List<ChangeModel> entityChanges, List<ChangeModel> allPossibleChangesWithEntities)
@@ -189,7 +189,7 @@ namespace HistoryTracking.BL.Services.Changes
             change.EntityNameForDisplaying = change.EntityName.SplitByCaps();
         }
 
-        private void FillUpRelatedPropertyChanges(ChangeModel change, TrackedEntityConfig config, List<ChangeModel> relatedEntityChanges)
+        private void MergeRelatedPropertyChangesIntoChangeWhichWereDoneAtTheSameTime(ChangeModel change, TrackedEntityConfig config, List<ChangeModel> relatedEntityChanges)
         {
             var relatedChanges = relatedEntityChanges.Where(x => x.RelatedEntityId == change.EntityId).ToList();
             if (relatedChanges.Count == 0)
@@ -197,12 +197,6 @@ namespace HistoryTracking.BL.Services.Changes
                 return;
             }
 
-            relatedChanges = MergeRelatedChangesIntoChange(change, config, relatedChanges);
-            GetSaparatedRelatedChanges();
-        }
-
-        private static List<ChangeModel> MergeRelatedChangesIntoChange(ChangeModel change, TrackedEntityConfig config, List<ChangeModel> relatedChanges)
-        {
             var relatedChangesGroups = relatedChanges.Where(x => x.ChangeDate == change.ChangeDate).GroupBy(x => x.EntityName);
             foreach (var group in relatedChangesGroups)
             {
@@ -221,13 +215,34 @@ namespace HistoryTracking.BL.Services.Changes
                 var propertyChanges = CompareAndGetChanges.For(entityBeforeChange, entityAfterChange, relatedEntityConfig);
                 change.PropertyChanges.AddRange(propertyChanges);
             }
-
-            return relatedChanges;
         }
 
-        void GetSeparatedRelatedChanges()
+        void AddRelatedChangesWhichWereDoneAtTheSeparatedTime(ChangeModel change, TrackedEntityConfig config, List<ChangeModel> relatedEntityChanges)
         {
+            var relatedChanges = relatedEntityChanges.Where(x => x.RelatedEntityId == change.EntityId).ToList();
+            if (relatedChanges.Count == 0)
+            {
+                return;
+            }
 
+            var relatedChangesGroups = relatedChanges.Where(x => x.ChangeDate != change.ChangeDate).GroupBy(x => x.EntityName);
+            foreach (var group in relatedChangesGroups)
+            {
+                // there can be only one change in related entity in one ChangeDate
+                var relatedChange = group.First();
+                var relatedEntityConfig = config.RelatedEntities.FirstOrDefault(x => x.EntityName == group.Key);
+
+                if (relatedEntityConfig == null)
+                {
+                    continue;
+                }
+
+                var entityBeforeChange = JsonConvert.DeserializeObject(relatedChange.EntityBeforeChangeAsJson ?? string.Empty, relatedEntityConfig.EntityType);
+                var entityAfterChange = JsonConvert.DeserializeObject(relatedChange.EntityAfterChangeAsJson ?? string.Empty, relatedEntityConfig.EntityType);
+
+                var propertyChanges = CompareAndGetChanges.For(entityBeforeChange, entityAfterChange, relatedEntityConfig);
+                change.PropertyChanges.AddRange(propertyChanges);
+            }
         }
 
         private static void FilterByUserRole(GetChangesListModel query, ChangeModel changeModel)
