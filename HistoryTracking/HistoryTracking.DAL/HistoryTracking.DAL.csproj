@@ -77,8 +77,15 @@
     <Compile Include="Migrations\202106231517525_Renaming.designer.cs">
       <DependentUpon>202106231517525_Renaming.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202108051710498_AddRelatedEntityIdFieldToTrackedChangesTable.cs" />
+    <Compile Include="Migrations\202108051710498_AddRelatedEntityIdFieldToTrackedChangesTable.designer.cs">
+      <DependentUpon>202108051710498_AddRelatedEntityIdFieldToTrackedChangesTable.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="TrackEntityChangesLogic\Base\Configuration\DisplayRelatedEntityPropertiesConfig.cs" />
+    <Compile Include="TrackEntityChangesLogic\Base\Configuration\ITrackedEntityConfig.cs" />
     <Compile Include="TrackEntityChangesLogic\Base\Configuration\TrackedComplexEntityConfigBuilder.cs" />
+    <Compile Include="TrackEntityChangesLogic\Base\Configuration\DisplayRelatedEntityPropertiesConfigBuilder.cs" />
     <Compile Include="TrackEntityChangesLogic\CompareAndGetChanges.cs" />
     <Compile Include="TrackEntityChangesLogic\ConfigurationOfTrackedEntities.cs" />
     <Compile Include="TrackEntityChangesLogic\Base\Configuration\TrackedEntityConfigBuilder.cs" />
@@ -125,6 +132,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202106231517525_Renaming.resx">
       <DependentUpon>202106231517525_Renaming.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202108051710498_AddRelatedEntityIdFieldToTrackedChangesTable.resx">
+      <DependentUpon>202108051710498_AddRelatedEntityIdFieldToTrackedChangesTable.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

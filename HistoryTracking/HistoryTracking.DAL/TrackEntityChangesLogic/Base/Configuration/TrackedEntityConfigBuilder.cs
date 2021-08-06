@@ -47,6 +47,15 @@ namespace HistoryTracking.DAL.TrackEntityChangesLogic.PropertiesTrackingConfigur
             return this;
         }
 
+        public DisplayRelatedEntityPropertiesConfigBuilder<TEntity, TProperty> DisplayRelatedEntity<TProperty>(
+            Expression<Func<TEntity, IEnumerable<TProperty>>> func) where TProperty : class
+        {
+            var expression = (MemberExpression)func.Body;
+            var propertyName = expression.Member.Name;
+
+            return new DisplayRelatedEntityPropertiesConfigBuilder<TEntity, TProperty>(this);
+        }
+
         public TrackedEntityConfig BuildConfiguration()
         {
             return EntityConfig;
@@ -61,13 +70,21 @@ namespace HistoryTracking.DAL.TrackEntityChangesLogic.PropertiesTrackingConfigur
             return new TrackedComplexEntityConfigBuilder<TEntity, TProperty>(this, propertyName);
         }
 
+        public TrackedEntityConfigBuilder<TEntity> SaveRelatedEntityId(
+            Expression<Func<TEntity, Guid>> func)
+        {
+            var expression = (MemberExpression)func.Body;
+            var saveRelatedEntityIdPropertyName = expression.Member.Name;
+
+            EntityConfig.SaveRelatedEntityIdPropertyName = saveRelatedEntityIdPropertyName;
+
+            return this;
+        }
+
         private string GetEntityTableName()
         {
             var entityType = typeof(TEntity);
-            var tableAttr = entityType.GetCustomAttributes(typeof(TableAttribute), true).SingleOrDefault() as TableAttribute;
-            var entityTableName = tableAttr != null ? tableAttr.Name : entityType.Name;
-
-            return entityTableName;
+            return entityType.Name;
         }
 
         public TrackedEntityConfigBuilder<TEntity> AlsoDisplayChangesInParentEntityWithId<TProperty>(Expression<Func<TEntity, TProperty>> func)

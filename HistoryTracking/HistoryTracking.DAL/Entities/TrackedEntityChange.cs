@@ -15,6 +15,7 @@ namespace HistoryTracking.DAL.Entities
         [Key]
         public Guid Id { get; set; }
 
+        // todo: rename to EntityType
         public string EntityTable { get; set; }
 
         public string ChangeType { get; set; }
@@ -29,6 +30,9 @@ namespace HistoryTracking.DAL.Entities
 
         [Index]
         public DateTime ChangeDateUtc { get; set; }
+
+        [Index]
+        public Guid? RelatedEntityId { get; set; }
 
 
         public Guid ChangedByUserId { get; set; }

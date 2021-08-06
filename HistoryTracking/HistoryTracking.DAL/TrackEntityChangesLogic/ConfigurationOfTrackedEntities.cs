@@ -24,17 +24,25 @@ namespace HistoryTracking.DAL.TrackEntityChangesLogic.PropertiesTrackingConfigur
             ConfigList = new List<TrackedEntityConfig>
             {
                 TrackEntityChangesFor<UserEntity>()
+                    // todo: rename to DisplayProperty
                     .TrackProperty(x => x.Name, allUserRoles)
                     .TrackProperty(x => x.Email, allUserRoles)
                     .TrackProperty(x => x.UserType, allUserRoles, type => type?.ToString().SplitByCaps())
-                    .TrackComplexProperty(x => x.Contacts)
+                    .DisplayRelatedEntity(x => x.Addresses)
+                        .TrackRelatedProperty(x => x.HouseAddress, allUserRoles)
+                        .EndOfComplexProperty()
+/*                    .TrackComplexProperty(x => x.Contacts)
                             .TrackProperty(x => x.Email, allUserRoles)
                             .TrackProperty(x => x.PhoneNumber, allUserRoles)
                             .EndOfComplexProperty()
                     .TrackComplexProperty(x => x.Addresses)
                             .TrackProperty(x => x.City, allUserRoles)
                             .TrackProperty(x => x.HouseAddress, allUserRoles)
-                            .EndOfComplexProperty()
+                            .EndOfComplexProperty()*/
+                    .BuildConfiguration(),
+
+                TrackEntityChangesFor<UserAddressEntity>()
+                    .SaveRelatedEntityId(x => x.UserId)
                     .BuildConfiguration(),
 
                 TrackEntityChangesFor<SubscriptionProductEntity>()

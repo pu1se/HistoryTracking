@@ -40,7 +40,20 @@ namespace HistoryTracking.DAL
             {
                 var trackParentEntityIdConfig = trackedEntityConfig.PropertyList.First(x => x.IsParentEntityId);
                 var parentIdProperty = dbEntry.Entity.GetType().GetProperties().FirstOrDefault(x => x.Name == trackParentEntityIdConfig.Name);
-                parentId = parentIdProperty.GetValue(dbEntry.Entity) as Guid?;
+                if (parentIdProperty != null)
+                {
+                    parentId = parentIdProperty.GetValue(dbEntry.Entity) as Guid?;
+                }
+            }
+
+            Guid? relatedEntityId = null;
+            if (trackedEntityConfig.SaveRelatedEntityIdPropertyName != null)
+            {
+                var relatedEntityIdProperty = dbEntry.Entity.GetType().GetProperties().FirstOrDefault(x => x.Name == trackedEntityConfig.SaveRelatedEntityIdPropertyName);
+                if (relatedEntityIdProperty != null)
+                {
+                    relatedEntityId = relatedEntityIdProperty.GetValue(dbEntry.Entity) as Guid?;
+                }
             }
 
             var trackEntityChange = new TrackedEntityChange
@@ -53,6 +66,7 @@ namespace HistoryTracking.DAL
                 ChangeDateUtc = changedDateUtc,
                 EntityAfterChangeSnapshot = dbEntry.State != EntityState.Deleted ? dbEntry.Entity.ToJson() : null,
                 ChangedByUserId = UserManager.GetCurrentUserId(),
+                RelatedEntityId = relatedEntityId
             };
             return trackEntityChange;
         }

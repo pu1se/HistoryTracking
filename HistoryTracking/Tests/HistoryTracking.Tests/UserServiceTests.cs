@@ -32,6 +32,8 @@ namespace HistoryTracking.Tests
             var oldName = user.Name;
             var newName = "new name " + Guid.NewGuid();
             user.Name = newName;
+            var oldAddress = user.Addresses.First().HouseAddress;
+            user.Addresses.First().HouseAddress += " some more info";
             Storage.Users.AddOrUpdate(user);
             await Storage.SaveChangesAsync();
             CleanStorageCache();
@@ -39,6 +41,7 @@ namespace HistoryTracking.Tests
             user = await Storage.Users.Include(x=> x.Contacts).Include(x=>x.Addresses).FirstAsync();
             Assert.IsTrue(user.Name == newName);
             user.Name = oldName;
+            user.Addresses.First().HouseAddress = oldAddress;
             Storage.Users.AddOrUpdate(user);
             await Storage.SaveChangesAsync();
             user = await Storage.Users.Include(x=> x.Contacts).Include(x=>x.Addresses).FirstAsync();

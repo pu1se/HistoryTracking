@@ -16,6 +16,7 @@ namespace HistoryTracking.BL.Services.Changes.Models
 
         public List<PropertyChange> PropertyChanges { get; set; } = new List<PropertyChange>();
 
+        // todo: rename to EntityType
         public string EntityName { get; set; }
 
         public string EntityNameForDisplaying { get; set; }
@@ -26,5 +27,6 @@ namespace HistoryTracking.BL.Services.Changes.Models
         public string EntityBeforeChangeAsJson { get; set; }
         public string EntityAfterChangeAsJson { get; set; }
         public Guid? ParentEntityId { get; set; }
+        public Guid? RelatedEntityId { get; set; }
     }
 }

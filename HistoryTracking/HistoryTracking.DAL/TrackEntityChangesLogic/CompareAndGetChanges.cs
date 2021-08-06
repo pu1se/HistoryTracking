@@ -7,13 +7,14 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using HistoryTracking.DAL.Entities;
+using HistoryTracking.DAL.TrackEntityChangesLogic.Base.Configuration;
 using HistoryTracking.DAL.TrackEntityChangesLogic.PropertiesTrackingConfigurations;
 
 namespace HistoryTracking.DAL.TrackEntityChangesLogic
 {
     public static class CompareAndGetChanges
     {
-        public static List<PropertyChange> For<T>(T oldEntity, T newEntity, TrackedEntityConfig propertyConfigs) where T: class
+        public static List<PropertyChange> For<T>(T oldEntity, T newEntity, ITrackedEntityConfig propertyConfigs) where T: class
         {
             var changeList = new List<PropertyChange>();
 
