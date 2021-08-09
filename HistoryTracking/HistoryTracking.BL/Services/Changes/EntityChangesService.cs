@@ -39,6 +39,7 @@ namespace HistoryTracking.BL.Services.Changes
             query = query ?? new GetChangesListModel();
             var getEntityChangesDbQuery = Storage.TrackEntityChanges.AsQueryable();
 
+            // 1. Filter changes.
             if (query.EntityNames.Any())
             {
                 getEntityChangesDbQuery = getEntityChangesDbQuery.Where(e => query.EntityNames.Contains(e.EntityTable));
@@ -62,11 +63,14 @@ namespace HistoryTracking.BL.Services.Changes
                         e.ParentId == query.EntityId.Value);
             }
 
+            // 2. Get changes from DB.
             var entityChanges = await getEntityChangesDbQuery
                 .MapToChangeModel()
                 .OrderByDescending(x => x.ChangeDate)
                 .ToListAsync();
 
+            // 3. Get all possible changes for correct BeforeChange and AfterChange snapshot filling.
+            // Fill up BeforeChange and AfterChange fields.
             var allPossibleChangesWithEntities = entityChanges.ToList();
             var allEntityIds = allPossibleChangesWithEntities
                 .Select(x => x.EntityId).Distinct()
@@ -80,17 +84,32 @@ namespace HistoryTracking.BL.Services.Changes
                     .ThenByDescending(x => x.ChangeDate)
                     .ToListAsync();
             }
+            entityChanges = FillUpBeforeChange(entityChanges, allPossibleChangesWithEntities);
 
-            var relatedEntityChanges = await Storage.TrackEntityChanges
+            // 4. Get all related changes
+            var allRelatedEntityChanges = await Storage.TrackEntityChanges
                 .Where(e => e.RelatedEntityId != null && allEntityIds.Contains(e.RelatedEntityId.Value))
                 .MapToChangeModel()
                 .OrderBy(x => x.EntityId)
                 .ThenByDescending(x => x.ChangeDate)
                 .ToListAsync();
 
-            entityChanges = FillUpBeforeChange(entityChanges, allPossibleChangesWithEntities);
-            relatedEntityChanges = FillUpBeforeChange(relatedEntityChanges, relatedEntityChanges);
+            // 5. Filter related changes
+            var filteredRelatedEntityChanges = allRelatedEntityChanges.ToList();
+            if (query.UserIds.Any())
+            {
+                filteredRelatedEntityChanges = filteredRelatedEntityChanges.Where(e => query.UserIds.Contains(e.ChangedByUser.Id)).ToList();
+            }
+            if (query.TakeHistoryForLastNumberOfDays.HasValue)
+            {
+                var fromDate = DateTime.UtcNow.AddDays(-query.TakeHistoryForLastNumberOfDays.Value);
+                filteredRelatedEntityChanges = filteredRelatedEntityChanges.Where(e => fromDate <= e.ChangeDate).ToList();
+            }
 
+            // 6. Fill up BeforeChange and AfterChange fields for Related Changes.
+            filteredRelatedEntityChanges = FillUpBeforeChange(filteredRelatedEntityChanges, allRelatedEntityChanges);
+
+            // 7. Create PropertyChange list.
             entityChanges.ForEach(change =>
             {
                 var config = ConfigurationOfTrackedEntities.GetConfigFor(change.EntityName);
@@ -100,11 +119,65 @@ namespace HistoryTracking.BL.Services.Changes
                 }
 
                 FillUpPropertyChanges(change, config);
-                MergeRelatedPropertyChangesIntoChangeWhichWereDoneAtTheSameTime(change, config, relatedEntityChanges);
+                MergeRelatedPropertyChangesIntoChangeWhichWereDoneAtTheSameTime(change, config, filteredRelatedEntityChanges);
                 FilterByUserRole(query, change);
             });
 
+            entityChanges.AddRange(GetRelatedChangesWhichWereDoneAtTheSeparatedTime(entityChanges, filteredRelatedEntityChanges));
+
             return entityChanges.Where(x => x.PropertyChanges.Any()).ToList();
+        }
+
+        List<ChangeModel> GetRelatedChangesWhichWereDoneAtTheSeparatedTime(List<ChangeModel> entityChanges, List<ChangeModel> relatedEntityChanges)
+        {
+            var relatedChangesWhichWereDoneAtTheSeparatedTime = new List<ChangeModel>();
+            var entityChangeDates = entityChanges.Select(x => x.ChangeDate).ToList();
+            var relatedEntitiesThatCanBeAdded = relatedEntityChanges.Where(x => !entityChangeDates.Contains(x.ChangeDate) && x.RelatedEntityId.HasValue).ToList();
+            var entityGroups = entityChanges.GroupBy(x => x.EntityName);
+
+            foreach (var entityGroup in entityGroups)
+            {
+                var config = ConfigurationOfTrackedEntities.GetConfigFor(entityGroup.Key);
+                if (config == null)
+                {
+                    continue;
+                }
+
+                foreach (var relatedChange in relatedEntitiesThatCanBeAdded)
+                {
+                    var relatedEntityConfig = config.RelatedEntities.FirstOrDefault(x => x.EntityName == relatedChange.EntityName);
+
+                    if (relatedEntityConfig == null || relatedChange.RelatedEntityId == null)
+                    {
+                        continue;
+                    }
+
+                    var entityBeforeChange = JsonConvert.DeserializeObject(relatedChange.EntityBeforeChangeAsJson ?? string.Empty, relatedEntityConfig.EntityType);
+                    var entityAfterChange = JsonConvert.DeserializeObject(relatedChange.EntityAfterChangeAsJson ?? string.Empty, relatedEntityConfig.EntityType);
+
+                    var propertyChanges = CompareAndGetChanges.For(entityBeforeChange, entityAfterChange, relatedEntityConfig);
+                    relatedChangesWhichWereDoneAtTheSeparatedTime.Add(new ChangeModel
+                    {
+                        Id = relatedChange.Id,
+                        ChangeDate = relatedChange.ChangeDate,
+                        ChangeType = relatedChange.ChangeType,
+                        EntityAfterChangeAsJson = relatedChange.EntityAfterChangeAsJson,
+                        EntityName = config.EntityName,
+                        EntityId = relatedChange.RelatedEntityId.Value,
+                        ParentEntityId = null,
+                        RelatedEntityId = relatedChange.EntityId,
+                        ChangedByUser = new UserModel
+                        {
+                            Name = relatedChange.ChangedByUser.Name,
+                            Email = relatedChange.ChangedByUser.Email,
+                            UserType = relatedChange.ChangedByUser.UserType
+                        },
+                        PropertyChanges = propertyChanges
+                    });
+                }
+            }
+
+            return relatedChangesWhichWereDoneAtTheSeparatedTime;
         }
 
         private static List<ChangeModel> FillUpBeforeChange(List<ChangeModel> entityChanges, List<ChangeModel> allPossibleChangesWithEntities)
@@ -198,34 +271,6 @@ namespace HistoryTracking.BL.Services.Changes
             }
 
             var relatedChangesGroups = relatedChanges.Where(x => x.ChangeDate == change.ChangeDate).GroupBy(x => x.EntityName);
-            foreach (var group in relatedChangesGroups)
-            {
-                // there can be only one change in related entity in one ChangeDate
-                var relatedChange = group.First();
-                var relatedEntityConfig = config.RelatedEntities.FirstOrDefault(x => x.EntityName == group.Key);
-
-                if (relatedEntityConfig == null)
-                {
-                    continue;
-                }
-
-                var entityBeforeChange = JsonConvert.DeserializeObject(relatedChange.EntityBeforeChangeAsJson ?? string.Empty, relatedEntityConfig.EntityType);
-                var entityAfterChange = JsonConvert.DeserializeObject(relatedChange.EntityAfterChangeAsJson ?? string.Empty, relatedEntityConfig.EntityType);
-
-                var propertyChanges = CompareAndGetChanges.For(entityBeforeChange, entityAfterChange, relatedEntityConfig);
-                change.PropertyChanges.AddRange(propertyChanges);
-            }
-        }
-
-        void AddRelatedChangesWhichWereDoneAtTheSeparatedTime(ChangeModel change, TrackedEntityConfig config, List<ChangeModel> relatedEntityChanges)
-        {
-            var relatedChanges = relatedEntityChanges.Where(x => x.RelatedEntityId == change.EntityId).ToList();
-            if (relatedChanges.Count == 0)
-            {
-                return;
-            }
-
-            var relatedChangesGroups = relatedChanges.Where(x => x.ChangeDate != change.ChangeDate).GroupBy(x => x.EntityName);
             foreach (var group in relatedChangesGroups)
             {
                 // there can be only one change in related entity in one ChangeDate

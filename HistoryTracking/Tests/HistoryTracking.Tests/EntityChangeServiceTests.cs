@@ -29,7 +29,10 @@ namespace HistoryTracking.Tests
         [TestMethod]
         public async Task CheckGetChangesAsync()
         {
-            var changes = await Service.GetChangesAsync(new GetChangesListModel());
+            var changes = await Service.GetChangesAsync(new GetChangesListModel
+            {
+                EntityNames = new List<string>{"UserEntity"}
+            });
 
             foreach (var change in changes)
             {
