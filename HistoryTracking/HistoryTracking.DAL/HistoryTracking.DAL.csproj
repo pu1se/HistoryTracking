@@ -84,7 +84,6 @@
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="TrackEntityChangesLogic\Base\Configuration\DisplayRelatedEntityPropertiesConfig.cs" />
     <Compile Include="TrackEntityChangesLogic\Base\Configuration\ITrackedEntityConfig.cs" />
-    <Compile Include="TrackEntityChangesLogic\Base\Configuration\TrackedComplexEntityConfigBuilder.cs" />
     <Compile Include="TrackEntityChangesLogic\Base\Configuration\DisplayRelatedEntityPropertiesConfigBuilder.cs" />
     <Compile Include="TrackEntityChangesLogic\CompareAndGetChanges.cs" />
     <Compile Include="TrackEntityChangesLogic\ConfigurationOfTrackedEntities.cs" />

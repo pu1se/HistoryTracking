@@ -61,15 +61,6 @@ namespace HistoryTracking.DAL.TrackEntityChangesLogic.PropertiesTrackingConfigur
             return EntityConfig;
         }
 
-        public TrackedComplexEntityConfigBuilder<TEntity, TProperty> TrackComplexProperty<TProperty>(
-            Expression<Func<TEntity, IEnumerable<TProperty>>> func) where TProperty : class
-        {
-            var expression = (MemberExpression)func.Body;
-            var propertyName = expression.Member.Name;
-
-            return new TrackedComplexEntityConfigBuilder<TEntity, TProperty>(this, propertyName);
-        }
-
         public TrackedEntityConfigBuilder<TEntity> SaveRelatedEntityId(
             Expression<Func<TEntity, Guid>> func)
         {

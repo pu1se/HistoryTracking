@@ -28,18 +28,10 @@ namespace HistoryTracking.DAL.TrackEntityChangesLogic
                     continue;
                 }
 
-                if (propertyConfig.IsComplex)
+                var change = HandelSimpleProperties(oldEntity, newEntity, propertyOfEntity, propertyConfig);
+                if (change != null)
                 {
-                    var complexChanges = HandelComplexProperties(oldEntity, newEntity, propertyOfEntity, propertyConfig);
-                    changeList.AddRange(complexChanges);
-                }
-                else
-                {
-                    var change = HandelSimpleProperties(oldEntity, newEntity, propertyOfEntity, propertyConfig);
-                    if (change != null)
-                    {
-                        changeList.Add(change);
-                    }
+                    changeList.Add(change);
                 }
             }
 
@@ -69,11 +61,6 @@ namespace HistoryTracking.DAL.TrackEntityChangesLogic
             }
 
             var propertyName = propertyOfEntity.Name;
-            if (propertyConfig.IsComplex)
-            {
-                propertyConfig = propertyConfig.SubProperties.First(x => x.Name == propertyName);
-            }
-            
             return new PropertyChange
             {
                 PropertyName = propertyName,
@@ -84,52 +71,6 @@ namespace HistoryTracking.DAL.TrackEntityChangesLogic
                 NewValue = newValue?.ToString(),
                 NewValueForDisplaying = propertyConfig.DisplayingPropertyFunction(newValue)
             };
-        }
-
-        private static List<PropertyChange> HandelComplexProperties<T>(
-            T oldParentEntityList,
-            T newParentEntityList,
-            PropertyInfo propertyOfParentEntityList,
-            TrackedPropertyConfig propertyConfig) where T : class
-        {
-            var changeList = new List<PropertyChange>();
-            IEnumerable<BaseEntity> oldChildEntityList = new List<BaseEntity>();
-            if (oldParentEntityList != null)
-            {
-                oldChildEntityList = (IEnumerable<BaseEntity>) propertyOfParentEntityList.GetValue(oldParentEntityList);
-                oldChildEntityList = oldChildEntityList ?? new List<BaseEntity>();
-            }
-
-            IEnumerable<BaseEntity> newChildEntityList = new List<BaseEntity>();
-            if (newParentEntityList != null)
-            {
-                newChildEntityList = (IEnumerable<BaseEntity>) propertyOfParentEntityList.GetValue(newParentEntityList);
-                newChildEntityList = newChildEntityList ?? new List<BaseEntity>();
-            }
-
-
-            foreach (var newChildEntity in newChildEntityList)
-            {
-                var oldChildEntity = oldChildEntityList.FirstOrDefault(x => x.Id == newChildEntity.Id);
-
-                var allChildProperties = newChildEntity.GetType().GetProperties();
-                foreach (var childProperty in allChildProperties)
-                {
-                    var childConfig = propertyConfig.SubProperties.FirstOrDefault(x => x.Name == childProperty.Name);
-                    if (childConfig == null)
-                    {
-                        continue;
-                    }
-
-                    var change = HandelSimpleProperties(oldChildEntity, newChildEntity, childProperty, propertyConfig);
-                    if (change != null)
-                    {
-                        changeList.Add(change);
-                    }
-                }
-            }
-
-            return changeList;
         }
     }
 }
