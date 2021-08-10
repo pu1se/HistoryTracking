@@ -19,7 +19,7 @@ namespace HistoryTracking.Tests
         [TestMethod]
         public async Task CheckGetTableNamesTest()
         {
-            var tableNames = await Service.GetTrackingTableNamesAsync();
+            var tableNames = Service.GetTrackingTableNames();
 
             Assert.IsTrue(tableNames.Any());
             Assert.IsTrue(tableNames.First().EntityName.IsNullOrEmpty() == false);

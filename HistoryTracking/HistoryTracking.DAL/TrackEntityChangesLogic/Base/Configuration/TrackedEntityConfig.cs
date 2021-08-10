@@ -10,6 +10,8 @@ namespace HistoryTracking.DAL.TrackEntityChangesLogic.PropertiesTrackingConfigur
     // todo: maybe rename to DisplayChangesInEntity
     public class TrackedEntityConfig : ITrackedEntityConfig
     {
+        public bool ShowOnUiAsCategory { get; }
+
         public Type EntityType { get; }
 
         public string EntityName { get; }
@@ -19,10 +21,11 @@ namespace HistoryTracking.DAL.TrackEntityChangesLogic.PropertiesTrackingConfigur
         public List<DisplayRelatedEntityPropertiesConfig> RelatedEntities { get; } = new List<DisplayRelatedEntityPropertiesConfig>();
         public string SaveRelatedEntityIdPropertyName { get; set; }
 
-        public TrackedEntityConfig(string entityName, Type entityType)
+        public TrackedEntityConfig(string entityName, Type entityType, bool showOnUiAsCategory)
         {
             EntityName = entityName;
             EntityType = entityType;
+            ShowOnUiAsCategory = showOnUiAsCategory;
         }
     }
 }

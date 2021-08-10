@@ -23,20 +23,21 @@ namespace HistoryTracking.BL.Services.Changes
         {
         }
 
-        public async Task<List<TrackedEntityNameModel>> GetTrackingTableNamesAsync()
+        public List<TrackedEntityNameModel> GetTrackingTableNames()
         {
-            var trackingEntityNames = ConfigurationOfTrackedEntities.GetConfigList().Select(x => x.EntityName);
+            var trackingEntityNames = ConfigurationOfTrackedEntities.GetConfigList();
 
-            return trackingEntityNames.Select(x => new TrackedEntityNameModel
+            return trackingEntityNames.Where(x => x.ShowOnUiAsCategory).Select(x => new TrackedEntityNameModel
             {
-                EntityName = x,
-                EntityNameForDisplaying = x.SplitByCaps()
+                EntityName = x.EntityName,
+                EntityNameForDisplaying = x.EntityName.SplitByCaps()
             }).ToList();
         }
 
         public async Task<List<ChangeModel>> GetChangesAsync(GetChangesListModel query)
         {
             query = query ?? new GetChangesListModel();
+
             var getEntityChangesDbQuery = Storage.TrackEntityChanges.AsQueryable();
 
             // 1. Filter changes.
@@ -125,7 +126,7 @@ namespace HistoryTracking.BL.Services.Changes
 
             entityChanges.AddRange(GetRelatedChangesWhichWereDoneAtTheSeparatedTime(entityChanges, filteredRelatedEntityChanges));
 
-            return entityChanges.Where(x => x.PropertyChanges.Any()).ToList();
+            return entityChanges.Where(x => x.PropertyChanges.Any()).OrderByDescending(x => x.ChangeDate).ToList();
         }
 
         List<ChangeModel> GetRelatedChangesWhichWereDoneAtTheSeparatedTime(List<ChangeModel> entityChanges, List<ChangeModel> relatedEntityChanges)
@@ -163,6 +164,7 @@ namespace HistoryTracking.BL.Services.Changes
                         ChangeType = relatedChange.ChangeType,
                         EntityAfterChangeAsJson = relatedChange.EntityAfterChangeAsJson,
                         EntityName = config.EntityName,
+                        EntityNameForDisplaying = config.EntityName.SplitByCaps(),
                         EntityId = relatedChange.RelatedEntityId.Value,
                         ParentEntityId = null,
                         RelatedEntityId = relatedChange.EntityId,

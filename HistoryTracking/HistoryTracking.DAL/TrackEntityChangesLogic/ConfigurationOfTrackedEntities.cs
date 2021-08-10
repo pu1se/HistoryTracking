@@ -23,7 +23,7 @@ namespace HistoryTracking.DAL.TrackEntityChangesLogic.PropertiesTrackingConfigur
             var allUserRoles = EnumHelper.ToArray<UserType>();
             ConfigList = new List<TrackedEntityConfig>
             {
-                TrackEntityChangesFor<UserEntity>()
+                TrackEntityChangesFor<UserEntity>(showOnUiAsCategory: true)
                     // todo: rename to DisplayProperty
                     .TrackProperty(x => x.Name, allUserRoles)
                     .TrackProperty(x => x.Email, allUserRoles)
@@ -33,11 +33,11 @@ namespace HistoryTracking.DAL.TrackEntityChangesLogic.PropertiesTrackingConfigur
                         .EndOfComplexProperty()
                     .BuildConfiguration(),
 
-                TrackEntityChangesFor<UserAddressEntity>()
+                TrackEntityChangesFor<UserAddressEntity>(showOnUiAsCategory: false)
                     .SaveRelatedEntityId(x => x.UserId)
                     .BuildConfiguration(),
 
-                TrackEntityChangesFor<SubscriptionProductEntity>()
+                TrackEntityChangesFor<SubscriptionProductEntity>(showOnUiAsCategory: true)
                     .TrackProperty(x => x.Title, allUserRoles)
                     .TrackProperty(x => x.Price, allUserRoles)
                     .TrackProperty(x => x.Currency, allUserRoles)
@@ -46,7 +46,7 @@ namespace HistoryTracking.DAL.TrackEntityChangesLogic.PropertiesTrackingConfigur
                     .AlsoDisplayChangesInParentEntityWithId(x => x.ParentId)
                     .BuildConfiguration(),
 
-                TrackEntityChangesFor<OrderEntity>()
+                TrackEntityChangesFor<OrderEntity>(showOnUiAsCategory: true)
                     .TrackProperty(x => x.Comments, allUserRoles)
                     .TrackProperty(x => x.OrderStatus, allUserRoles, type => type?.ToString().SplitByCaps())
                     .TrackProperty(x => x.PaymentStatus, allUserRoles, type => type?.ToString().SplitByCaps())
@@ -55,9 +55,9 @@ namespace HistoryTracking.DAL.TrackEntityChangesLogic.PropertiesTrackingConfigur
             return ConfigList;
         }
 
-        public static TrackedEntityConfigBuilder<T> TrackEntityChangesFor<T>() where T : class
+        public static TrackedEntityConfigBuilder<T> TrackEntityChangesFor<T>(bool showOnUiAsCategory) where T : class
         {
-            return new TrackedEntityConfigBuilder<T>();
+            return new TrackedEntityConfigBuilder<T>(showOnUiAsCategory);
         }
         
         public static TrackedEntityConfig GetConfigFor(Type searchingEntityType)

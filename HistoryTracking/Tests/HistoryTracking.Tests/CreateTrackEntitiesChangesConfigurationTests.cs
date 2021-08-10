@@ -18,7 +18,7 @@ namespace HistoryTracking.Tests
         {
             var allUserRoles = EnumHelper.ToArray<UserType>();
             var trackingEntityConfig = ConfigurationOfTrackedEntities
-                .TrackEntityChangesFor<UserEntity>()
+                .TrackEntityChangesFor<UserEntity>(showOnUiAsCategory: true)
                 .TrackProperty(x => x.Name, allUserRoles)
                 .TrackProperty(x => x.Email, allUserRoles.ExceptItem(UserType.Customer))
                 .TrackProperty(x => x.UserType, allUserRoles.ExceptItem(UserType.Customer, UserType.Reseller))

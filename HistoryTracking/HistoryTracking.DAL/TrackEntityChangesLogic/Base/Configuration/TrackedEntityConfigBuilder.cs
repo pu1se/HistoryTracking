@@ -14,9 +14,9 @@ namespace HistoryTracking.DAL.TrackEntityChangesLogic.PropertiesTrackingConfigur
     {
         private TrackedEntityConfig EntityConfig { get; }
 
-        public TrackedEntityConfigBuilder()
+        public TrackedEntityConfigBuilder(bool showOnUiAsCategory)
         {
-            EntityConfig = new TrackedEntityConfig(GetEntityTableName(), typeof(TEntity));
+            EntityConfig = new TrackedEntityConfig(GetEntityTableName(), typeof(TEntity), showOnUiAsCategory);
         }
 
         public TrackedEntityConfigBuilder<TEntity> TrackProperty<TProperty>(

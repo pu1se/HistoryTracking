@@ -25,9 +25,9 @@ namespace HistoryTracking.Api.Controllers
 
         [Route("tracking-entity-names")]
         [HttpGet]
-        public async Task<IHttpActionResult> GetTrackingEntityNames()
+        public IHttpActionResult GetTrackingEntityNames()
         {
-            var result = await EntityChangesService.GetTrackingTableNamesAsync();
+            var result = EntityChangesService.GetTrackingTableNames();
             return Ok(result);
         }
 

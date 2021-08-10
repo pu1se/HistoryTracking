@@ -138,6 +138,7 @@
             return;
         }
         Model.TrackingEntityNames = getTrackingEntitiesResult.Data.Select(x => new DropdownItem { Key = x.EntityName, Text = x.EntityNameForDisplaying });
+        Model.Filter.EntityNames = Model.TrackingEntityNames.Select(x => x.Key).ToList();
 
         await RefreshEntityChangesTable();
 
