@@ -78,5 +78,34 @@ namespace HistoryTracking.Tests
             Assert.IsTrue(newAddress.UpdatedDateUtc >= DateTime.UtcNow.Date);
             Assert.IsTrue(newAddress.UpdatedByUserId == TestData.SystemUserId);
         }
+
+        [TestMethod]
+        public async Task EditUserContact()
+        {
+            var contact = await Storage.UserContacts.FirstAsync();
+
+            var oldEmail = contact.Email;
+            var oldPhoneNumber = contact.PhoneNumber;
+            var newEmail = Guid.NewGuid() + "@gmail.com";
+            contact.Email = newEmail;
+            var newPhoneNumber = "+" + Guid.NewGuid();
+            contact.PhoneNumber = newPhoneNumber;
+            Storage.UserContacts.AddOrUpdate(contact);
+            await Storage.SaveChangesAsync();
+            CleanStorageCache();
+
+            contact = await Storage.UserContacts.FirstAsync();
+            var newContact = contact.DeepClone();
+
+            contact.Email = oldEmail;
+            contact.PhoneNumber = oldPhoneNumber;
+            Storage.UserContacts.AddOrUpdate(contact);
+            await Storage.SaveChangesAsync();
+
+            Assert.IsTrue(newContact.Email == newEmail);
+            Assert.IsTrue(newContact.PhoneNumber == newPhoneNumber);
+            Assert.IsTrue(newContact.UpdatedDateUtc >= DateTime.UtcNow.Date);
+            Assert.IsTrue(newContact.UpdatedByUserId == TestData.SystemUserId);
+        }
     }
 }

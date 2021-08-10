@@ -30,10 +30,19 @@ namespace HistoryTracking.DAL.TrackEntityChangesLogic.PropertiesTrackingConfigur
                     .TrackProperty(x => x.UserType, allUserRoles, type => type?.ToString().SplitByCaps())
                     .DisplayRelatedEntity(x => x.Addresses)
                         .TrackRelatedProperty(x => x.HouseAddress, allUserRoles)
+                        .TrackRelatedProperty(x => x.City, allUserRoles)
+                        .EndOfComplexProperty()
+                    .DisplayRelatedEntity(x => x.Contacts)
+                        .TrackRelatedProperty(x => x.PhoneNumber, allUserRoles)
+                        .TrackRelatedProperty(x => x.Email, allUserRoles)
                         .EndOfComplexProperty()
                     .BuildConfiguration(),
 
                 TrackEntityChangesFor<UserAddressEntity>(showOnUiAsCategory: false)
+                    .SaveRelatedEntityId(x => x.UserId)
+                    .BuildConfiguration(),
+
+                TrackEntityChangesFor<UserContactEntity>(showOnUiAsCategory: false)
                     .SaveRelatedEntityId(x => x.UserId)
                     .BuildConfiguration(),
 
