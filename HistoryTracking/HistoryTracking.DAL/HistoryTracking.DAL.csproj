@@ -89,7 +89,7 @@
     <Compile Include="TrackEntityChangesLogic\ConfigurationOfTrackedEntities.cs" />
     <Compile Include="TrackEntityChangesLogic\Base\Configuration\TrackedEntityConfigBuilder.cs" />
     <Compile Include="TrackEntityChangesLogic\Base\Configuration\TrackedEntityConfig.cs" />
-    <Compile Include="TrackEntityChangesLogic\Base\Configuration\TrackedPropertyConfig.cs" />
+    <Compile Include="TrackEntityChangesLogic\Base\Configuration\DisplayPropertyConfig.cs" />
     <Compile Include="TrackEntityChangesLogic\TrackingLogicOfSavedByEntityFrameworkChanges.cs" />
     <Compile Include="DatabaseInitializer.cs" />
     <Compile Include="DataContext.cs" />

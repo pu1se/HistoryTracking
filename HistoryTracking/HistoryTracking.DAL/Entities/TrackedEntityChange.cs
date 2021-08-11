@@ -15,7 +15,6 @@ namespace HistoryTracking.DAL.Entities
         [Key]
         public Guid Id { get; set; }
 
-        // todo: rename to EntityType
         public string EntityTable { get; set; }
 
         public string ChangeType { get; set; }

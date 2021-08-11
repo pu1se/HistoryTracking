@@ -19,7 +19,7 @@ namespace HistoryTracking.DAL.TrackEntityChangesLogic.PropertiesTrackingConfigur
             EntityConfig = new TrackedEntityConfig(GetEntityTableName(), typeof(TEntity), showOnUiAsCategory);
         }
 
-        public TrackedEntityConfigBuilder<TEntity> TrackProperty<TProperty>(
+        public TrackedEntityConfigBuilder<TEntity> ShowOnUiChangesInProperty<TProperty>(
             Expression<Func<TEntity, TProperty>> func,
             UserType[] isVisibleForUserRoles, 
             Func<object, string> displayPropertyFunc = null)
@@ -38,7 +38,7 @@ namespace HistoryTracking.DAL.TrackEntityChangesLogic.PropertiesTrackingConfigur
                 throw new Exception($"The description for property {propertyName} is already exists in Track Properties Configuration.");
             }
 
-            EntityConfig.PropertyList.Add(new TrackedPropertyConfig
+            EntityConfig.PropertyList.Add(new DisplayPropertyConfig
             {
                 Name = propertyName, 
                 IsVisibleForUserRoles = isVisibleForUserRoles.ToList(),
@@ -47,7 +47,7 @@ namespace HistoryTracking.DAL.TrackEntityChangesLogic.PropertiesTrackingConfigur
             return this;
         }
 
-        public DisplayRelatedEntityPropertiesConfigBuilder<TEntity, TProperty> DisplayRelatedEntity<TProperty>(
+        public DisplayRelatedEntityPropertiesConfigBuilder<TEntity, TProperty> MergeDisplayingOfRelatedEntity<TProperty>(
             Expression<Func<TEntity, IEnumerable<TProperty>>> func) where TProperty : class
         {
             var expression = (MemberExpression)func.Body;
@@ -88,7 +88,7 @@ namespace HistoryTracking.DAL.TrackEntityChangesLogic.PropertiesTrackingConfigur
                 throw new Exception($"The description for property {propertyName} is already exists in Track Properties Configuration.");
             }
 
-            EntityConfig.PropertyList.Add(new TrackedPropertyConfig
+            EntityConfig.PropertyList.Add(new DisplayPropertyConfig
             {
                 Name = propertyName, 
                 IsParentEntityId = true

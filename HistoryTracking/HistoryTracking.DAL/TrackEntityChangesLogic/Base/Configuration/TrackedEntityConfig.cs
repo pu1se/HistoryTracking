@@ -7,7 +7,6 @@ using HistoryTracking.DAL.TrackEntityChangesLogic.Base.Configuration;
 
 namespace HistoryTracking.DAL.TrackEntityChangesLogic.PropertiesTrackingConfigurations
 {
-    // todo: maybe rename to DisplayChangesInEntity
     public class TrackedEntityConfig : ITrackedEntityConfig
     {
         public bool ShowOnUiAsCategory { get; }
@@ -16,7 +15,7 @@ namespace HistoryTracking.DAL.TrackEntityChangesLogic.PropertiesTrackingConfigur
 
         public string EntityName { get; }
 
-        public List<TrackedPropertyConfig> PropertyList { get; } = new List<TrackedPropertyConfig>();
+        public List<DisplayPropertyConfig> PropertyList { get; } = new List<DisplayPropertyConfig>();
 
         public List<DisplayRelatedEntityPropertiesConfig> RelatedEntities { get; } = new List<DisplayRelatedEntityPropertiesConfig>();
         public string SaveRelatedEntityIdPropertyName { get; set; }

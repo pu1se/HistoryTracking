@@ -11,7 +11,7 @@ namespace HistoryTracking.DAL.TrackEntityChangesLogic.Base.Configuration
     {
         public string EntityName { get; }
         public Type EntityType { get; }
-        public List<TrackedPropertyConfig> PropertyList { get; } = new List<TrackedPropertyConfig>();
+        public List<DisplayPropertyConfig> PropertyList { get; } = new List<DisplayPropertyConfig>();
 
         public DisplayRelatedEntityPropertiesConfig(Type relatedEntityType)
         {

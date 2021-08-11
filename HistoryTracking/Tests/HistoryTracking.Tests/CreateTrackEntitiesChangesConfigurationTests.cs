@@ -19,10 +19,10 @@ namespace HistoryTracking.Tests
             var allUserRoles = EnumHelper.ToArray<UserType>();
             var trackingEntityConfig = ConfigurationOfTrackedEntities
                 .TrackEntityChangesFor<UserEntity>(showOnUiAsCategory: true)
-                .TrackProperty(x => x.Name, allUserRoles)
-                .TrackProperty(x => x.Email, allUserRoles.ExceptItem(UserType.Customer))
-                .TrackProperty(x => x.UserType, allUserRoles.ExceptItem(UserType.Customer, UserType.Reseller))
-                .TrackProperty(x => x.Orders, new []{UserType.SystemUser})
+                .ShowOnUiChangesInProperty(x => x.Name, allUserRoles)
+                .ShowOnUiChangesInProperty(x => x.Email, allUserRoles.ExceptItem(UserType.Customer))
+                .ShowOnUiChangesInProperty(x => x.UserType, allUserRoles.ExceptItem(UserType.Customer, UserType.Reseller))
+                .ShowOnUiChangesInProperty(x => x.Orders, new []{UserType.SystemUser})
                 .BuildConfiguration();
 
             Assert.IsTrue(trackingEntityConfig.EntityName.IsNullOrEmpty() == false);

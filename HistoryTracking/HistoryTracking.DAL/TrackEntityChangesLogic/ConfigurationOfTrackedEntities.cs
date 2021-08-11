@@ -24,18 +24,17 @@ namespace HistoryTracking.DAL.TrackEntityChangesLogic.PropertiesTrackingConfigur
             ConfigList = new List<TrackedEntityConfig>
             {
                 TrackEntityChangesFor<UserEntity>(showOnUiAsCategory: true)
-                    // todo: rename to DisplayProperty
-                    .TrackProperty(x => x.Name, allUserRoles)
-                    .TrackProperty(x => x.Email, allUserRoles)
-                    .TrackProperty(x => x.UserType, allUserRoles, type => type?.ToString().SplitByCaps())
-                    .DisplayRelatedEntity(x => x.Addresses)
-                        .TrackRelatedProperty(x => x.HouseAddress, allUserRoles)
-                        .TrackRelatedProperty(x => x.City, allUserRoles)
-                        .EndOfComplexProperty()
-                    .DisplayRelatedEntity(x => x.Contacts)
-                        .TrackRelatedProperty(x => x.PhoneNumber, allUserRoles)
-                        .TrackRelatedProperty(x => x.Email, allUserRoles)
-                        .EndOfComplexProperty()
+                    .ShowOnUiChangesInProperty(x => x.Name, allUserRoles)
+                    .ShowOnUiChangesInProperty(x => x.Email, allUserRoles)
+                    .ShowOnUiChangesInProperty(x => x.UserType, allUserRoles, type => type?.ToString().SplitByCaps())
+                    .MergeDisplayingOfRelatedEntity(x => x.Addresses)
+                        .ShowOnUiChangesInRelatedProperty(x => x.HouseAddress, allUserRoles)
+                        .ShowOnUiChangesInRelatedProperty(x => x.City, allUserRoles)
+                        .EndOfRelatedEntity()
+                    .MergeDisplayingOfRelatedEntity(x => x.Contacts)
+                        .ShowOnUiChangesInRelatedProperty(x => x.PhoneNumber, allUserRoles)
+                        .ShowOnUiChangesInRelatedProperty(x => x.Email, allUserRoles)
+                        .EndOfRelatedEntity()
                     .BuildConfiguration(),
 
                 TrackEntityChangesFor<UserAddressEntity>(showOnUiAsCategory: false)
@@ -47,18 +46,18 @@ namespace HistoryTracking.DAL.TrackEntityChangesLogic.PropertiesTrackingConfigur
                     .BuildConfiguration(),
 
                 TrackEntityChangesFor<SubscriptionProductEntity>(showOnUiAsCategory: true)
-                    .TrackProperty(x => x.Title, allUserRoles)
-                    .TrackProperty(x => x.Price, allUserRoles)
-                    .TrackProperty(x => x.Currency, allUserRoles)
-                    .TrackProperty(x => x.DistributorMarkupAsPercent, new [] {UserType.SystemUser, UserType.Distributor})
-                    .TrackProperty(x => x.ResellerMarkupAsPercent, new [] {UserType.SystemUser, UserType.Distributor, UserType.Reseller})
+                    .ShowOnUiChangesInProperty(x => x.Title, allUserRoles)
+                    .ShowOnUiChangesInProperty(x => x.Price, allUserRoles)
+                    .ShowOnUiChangesInProperty(x => x.Currency, allUserRoles)
+                    .ShowOnUiChangesInProperty(x => x.DistributorMarkupAsPercent, new [] {UserType.SystemUser, UserType.Distributor})
+                    .ShowOnUiChangesInProperty(x => x.ResellerMarkupAsPercent, new [] {UserType.SystemUser, UserType.Distributor, UserType.Reseller})
                     .AlsoDisplayChangesInParentEntityWithId(x => x.ParentId)
                     .BuildConfiguration(),
 
                 TrackEntityChangesFor<OrderEntity>(showOnUiAsCategory: true)
-                    .TrackProperty(x => x.Comments, allUserRoles)
-                    .TrackProperty(x => x.OrderStatus, allUserRoles, type => type?.ToString().SplitByCaps())
-                    .TrackProperty(x => x.PaymentStatus, allUserRoles, type => type?.ToString().SplitByCaps())
+                    .ShowOnUiChangesInProperty(x => x.Comments, allUserRoles)
+                    .ShowOnUiChangesInProperty(x => x.OrderStatus, allUserRoles, type => type?.ToString().SplitByCaps())
+                    .ShowOnUiChangesInProperty(x => x.PaymentStatus, allUserRoles, type => type?.ToString().SplitByCaps())
                     .BuildConfiguration(),
             };
             return ConfigList;

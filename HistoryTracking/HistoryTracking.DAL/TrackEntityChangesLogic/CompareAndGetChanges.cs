@@ -41,7 +41,7 @@ namespace HistoryTracking.DAL.TrackEntityChangesLogic
         private static PropertyChange HandelSimpleProperties<T>(T oldEntity,
             T newEntity,
             PropertyInfo propertyOfEntity, 
-            TrackedPropertyConfig propertyConfig) where T : class
+            DisplayPropertyConfig propertyConfig) where T : class
         {
             object oldValue = null;
             if (oldEntity != null)

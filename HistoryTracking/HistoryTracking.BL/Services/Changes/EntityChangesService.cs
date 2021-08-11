@@ -124,12 +124,14 @@ namespace HistoryTracking.BL.Services.Changes
                 FilterByUserRole(query, change);
             });
 
-            entityChanges.AddRange(GetRelatedChangesWhichWereDoneAtTheSeparatedTime(entityChanges, filteredRelatedEntityChanges));
+            // 8. Add related entities changes which were done at the separated time.
+            var relatedEntitesChangesWhichWereDoneAtTheSeparatedTime = GetRelatedEntitiesChangesWhichWereDoneAtTheSeparatedTime(entityChanges, filteredRelatedEntityChanges);
+            entityChanges.AddRange(relatedEntitesChangesWhichWereDoneAtTheSeparatedTime);
 
             return entityChanges.Where(x => x.PropertyChanges.Any()).OrderByDescending(x => x.ChangeDate).ToList();
         }
 
-        List<ChangeModel> GetRelatedChangesWhichWereDoneAtTheSeparatedTime(List<ChangeModel> entityChanges, List<ChangeModel> relatedEntityChanges)
+        List<ChangeModel> GetRelatedEntitiesChangesWhichWereDoneAtTheSeparatedTime(List<ChangeModel> entityChanges, List<ChangeModel> relatedEntityChanges)
         {
             var relatedChangesWhichWereDoneAtTheSeparatedTime = new List<ChangeModel>();
             var entityChangeDates = entityChanges.Select(x => x.ChangeDate).ToList();
