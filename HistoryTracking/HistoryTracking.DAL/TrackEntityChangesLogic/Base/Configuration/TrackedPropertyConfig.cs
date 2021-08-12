@@ -8,7 +8,7 @@ using HistoryTracking.DAL.Enums;
 
 namespace HistoryTracking.DAL.TrackEntityChangesLogic.PropertiesTrackingConfigurations
 {
-    public class DisplayPropertyConfig
+    public class TrackedPropertyConfig
     {
         public string Name { get; set; }
         public List<UserType> IsVisibleForUserRoles { get; set; }

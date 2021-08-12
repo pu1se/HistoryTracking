@@ -9,21 +9,21 @@ using HistoryTracking.DAL.TrackEntityChangesLogic.PropertiesTrackingConfiguratio
 
 namespace HistoryTracking.DAL.TrackEntityChangesLogic.Base.Configuration
 {
-    public class DisplayRelatedEntityPropertiesConfigBuilder<TMainEntity, TRelatedEntity> 
+    public class RelatedEntityPropertiesConfigBuilder<TMainEntity, TRelatedEntity> 
         where TRelatedEntity: class 
         where TMainEntity : class
     {
         private TrackedEntityConfigBuilder<TMainEntity> MainContext { get; }
 
-        private DisplayRelatedEntityPropertiesConfig Config { get; }
+        private RelatedEntityPropertiesConfig Config { get; }
 
-        public DisplayRelatedEntityPropertiesConfigBuilder(TrackedEntityConfigBuilder<TMainEntity> mainContext)
+        public RelatedEntityPropertiesConfigBuilder(TrackedEntityConfigBuilder<TMainEntity> mainContext)
         {
             MainContext = mainContext;
-            Config = new DisplayRelatedEntityPropertiesConfig(typeof(TRelatedEntity));
+            Config = new RelatedEntityPropertiesConfig(typeof(TRelatedEntity));
         }
 
-        public DisplayRelatedEntityPropertiesConfigBuilder<TMainEntity, TRelatedEntity> ShowOnUiChangesInRelatedProperty<TProperty>(
+        public RelatedEntityPropertiesConfigBuilder<TMainEntity, TRelatedEntity> ShowOnUiChangesInRelatedProperty<TProperty>(
             Expression<Func<TRelatedEntity, TProperty>> func,
             UserType[] isVisibleForUserRoles, 
             Func<object, string> displayPropertyFunc = null)
@@ -37,7 +37,7 @@ namespace HistoryTracking.DAL.TrackEntityChangesLogic.Base.Configuration
                 displayPropertyFunc = defaultDisplayingPropertyFunc;
             }
 
-            Config.PropertyList.Add(new DisplayPropertyConfig
+            Config.PropertyList.Add(new TrackedPropertyConfig
             {
                 Name = propertyName,
                 IsVisibleForUserRoles = isVisibleForUserRoles.ToList(),

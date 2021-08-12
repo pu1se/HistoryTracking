@@ -25,9 +25,7 @@ namespace HistoryTracking.BL.Services.Changes
 
         public List<TrackedEntityNameModel> GetTrackingTableNames()
         {
-            var trackingEntityNames = ConfigurationOfTrackedEntities.GetConfigList();
-
-            return trackingEntityNames.Where(x => x.ShowOnUiAsCategory).Select(x => new TrackedEntityNameModel
+            return ConfigurationOfTrackedEntities.GetConfigList().Where(x => x.ShowOnUiAsCategory).Select(x => new TrackedEntityNameModel
             {
                 EntityName = x.EntityName,
                 EntityNameForDisplaying = x.EntityName.SplitByCaps()

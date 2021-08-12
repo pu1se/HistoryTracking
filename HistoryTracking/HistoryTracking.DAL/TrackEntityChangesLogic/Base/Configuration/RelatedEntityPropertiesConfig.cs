@@ -7,13 +7,13 @@ using HistoryTracking.DAL.TrackEntityChangesLogic.PropertiesTrackingConfiguratio
 
 namespace HistoryTracking.DAL.TrackEntityChangesLogic.Base.Configuration
 {
-    public class DisplayRelatedEntityPropertiesConfig : ITrackedEntityConfig
+    public class RelatedEntityPropertiesConfig : ITrackedEntityConfig
     {
         public string EntityName { get; }
         public Type EntityType { get; }
-        public List<DisplayPropertyConfig> PropertyList { get; } = new List<DisplayPropertyConfig>();
+        public List<TrackedPropertyConfig> PropertyList { get; } = new List<TrackedPropertyConfig>();
 
-        public DisplayRelatedEntityPropertiesConfig(Type relatedEntityType)
+        public RelatedEntityPropertiesConfig(Type relatedEntityType)
         {
             EntityType = relatedEntityType;
             EntityName = EntityType.Name;

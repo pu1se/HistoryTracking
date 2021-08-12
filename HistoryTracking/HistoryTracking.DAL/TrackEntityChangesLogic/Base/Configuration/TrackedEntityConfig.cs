@@ -15,9 +15,9 @@ namespace HistoryTracking.DAL.TrackEntityChangesLogic.PropertiesTrackingConfigur
 
         public string EntityName { get; }
 
-        public List<DisplayPropertyConfig> PropertyList { get; } = new List<DisplayPropertyConfig>();
+        public List<TrackedPropertyConfig> PropertyList { get; } = new List<TrackedPropertyConfig>();
 
-        public List<DisplayRelatedEntityPropertiesConfig> RelatedEntities { get; } = new List<DisplayRelatedEntityPropertiesConfig>();
+        public List<RelatedEntityPropertiesConfig> RelatedEntities { get; } = new List<RelatedEntityPropertiesConfig>();
         public string SaveRelatedEntityIdPropertyName { get; set; }
 
         public TrackedEntityConfig(string entityName, Type entityType, bool showOnUiAsCategory)

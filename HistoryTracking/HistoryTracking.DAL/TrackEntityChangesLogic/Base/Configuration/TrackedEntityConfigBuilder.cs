@@ -38,7 +38,7 @@ namespace HistoryTracking.DAL.TrackEntityChangesLogic.PropertiesTrackingConfigur
                 throw new Exception($"The description for property {propertyName} is already exists in Track Properties Configuration.");
             }
 
-            EntityConfig.PropertyList.Add(new DisplayPropertyConfig
+            EntityConfig.PropertyList.Add(new TrackedPropertyConfig
             {
                 Name = propertyName, 
                 IsVisibleForUserRoles = isVisibleForUserRoles.ToList(),
@@ -47,13 +47,10 @@ namespace HistoryTracking.DAL.TrackEntityChangesLogic.PropertiesTrackingConfigur
             return this;
         }
 
-        public DisplayRelatedEntityPropertiesConfigBuilder<TEntity, TProperty> MergeDisplayingOfRelatedEntity<TProperty>(
+        public RelatedEntityPropertiesConfigBuilder<TEntity, TProperty> MergeDisplayingOfRelatedEntity<TProperty>(
             Expression<Func<TEntity, IEnumerable<TProperty>>> func) where TProperty : class
         {
-            var expression = (MemberExpression)func.Body;
-            var propertyName = expression.Member.Name;
-
-            return new DisplayRelatedEntityPropertiesConfigBuilder<TEntity, TProperty>(this);
+            return new RelatedEntityPropertiesConfigBuilder<TEntity, TProperty>(this);
         }
 
         public TrackedEntityConfig BuildConfiguration()
@@ -88,7 +85,7 @@ namespace HistoryTracking.DAL.TrackEntityChangesLogic.PropertiesTrackingConfigur
                 throw new Exception($"The description for property {propertyName} is already exists in Track Properties Configuration.");
             }
 
-            EntityConfig.PropertyList.Add(new DisplayPropertyConfig
+            EntityConfig.PropertyList.Add(new TrackedPropertyConfig
             {
                 Name = propertyName, 
                 IsParentEntityId = true

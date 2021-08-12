@@ -29,12 +29,6 @@ namespace HistoryTracking.DAL
                 return null;
             }
 
-            var changedDateUtc = DateTime.UtcNow;
-            if (dbEntry.Entity is BaseEntity baseEntity)
-            {
-                changedDateUtc = baseEntity.UpdatedDateUtc;
-            }
-
             Guid? parentId = null;
             if (trackedEntityConfig.PropertyList.Any(x => x.IsParentEntityId))
             {
@@ -63,7 +57,7 @@ namespace HistoryTracking.DAL
                 EntityId = GetPrimaryKeyId(dataContext, dbEntry),
                 ParentId = parentId,
                 ChangeType = dbEntry.State.ToString(),
-                ChangeDateUtc = changedDateUtc,
+                ChangeDateUtc = GetChangeDateUtc(dbEntry),
                 EntityAfterChangeSnapshot = dbEntry.State != EntityState.Deleted ? dbEntry.Entity.ToJson() : null,
                 ChangedByUserId = UserManager.GetCurrentUserId(),
                 RelatedEntityId = relatedEntityId
@@ -71,29 +65,32 @@ namespace HistoryTracking.DAL
             return trackEntityChange;
         }
 
+        private static DateTime GetChangeDateUtc(DbEntityEntry dbEntry)
+        {
+            var changedDateUtc = DateTime.UtcNow;
+            if (dbEntry.Entity is BaseEntity baseEntity)
+            {
+                changedDateUtc = baseEntity.UpdatedDateUtc;
+            }
+
+            return changedDateUtc;
+        }
+
         private static Guid GetPrimaryKeyId(DataContext dataContext, DbEntityEntry dbEntry)
         {
-            try
+            if (dbEntry.Entity is BaseEntity baseEntity)
             {
-                if (dbEntry.Entity is BaseEntity baseEntity)
-                {
-                    return baseEntity.Id;
-                }
+                return baseEntity.Id;
+            }
 
-                var objectStateEntry = ((IObjectContextAdapter)dataContext).ObjectContext.ObjectStateManager.GetObjectStateEntry(dbEntry.Entity);
-                var entityId = objectStateEntry.EntityKey.EntityKeyValues?[0].Value.ToString();
-                if (!entityId.IsNullOrEmpty())
-                {
-                    return new Guid(entityId);    
-                }
-                
-                return Guid.Empty;
-            }
-            catch (Exception e)
+            var objectStateEntry = ((IObjectContextAdapter)dataContext).ObjectContext.ObjectStateManager.GetObjectStateEntry(dbEntry.Entity);
+            var entityId = objectStateEntry.EntityKey.EntityKeyValues?[0].Value.ToString();
+            if (!entityId.IsNullOrEmpty())
             {
-                Console.Write(e.ToJson());
-                return Guid.Empty;
+                return new Guid(entityId);    
             }
+                
+            return Guid.Empty;
         }
     }
 }

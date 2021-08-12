@@ -82,19 +82,19 @@
       <DependentUpon>202108051710498_AddRelatedEntityIdFieldToTrackedChangesTable.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
-    <Compile Include="TrackEntityChangesLogic\Base\Configuration\DisplayRelatedEntityPropertiesConfig.cs" />
+    <Compile Include="TrackEntityChangesLogic\Base\Configuration\RelatedEntityPropertiesConfig.cs" />
     <Compile Include="TrackEntityChangesLogic\Base\Configuration\ITrackedEntityConfig.cs" />
-    <Compile Include="TrackEntityChangesLogic\Base\Configuration\DisplayRelatedEntityPropertiesConfigBuilder.cs" />
+    <Compile Include="TrackEntityChangesLogic\Base\Configuration\RelatedEntityPropertiesConfigBuilder.cs" />
     <Compile Include="TrackEntityChangesLogic\CompareAndGetChanges.cs" />
     <Compile Include="TrackEntityChangesLogic\ConfigurationOfTrackedEntities.cs" />
     <Compile Include="TrackEntityChangesLogic\Base\Configuration\TrackedEntityConfigBuilder.cs" />
     <Compile Include="TrackEntityChangesLogic\Base\Configuration\TrackedEntityConfig.cs" />
-    <Compile Include="TrackEntityChangesLogic\Base\Configuration\DisplayPropertyConfig.cs" />
+    <Compile Include="TrackEntityChangesLogic\Base\Configuration\TrackedPropertyConfig.cs" />
     <Compile Include="TrackEntityChangesLogic\TrackingLogicOfSavedByEntityFrameworkChanges.cs" />
     <Compile Include="DatabaseInitializer.cs" />
     <Compile Include="DataContext.cs" />
     <Compile Include="Entities\BaseEntity.cs" />
-    <Compile Include="TrackEntityChangesLogic\Base\PropertyChange.cs" />
+    <Compile Include="TrackEntityChangesLogic\Base\Configuration\PropertyChange.cs" />
     <Compile Include="Entities\TrackedEntityChange.cs" />
     <Compile Include="Entities\SubscriptionProductEntity.cs" />
     <Compile Include="Entities\OrderEntity.cs" />

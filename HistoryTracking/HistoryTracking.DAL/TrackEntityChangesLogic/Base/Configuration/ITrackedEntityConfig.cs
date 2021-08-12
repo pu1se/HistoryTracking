@@ -10,6 +10,6 @@ namespace HistoryTracking.DAL.TrackEntityChangesLogic.Base.Configuration
     public interface ITrackedEntityConfig
     {
         Type EntityType { get; }
-        List<DisplayPropertyConfig> PropertyList { get; }
+        List<TrackedPropertyConfig> PropertyList { get; }
     }
 }
